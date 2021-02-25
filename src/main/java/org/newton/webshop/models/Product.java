@@ -7,21 +7,22 @@ import javax.persistence.*;
 public class Product {
     @Column(name = "name")
     private String name;
+
     @Column(name = "price")
     private int price;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
+
     public Product() {
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
+    public Product(String name, int price, int id) {
+        this.name = name;
+        this.price = price;
         this.id = id;
     }
 
@@ -41,8 +42,11 @@ public class Product {
         this.price = price;
     }
 
-    public Product(String name, int price) {
-        this.name = name;
-        this.price = price;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
