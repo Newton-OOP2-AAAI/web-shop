@@ -8,7 +8,7 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
-    private int id;
+    private Integer id;
 
 
     @ManyToOne
@@ -19,23 +19,23 @@ public class Item {
     private Product product;
 
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
     public Item() {
     }
 
-    public Item(int id, Cart cart, Product product, int quantity) {
+    public Item(Integer id, Cart cart, Product product, Integer quantity) {
         this.id = id;
         this.cart = cart;
         this.product = product;
         this.quantity = quantity;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -55,11 +55,11 @@ public class Item {
         this.product = product;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

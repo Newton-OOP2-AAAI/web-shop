@@ -9,7 +9,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
-    private int id;
+    private Integer id;
 
 
     @OneToMany(mappedBy = "cart")
@@ -23,17 +23,17 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(int id, Set<Item> items, Customer customer) {
+    public Cart(Integer id, Set<Item> items, Customer customer) {
         this.id = id;
         this.items = items;
         this.customer = customer;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

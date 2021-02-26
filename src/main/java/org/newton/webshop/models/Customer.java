@@ -9,7 +9,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
-    private int id;
+    private Integer id;
 
     @OneToMany(mappedBy = "customer")
     private Set<Cart> carts;
@@ -30,10 +30,10 @@ public class Customer {
     private String streetname;
 
     @Column(name = "streetnumber")
-    private int streetnumber;
+    private Integer streetnumber;
 
     @Column(name = "zip_code")
-    private int zip_code;
+    private Integer zip_code;
 
     @Column(name = "city")
     private String city;
@@ -41,7 +41,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(int id, String firstname, String lastname, String phone, String email, String streetname, int streetnumber, int zip_code, String city) {
+    public Customer(Integer id, String firstname, String lastname, String phone, String email, String streetname, Integer streetnumber, Integer zip_code, String city) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -53,11 +53,11 @@ public class Customer {
         this.city = city;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -101,19 +101,19 @@ public class Customer {
         this.streetname = streetname;
     }
 
-    public int getStreetnumber() {
+    public Integer getStreetnumber() {
         return streetnumber;
     }
 
-    public void setStreetnumber(int streetnumber) {
+    public void setStreetnumber(Integer streetnumber) {
         this.streetnumber = streetnumber;
     }
 
-    public int getZip_code() {
+    public Integer getZip_code() {
         return zip_code;
     }
 
-    public void setZip_code(int zip_code) {
+    public void setZip_code(Integer zip_code) {
         this.zip_code = zip_code;
     }
 
