@@ -11,7 +11,7 @@ public class Customer {
     @Column(name = "customer_id")
     private int id;
 
-    @OneToMany(mappedBy = "customers")
+    @OneToMany(mappedBy = "customer")
     private Set<Cart> carts;
 
     @Column(name = "firstname")

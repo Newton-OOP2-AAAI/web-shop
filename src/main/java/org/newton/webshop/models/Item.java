@@ -15,8 +15,8 @@ public class Item {
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @Column(name = "product_id")
-    private int productId;
+    @OneToOne
+    private Product product;
 
     @Column(name = "quantity")
     private int quantity;
@@ -24,10 +24,10 @@ public class Item {
     public Item() {
     }
 
-    public Item(int id, Cart cart, int productId, int quantity) {
+    public Item(int id, Cart cart, Product product, int quantity) {
         this.id = id;
         this.cart = cart;
-        this.productId = productId;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -47,12 +47,12 @@ public class Item {
         this.cart = cart;
     }
 
-    public int getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {
@@ -63,3 +63,6 @@ public class Item {
         this.quantity = quantity;
     }
 }
+
+
+

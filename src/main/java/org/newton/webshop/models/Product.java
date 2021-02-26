@@ -9,21 +9,20 @@ public class Product {
     private String name;
 
     @Column(name = "price")
-    private int price;
+    private Integer price;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-
+    private Integer id;
 
     public Product() {
     }
 
-    public Product(String name, int price, int id) {
+    public Product(String name, Integer price) {
         this.name = name;
         this.price = price;
-        this.id = id;
+
     }
 
     public String getName() {
@@ -34,19 +33,28 @@ public class Product {
         this.name = name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", id=" + id +
+                '}';
     }
 }

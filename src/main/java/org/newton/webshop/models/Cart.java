@@ -12,7 +12,7 @@ public class Cart {
     private int id;
 
 
-    @OneToMany(mappedBy = "carts")
+    @OneToMany(mappedBy = "cart")
     private Set<Item> items;
 
     @ManyToOne
