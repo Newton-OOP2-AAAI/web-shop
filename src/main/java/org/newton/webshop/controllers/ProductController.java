@@ -17,7 +17,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<Product> all() {
+    List<Product> all() {
         return repository.findAll();
     }
 
