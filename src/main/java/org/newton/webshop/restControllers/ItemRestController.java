@@ -41,6 +41,7 @@ public class ItemRestController {
                     item.setCart(newItem.getCart());
                     item.setProduct(newItem.getProduct());
                     item.setQuantity(newItem.getQuantity());
+                    item.setSize(newItem.getSize());
                     return repository.save(item);
                 })
                 .orElseGet(() -> {

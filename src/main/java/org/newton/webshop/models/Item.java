@@ -66,6 +66,13 @@ public class Item {
         this.quantity = quantity;
     }
 
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 
     @Override
     public String toString() {

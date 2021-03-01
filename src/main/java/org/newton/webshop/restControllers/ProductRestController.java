@@ -42,6 +42,8 @@ public class ProductRestController {
                 .map(product -> {
                     product.setName(newProduct.getName());
                     product.setPrice(newProduct.getPrice());
+                    product.setCategory(newProduct.getCategory());
+                    product.setDescription(newProduct.getDescription());
                     return repository.save(product);
                 })
                 .orElseGet(() -> {

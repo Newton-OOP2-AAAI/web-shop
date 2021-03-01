@@ -5,23 +5,31 @@ import javax.persistence.*;
 @Table(name = "products")
 @Entity
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
     @Column(name = "name")
     private String name;
 
     @Column(name = "price")
     private Integer price;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "description")
+    private String description;
 
     public Product() {
     }
 
-    public Product(String name, Integer price) {
+    public Product(String name, Integer price,String category,String description) {
         this.name = name;
         this.price = price;
+        this.category= category;
+        this.description=description;
 
     }
 
@@ -47,6 +55,22 @@ public class Product {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
