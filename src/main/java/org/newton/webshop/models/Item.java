@@ -24,8 +24,7 @@ public class Item {
     public Item() {
     }
 
-    public Item(Integer id, Cart cart, Product product, Integer quantity) {
-        this.id = id;
+    public Item(Cart cart, Product product, Integer quantity) {
         this.cart = cart;
         this.product = product;
         this.quantity = quantity;
@@ -61,6 +60,16 @@ public class Item {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", cart=" + cart +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
     }
 }
 
