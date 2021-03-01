@@ -41,8 +41,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(Integer id, String firstname, String lastname, String phone, String email, String streetname, Integer streetnumber, Integer zip_code, String city) {
-        this.id = id;
+    public Customer(String firstname, String lastname, String phone, String email, String streetname, Integer streetnumber, Integer zip_code, String city) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.phone = phone;
@@ -131,5 +130,21 @@ public class Customer {
 
     public void setCarts(Set<Cart> carts) {
         this.carts = carts;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", carts=" + carts +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", streetname='" + streetname + '\'' +
+                ", streetnumber=" + streetnumber +
+                ", zip_code=" + zip_code +
+                ", city='" + city + '\'' +
+                '}';
     }
 }

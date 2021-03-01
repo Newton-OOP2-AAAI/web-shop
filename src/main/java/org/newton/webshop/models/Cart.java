@@ -23,8 +23,7 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(Integer id, Set<Item> items, Customer customer) {
-        this.id = id;
+    public Cart(Set<Item> items, Customer customer) {
         this.items = items;
         this.customer = customer;
     }
@@ -51,6 +50,15 @@ public class Cart {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", items=" + items +
+                ", customer=" + customer +
+                '}';
     }
 }
 
