@@ -1,4 +1,4 @@
-package org.newton.webshop.controllers;
+package org.newton.webshop.restControllers;
 
 import org.newton.webshop.exceptions.CartNotFoundException;
 import org.newton.webshop.models.Cart;
@@ -6,13 +6,12 @@ import org.newton.webshop.repositories.CartRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-public class CartController {
+public class CartRestController {
     private final CartRepository repository;
 
-    CartController(CartRepository repository) {
+    CartRestController(CartRepository repository) {
         this.repository = repository;
     }
 

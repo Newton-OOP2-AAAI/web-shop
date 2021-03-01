@@ -1,4 +1,4 @@
-package org.newton.webshop.controllers;
+package org.newton.webshop.restControllers;
 
 import org.newton.webshop.exceptions.ItemNotFoundException;
 import org.newton.webshop.models.Item;
@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public class ItemController {
+public class ItemRestController {
     private final ItemRepository repository;
 
-    ItemController(ItemRepository repository) {
+    ItemRestController(ItemRepository repository) {
         this.repository = repository;
     }
 
