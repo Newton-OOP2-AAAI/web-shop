@@ -124,4 +124,12 @@ public class Customer {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public Set<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Set<Cart> carts) {
+        this.carts = carts;
+    }
 }
