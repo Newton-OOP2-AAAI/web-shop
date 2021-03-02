@@ -31,7 +31,7 @@ public class Item {
         this.cart = cart;
         this.product = product;
         this.quantity = quantity;
-        this.size= size;
+        this.size = size;
     }
 
     public Integer getId() {

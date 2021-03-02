@@ -11,6 +11,8 @@ public class Cart {
     @Column(name = "cart_id")
     private Integer id;
 
+    @OneToMany(mappedBy = "cart")
+    private Set<Item> items;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
@@ -20,7 +22,8 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(Customer customer) {
+    public Cart(Set<Item> items, Customer customer) {
+        this.items = items;
         this.customer = customer;
     }
 
@@ -30,6 +33,14 @@ public class Cart {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
     }
 
     public Customer getCustomer() {
@@ -44,6 +55,7 @@ public class Cart {
     public String toString() {
         return "Cart{" +
                 "id=" + id +
+                ", items=" + items +
                 ", customer=" + customer +
                 '}';
     }
