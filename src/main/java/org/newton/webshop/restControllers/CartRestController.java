@@ -45,6 +45,7 @@ public class CartRestController {
 
         return repository.findById(id)
                 .map(cart -> {
+                    cart.setItems(newCart.getItems());
                     cart.setCustomer(newCart.getCustomer());
                     return repository.save(cart);
                 })
