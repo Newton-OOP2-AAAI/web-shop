@@ -21,13 +21,17 @@ public class Item {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @Column(name = "size")
+    private String size;
+
     public Item() {
     }
 
-    public Item(Cart cart, Product product, Integer quantity) {
+    public Item(Cart cart, Product product, Integer quantity, String size) {
         this.cart = cart;
         this.product = product;
         this.quantity = quantity;
+        this.size = size;
     }
 
     public Integer getId() {
@@ -62,6 +66,14 @@ public class Item {
         this.quantity = quantity;
     }
 
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -69,6 +81,7 @@ public class Item {
                 ", cart=" + cart +
                 ", product=" + product +
                 ", quantity=" + quantity +
+                ", size=" + size +
                 '}';
     }
 }

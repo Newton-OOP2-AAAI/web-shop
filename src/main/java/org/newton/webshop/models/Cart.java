@@ -11,7 +11,6 @@ public class Cart {
     @Column(name = "cart_id")
     private Integer id;
 
-
     @OneToMany(mappedBy = "cart")
     private Set<Item> items;
 

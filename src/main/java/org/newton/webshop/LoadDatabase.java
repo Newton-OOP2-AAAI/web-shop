@@ -29,9 +29,9 @@ class LoadDatabase {
             Customer cust1 = new Customer("Förnamn", "Efternamn", "0701234567", "hej@hej.hej", "Testvägen", 1337, 41870, "Göteborg");
             log.info("Preloading " + customerRepository.save(cust1));
 
-            Product prod1 = new Product("T-shirt", 199);
-            Product prod2 = new Product("Jeans", 599);
-            Product prod3 = new Product("Hat", 299);
+            Product prod1 = new Product("T-shirt", 199, "Basics", "100% cotton, plain white");
+            Product prod2 = new Product("Jeans", 599, "Trousers", "10% less water, sustainable brand");
+            Product prod3 = new Product("Hat", 299, "Hats", "Incredibly soft beanie!");
 
             log.info("Preloading " + productRepository.save(prod1));
             log.info("Preloading " + productRepository.save(prod2));
@@ -40,9 +40,9 @@ class LoadDatabase {
             Cart cart1 = new Cart(null, cust1);
             log.info("Preloading " + cartRepository.save(cart1));
 
-            Item item1 = new Item(cart1, prod1, 5);
-            Item item2 = new Item(cart1, prod2, 1);
-            Item item3 = new Item(cart1, prod3, 2);
+            Item item1 = new Item(cart1, prod1, 5, "M");
+            Item item2 = new Item(cart1, prod2, 1, "XL");
+            Item item3 = new Item(cart1, prod3, 2, "S");
 
             log.info("Preloading " + itemRepository.save(item1));
             log.info("Preloading " + itemRepository.save(item2));
