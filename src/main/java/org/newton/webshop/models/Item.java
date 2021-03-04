@@ -1,5 +1,8 @@
 package org.newton.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Table(name = "items")
@@ -11,10 +14,12 @@ public class Item {
     private Integer id;
 
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
+    @JsonManagedReference
     @OneToOne
     private Product product;
 
