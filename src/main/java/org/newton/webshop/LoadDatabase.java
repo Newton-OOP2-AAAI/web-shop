@@ -28,6 +28,8 @@ class LoadDatabase {
         return args -> {
             Customer cust1 = new Customer("Förnamn", "Efternamn", "0701234567", "hej@hej.hej", "Testvägen", 1337, 41870, "Göteborg");
             log.info("Preloading " + customerRepository.save(cust1));
+            Customer cust2 = new Customer("Hej", "Hejsson", "0701234567", "hej@hej.hej", "Testvägen", 13, 41870, "Göteborg");
+            log.info("Preloading " + customerRepository.save(cust2));
 
             Product prod1 = new Product("T-shirt", 199, "Basics", "100% cotton, plain white");
             Product prod2 = new Product("Jeans", 599, "Trousers", "10% less water, sustainable brand");

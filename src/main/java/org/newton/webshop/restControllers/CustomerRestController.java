@@ -28,7 +28,6 @@ public class CustomerRestController {
 
     @GetMapping("/customers/{id}")
     Customer one(@PathVariable Integer id) {
-
         return repository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
     }
