@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 public class CustomerController {
     private final CustomerRepository repository;
 
@@ -28,7 +29,6 @@ public class CustomerController {
 
     @GetMapping("/customers/{id}")
     Customer one(@PathVariable Integer id) {
-
         return repository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
     }
