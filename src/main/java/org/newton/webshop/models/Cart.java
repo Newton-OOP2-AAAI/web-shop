@@ -1,5 +1,8 @@
 package org.newton.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,9 +14,11 @@ public class Cart {
     @Column(name = "cart_id")
     private Integer id;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "cart")
     private Set<Item> items;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;

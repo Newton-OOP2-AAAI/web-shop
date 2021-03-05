@@ -1,4 +1,4 @@
-package org.newton.webshop.restControllers;
+package org.newton.webshop.rest;
 
 import org.newton.webshop.exceptions.CustomerNotFoundException;
 import org.newton.webshop.models.Customer;
@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public class CustomerRestController {
+public class CustomerController {
     private final CustomerRepository repository;
 
-    CustomerRestController(CustomerRepository repository) {
+    CustomerController(CustomerRepository repository) {
         this.repository = repository;
     }
 
