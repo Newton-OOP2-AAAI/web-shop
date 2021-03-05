@@ -25,6 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CartNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(CartNotFoundException e) {
+
         String error = "Could not retrieve resource";
         return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, error, e));
     }
