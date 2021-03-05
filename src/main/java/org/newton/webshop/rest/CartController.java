@@ -29,8 +29,6 @@ public class CartController {
     // Single item
 
 
-
-
     /**
      * The customer wants to view content in the shopping cart (number of each article, price, name, size) to see what’s there.
      *
