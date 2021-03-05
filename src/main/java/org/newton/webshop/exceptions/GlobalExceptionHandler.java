@@ -53,36 +53,3 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return throwException(e);
     }
 }
-
-
-
-
-
-
-// Första test:
-// package org.newton.webshop.exceptions;
-//
-//import org.springframework.http.HttpStatus;
-//import org.springframework.web.bind.annotation.ExceptionHandler;
-//import org.springframework.web.bind.annotation.ResponseStatus;
-//
-//public class CustomerNotFoundError {
-//
-//        private final String message;
-//
-//        public CustomerNotFoundError(String message){
-//            this.message=message;
-//        }
-//
-//        public String getMessage() {
-//            return message;
-//        }
-//
-//        @ExceptionHandler(CustomerNotFoundException.class)
-//        @ResponseStatus(HttpStatus.BAD_REQUEST)
-//        public org.newton.webshop.exceptions.CustomerNotFoundError handleCustomerNotFound(CustomerNotFoundException e){
-//            return new org.newton.webshop.exceptions.CustomerNotFoundError(e.getMessage());
-//        }
-//
-//
-//    }
