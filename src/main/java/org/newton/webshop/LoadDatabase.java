@@ -26,6 +26,8 @@ class LoadDatabase {
 
 
         return args -> {
+            //todo sample data
+            /*
             Customer cust1 = new Customer("Förnamn", "Efternamn", "0701234567", "hej@hej.hej", "Testvägen", 1337, 41870, "Göteborg");
             log.info("Preloading " + customerRepository.save(cust1));
             Customer cust2 = new Customer("Hej", "Hejsson", "0701234567", "hej@hej.hej", "Testvägen", 13, 41870, "Göteborg");
@@ -49,6 +51,8 @@ class LoadDatabase {
             log.info("Preloading " + itemRepository.save(item1));
             log.info("Preloading " + itemRepository.save(item2));
             log.info("Preloading " + itemRepository.save(item3));
+
+             */
         };
     }
 }
