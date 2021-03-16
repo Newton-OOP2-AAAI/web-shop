@@ -1,8 +1,17 @@
 package org.newton.webshop.models;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Set;
 
 @Table(name = "products")
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Product {
     @Id
@@ -10,75 +19,21 @@ public class Product {
     @Column(name = "product_id")
     private Integer id;
 
-    @Column(name = "name")
+    @OneToMany(mappedBy = "product")
+    private Set<Inventory> inventory;
+
+    @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(name = "price")
-    private Integer price;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-    @Column(name = "category")
-    private String category;
+    @ManyToMany(mappedBy = "products")
+    private Set<Category> category;
 
-    @Column(name = "description")
+    @Column(nullable = false, length = 500)
     private String description;
 
-    public Product() {
-    }
-
-    public Product(String name, Integer price, String category, String description) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.description = description;
-
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", id=" + id +
-                '}';
-    }
+    @Column(nullable = false)
+    private Boolean visible;
 }
