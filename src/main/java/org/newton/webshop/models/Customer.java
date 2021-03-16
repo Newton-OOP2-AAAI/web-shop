@@ -1,153 +1,55 @@
 package org.newton.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Set;
+@Setter
+@Getter
+@NoArgsConstructor
 
 @Table(name = "customers")
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id")
-    private Integer id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name="uuid2", strategy="org.hibernate.id.UUIDGenerator")
+    @Column(name = "customer_id", length= 50, nullable = false)
+    private String id;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "customer")
     private Set<Cart> carts;
 
-    @Column(name = "firstname")
+    @OneToOne(mappedBy = "customer")
+    private Account account;
+
+    @Column(length=50,nullable = false)
     private String firstname;
 
-    @Column(name = "lastname")
+    @Column(length=50,nullable = false)
     private String lastname;
 
-    @Column(name = "phone")
+    @Column(length=50)
     private String phone;
 
-    @Column(name = "email")
+    @Column(length=50,nullable = false)
     private String email;
 
-    @Column(name = "streetname")
+    @Column(length=50,nullable = false)
     private String streetname;
 
-    @Column(name = "streetnumber")
+    @Column(length=50,nullable = false)
     private Integer streetnumber;
 
-    @Column(name = "zip_code")
-    private Integer zip_code;
+    @Column(length=50,nullable = false,name = "zip_code")
+    private Integer zipCode;
 
-    @Column(name = "city")
+    @Column(length=50,nullable = false)
     private String city;
 
-    public Customer() {
-    }
-
-    public Customer(String firstname, String lastname, String phone, String email, String streetname, Integer streetnumber, Integer zip_code, String city) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.phone = phone;
-        this.email = email;
-        this.streetname = streetname;
-        this.streetnumber = streetnumber;
-        this.zip_code = zip_code;
-        this.city = city;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getStreetname() {
-        return streetname;
-    }
-
-    public void setStreetname(String streetname) {
-        this.streetname = streetname;
-    }
-
-    public Integer getStreetnumber() {
-        return streetnumber;
-    }
-
-    public void setStreetnumber(Integer streetnumber) {
-        this.streetnumber = streetnumber;
-    }
-
-    public Integer getZip_code() {
-        return zip_code;
-    }
-
-    public void setZip_code(Integer zip_code) {
-        this.zip_code = zip_code;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public Set<Cart> getCarts() {
-        return carts;
-    }
-
-    public void setCarts(Set<Cart> carts) {
-        this.carts = carts;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", carts=" + carts +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", streetname='" + streetname + '\'' +
-                ", streetnumber=" + streetnumber +
-                ", zip_code=" + zip_code +
-                ", city='" + city + '\'' +
-                '}';
-    }
 }
