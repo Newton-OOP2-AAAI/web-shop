@@ -1,5 +1,6 @@
 package org.newton.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,13 +12,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "reviews")
 @Entity
 public class Review {
     @Id @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(length = 50)
     private String id;
 
-    @OneToOne(mappedBy = "review")
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
@@ -30,6 +34,6 @@ public class Review {
     @Column(nullable = false, length = 500)
     private String text;
 
-    @Column(nullable = false)
+    @Column(name = "review_date", nullable = false)
     private LocalDate reviewDate;
 }

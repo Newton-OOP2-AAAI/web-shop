@@ -2,93 +2,43 @@ package org.newton.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "items")
 @Entity
 public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
-    private Integer id;
+    @Id @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(length = 50)
+    private String id;
 
+    @OneToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @JsonManagedReference
-    @OneToOne
-    private Product product;
+    @OneToOne(mappedBy = "item")
+    private Review review;
 
-    @Column(name = "quantity")
+    @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "size")
+    @Column(length = 5)
     private String size;
 
-    public Item() {
-    }
-
-    public Item(Cart cart, Product product, Integer quantity, String size) {
-        this.cart = cart;
-        this.product = product;
-        this.quantity = quantity;
-        this.size = size;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", cart=" + cart +
-                ", product=" + product +
-                ", quantity=" + quantity +
-                ", size=" + size +
-                '}';
-    }
+    @Column(length = 50)
+    private String color;
 }
 
 
