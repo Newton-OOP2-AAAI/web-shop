@@ -1,7 +1,6 @@
 package org.newton.webshop.rest;
 
-import lombok.Getter;
-import lombok.Setter;
+
 import org.newton.webshop.exceptions.CustomerNotFoundException;
 import org.newton.webshop.models.Customer;
 import org.newton.webshop.repositories.CustomerRepository;
