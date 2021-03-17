@@ -1,5 +1,6 @@
 package org.newton.webshop.rest;
 
+
 import org.newton.webshop.exceptions.CustomerNotFoundException;
 import org.newton.webshop.models.Customer;
 import org.newton.webshop.repositories.CustomerRepository;
@@ -28,13 +29,13 @@ public class CustomerController {
     // Single item
 
     @GetMapping("/customers/{id}")
-    Customer one(@PathVariable Integer id) {
+    Customer one(@PathVariable String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
     }
 
     @PutMapping("/customers/{id}")
-    Customer replaceCustomer(@RequestBody Customer newCustomer, @PathVariable Integer id) {
+    Customer replaceCustomer(@RequestBody Customer newCustomer, @PathVariable String id) {
 
         return repository.findById(id)
                 .map(customer -> {
@@ -44,7 +45,7 @@ public class CustomerController {
                     customer.setEmail(newCustomer.getEmail());
                     customer.setStreetname(newCustomer.getStreetname());
                     customer.setStreetnumber(newCustomer.getStreetnumber());
-                    customer.setZip_code(newCustomer.getZip_code());
+                    customer.setZipCode(newCustomer.getZipCode());
                     customer.setCity(newCustomer.getCity());
                     customer.setCarts(newCustomer.getCarts());
                     return repository.save(customer);
@@ -56,7 +57,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customers/{id}")
-    void deleteCustomer(@PathVariable Integer id) {
+    void deleteCustomer(@PathVariable String id) {
         repository.deleteById(id);
     }
 }
