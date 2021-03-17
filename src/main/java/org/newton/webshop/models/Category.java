@@ -1,7 +1,5 @@
 package org.newton.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +20,7 @@ public class Category {
     private Integer id;
 
     @ManyToMany
-    @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "category_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "product_id", nullable = false))
     private Set<Product> products;
 
     @Column(length = 30)

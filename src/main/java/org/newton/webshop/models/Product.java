@@ -28,7 +28,8 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany
+    @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "product_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false))
     private Set<Category> category;
 
     @Column(nullable = false, length = 500)
