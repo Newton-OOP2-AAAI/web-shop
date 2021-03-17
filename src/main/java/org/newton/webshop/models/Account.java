@@ -18,24 +18,24 @@ public class Account {
 
     @Id
     @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name="uuid2", strategy="org.hibernate.id.UUIDGenerator")
-    @Column(name = "account_id", length= 50, nullable = false)
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "account_id", length = 50, nullable = false)
     private String id;
 
     @OneToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Column(length=50,nullable = false)
+    @Column(length = 50, nullable = false)
     private String username;
 
-    @Column(length=50,nullable = false)
+    @Column(length = 50, nullable = false)
     private String password;
 
-    @Column(name = "create_date",nullable = false)
+    @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
 
-    @Column(name = "birth_date",nullable = false)
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
 

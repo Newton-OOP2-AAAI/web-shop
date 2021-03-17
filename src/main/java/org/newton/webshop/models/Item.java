@@ -15,7 +15,8 @@ import javax.persistence.*;
 @Table(name = "items")
 @Entity
 public class Item {
-    @Id @GeneratedValue(generator = "uuid2")
+    @Id
+    @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length = 50)
     private String id;
