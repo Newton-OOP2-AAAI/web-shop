@@ -15,7 +15,8 @@ import java.time.LocalDate;
 @Table(name = "reviews")
 @Entity
 public class Review {
-    @Id @GeneratedValue(generator = "uuid2")
+    @Id
+    @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length = 50)
     private String id;
