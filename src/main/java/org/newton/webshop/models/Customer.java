@@ -13,7 +13,6 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
-
 @Table(name = "customers")
 @Entity
 public class Customer {
@@ -23,8 +22,8 @@ public class Customer {
     @Column(name = "customer_id", length = 50, nullable = false)
     private String id;
 
-    @OneToMany(mappedBy = "customer")
-    private Set<Cart> carts;
+    @OneToOne(mappedBy = "customer")
+    private Cart cart;
 
     @OneToOne(mappedBy = "customer")
     private Account account;
@@ -35,7 +34,7 @@ public class Customer {
     @Column(length = 50, nullable = false)
     private String lastname;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String phone;
 
     @Column(length = 50, nullable = false)
