@@ -53,6 +53,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, error, e));
     }
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(OrderNotFoundException e) {
+        String error = "Could not retrieve resource";
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, error, e));
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(AccountNotFoundException e) {
+        String error = "Could not retrieve resource";
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, error, e));
+    }
+
 
     public Exception throwException(Exception e) {
         return throwException(e);

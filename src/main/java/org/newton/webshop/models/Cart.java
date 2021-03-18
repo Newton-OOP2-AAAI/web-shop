@@ -20,17 +20,18 @@ public class Cart {
     @Column(name = "cart_id", length = 50, nullable = false)
     private String id;
 
-
     @OneToMany(cascade = CascadeType.ALL,
             orphanRemoval = true,
             mappedBy = "cart")
     @JsonIgnore
     private Set<Item> items;
 
-
     @OneToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    @OneToOne(mappedBy = "cart")
+    private Order order;
 
 }
 
