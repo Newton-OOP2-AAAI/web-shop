@@ -36,13 +36,13 @@ public class CartController {
      * @return Instance of cart
      */
     @GetMapping("/carts/{id}")
-    Cart one(@PathVariable Integer id) {
+    Cart one(@PathVariable String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new CartNotFoundException(id));
     }
 
     @PutMapping("/carts/{id}")
-    Cart replaceCart(@RequestBody Cart newCart, @PathVariable Integer id) {
+    Cart replaceCart(@RequestBody Cart newCart, @PathVariable String id) {
 
         return repository.findById(id)
                 .map(cart -> {
@@ -57,7 +57,7 @@ public class CartController {
     }
 
     @DeleteMapping("/carts/{id}")
-    void deleteCart(@PathVariable Integer id) {
+    void deleteCart(@PathVariable String id) {
         repository.deleteById(id);
     }
 }

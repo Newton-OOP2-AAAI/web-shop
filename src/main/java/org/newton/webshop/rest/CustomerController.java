@@ -47,7 +47,7 @@ public class CustomerController {
                     customer.setStreetnumber(newCustomer.getStreetnumber());
                     customer.setZipCode(newCustomer.getZipCode());
                     customer.setCity(newCustomer.getCity());
-                    customer.setCarts(newCustomer.getCarts());
+                    customer.setCart(newCustomer.getCart());
                     return repository.save(customer);
                 })
                 .orElseGet(() -> {
