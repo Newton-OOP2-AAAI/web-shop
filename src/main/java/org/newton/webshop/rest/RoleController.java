@@ -3,6 +3,7 @@ package org.newton.webshop.rest;
 import org.newton.webshop.exceptions.RoleNotFoundException;
 import org.newton.webshop.models.Role;
 import org.newton.webshop.repositories.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public class RoleController {
     private final RoleRepository repository;
 
+    @Autowired
     RoleController(RoleRepository repository) {
         this.repository = repository;
     }
