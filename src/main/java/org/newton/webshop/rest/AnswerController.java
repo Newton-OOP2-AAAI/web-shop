@@ -17,7 +17,7 @@ public class AnswerController {
         this.repository = repository;
     }
 
-    @GetMapping("answers")
+    @GetMapping("/answers")
     public List<Answer> all() {
         return repository.findAll();
     }
