@@ -1,20 +1,16 @@
 package org.newton.webshop;
 
-import org.newton.webshop.models.Cart;
-import org.newton.webshop.models.Customer;
-import org.newton.webshop.models.Item;
-import org.newton.webshop.models.Product;
-import org.newton.webshop.repositories.CartRepository;
-import org.newton.webshop.repositories.CustomerRepository;
-import org.newton.webshop.repositories.ItemRepository;
-import org.newton.webshop.repositories.ProductRepository;
+import org.newton.webshop.models.*;
+import org.newton.webshop.repositories.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Configuration
 class LoadDatabase {
@@ -22,10 +18,43 @@ class LoadDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
     @Bean
-    CommandLineRunner InitDatabase(ProductRepository productRepository, CustomerRepository customerRepository, CartRepository cartRepository, ItemRepository itemRepository) {
+    CommandLineRunner InitDatabase(
+            ProductRepository productRepository,
+            CustomerRepository customerRepository,
+            CartRepository cartRepository,
+            ItemRepository itemRepository,
+            CategoryRepository categoryRepository
+    ) {
 
 
         return args -> {
+            Category category = new Category();
+            category.setName("Pants");
+            category.setChildCategories(new HashSet<>());
+            category.setParentCategories(new HashSet<>());
+
+            Category childCategory = new Category();
+            childCategory.setName("Jeans");
+            childCategory.setChildCategories(new HashSet<>());
+            childCategory.setParentCategories(new HashSet<>());
+
+            Category parentCategory = new Category();
+            parentCategory.setName("Clothes");
+            parentCategory.setChildCategories(new HashSet<>());
+            parentCategory.setParentCategories(new HashSet<>());
+
+            log.info("Preloading " + categoryRepository.save(childCategory));
+            log.info("Preloading " + categoryRepository.save(parentCategory));
+
+            category.addChildCategory(childCategory);
+            category.addParentCategory(parentCategory);
+
+            log.info("Preloading " + categoryRepository.save(category));
+
+
+
+
+
             //todo sample data
             /*
             Customer cust1 = new Customer("Förnamn", "Efternamn", "0701234567", "hej@hej.hej", "Testvägen", 1337, 41870, "Göteborg");
