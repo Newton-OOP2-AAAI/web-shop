@@ -47,7 +47,7 @@ public class Category {
     }
 
     /**
-     * Adds a parent category and corresponding child category, from the perspective of the instance invoking the method.
+     * Bidirectional utility method to add a parent category.
      *
      * @param parentCategory the parent category
      */
@@ -57,7 +57,7 @@ public class Category {
     }
 
     /**
-     * Removes a parent category and corresponding child category, from the perspective of the instance invoking the method.
+     * Bidirectional utility method to remove the parent category.
      *
      * @param parentCategory the parent category
      */
@@ -67,7 +67,7 @@ public class Category {
     }
 
     /**
-     * Adds a child category and corresponding parent category, from the perspective of the instance invoking the method.
+     * Bidirectional utility method to add a child category.
      *
      * @param childCategory the child category
      */
@@ -77,13 +77,34 @@ public class Category {
     }
 
     /**
-     * Removes a child category and corresponding parent category, from the perspective of the instance invoking the method.
+     * Bidirectional utility method to remove a child category.
      *
      * @param childCategory the child category
      */
     public void removeChildCategory(Category childCategory) {
         this.childCategories.remove(childCategory);
         childCategory.setParentCategory(null);
+    }
+
+    /**
+     * //todo revisit helper methods
+     * Bidirectional utility method to add a product to a category.
+     *
+     * @param product
+     */
+    public void addProduct(Product product) {
+        this.products.add(product);
+        product.getCategory().add(this);
+    }
+
+    /**
+     * Bidirectional utility method to remove a product from a category.
+     *
+     * @param product
+     */
+    public void removeProduct(Product product) {
+        this.products.remove(product);
+        product.getCategory().remove(this);
     }
 }
 

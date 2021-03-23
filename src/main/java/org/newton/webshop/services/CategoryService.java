@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
@@ -17,8 +15,8 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> findAll() {
-        return (List<Category>) categoryRepository.findAll();
+    public Iterable<Category> findAll() {
+        return categoryRepository.findAll();
     }
 
     public Category findById(String id) {
@@ -28,6 +26,4 @@ public class CategoryService {
     public Category addCategory(@RequestBody Category newCategory) {
         return categoryRepository.save(newCategory);
     }
-
-
 }
