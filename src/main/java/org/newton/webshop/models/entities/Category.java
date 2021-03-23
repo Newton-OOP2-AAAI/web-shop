@@ -1,48 +1,40 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerator;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.models.Product;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Table(name = "categories")
-//@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(length = 36, nullable = false)
+    private String id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "category_parent_categories",
-            joinColumns = @JoinColumn(name = "parent_category_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "child_category_id", nullable = false)
-    )
-    private Set<Category> parentCategories;
+    @Column(length = 30)
+    private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "category_parent_categories",
-            joinColumns = @JoinColumn(name = "child_category_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "parent_category_id", nullable = false)
-    )
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category parentCategory;
+
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentCategory")
     private Set<Category> childCategories;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "categories_products",
             joinColumns = @JoinColumn(name = "category_id", nullable = false),
@@ -50,48 +42,48 @@ public class Category {
     )
     private Set<Product> products;
 
-    @Column(length = 30)
-    private String name;
-
     public Category() {
-        childCategories = new HashSet<>();
-        parentCategories = new HashSet<>();
+        this.childCategories = new HashSet<>();
     }
 
     /**
      * Adds a parent category and corresponding child category, from the perspective of the instance invoking the method.
+     *
      * @param parentCategory the parent category
      */
     public void addParentCategory(Category parentCategory) {
-        this.parentCategories.add(parentCategory);
+        this.parentCategory = parentCategory;
         parentCategory.getChildCategories().add(this);
     }
 
     /**
      * Removes a parent category and corresponding child category, from the perspective of the instance invoking the method.
+     *
      * @param parentCategory the parent category
      */
     public void removeParentCategory(Category parentCategory) {
-        this.parentCategories.remove(parentCategory);
+        this.parentCategory = null;
         parentCategory.getChildCategories().remove(this);
     }
 
     /**
      * Adds a child category and corresponding parent category, from the perspective of the instance invoking the method.
+     *
      * @param childCategory the child category
      */
     public void addChildCategory(Category childCategory) {
         this.childCategories.add(childCategory);
-        childCategory.getParentCategories().add(this);
+        childCategory.setParentCategory(this);
     }
 
     /**
      * Removes a child category and corresponding parent category, from the perspective of the instance invoking the method.
+     *
      * @param childCategory the child category
      */
     public void removeChildCategory(Category childCategory) {
         this.childCategories.remove(childCategory);
-        childCategory.getParentCategories().remove(this);
+        childCategory.setParentCategory(null);
     }
 }
 
