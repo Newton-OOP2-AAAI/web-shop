@@ -35,6 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String error = "Could not retrieve resource";
         return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, error, e));
     }
+
     @ExceptionHandler(EmployeeNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(EmployeeNotFoundException e) {
         String error = "Could not retrieve resource";

@@ -4,6 +4,7 @@ import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -17,13 +18,12 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    Iterable<Category> all() {
+    Iterable<Category> findAll() {
         return categoryService.findAll();
     }
 
     @GetMapping
-    @ResponseBody
-    Category one(@RequestParam String id) {
+    Category findById(@RequestParam String id) {
         return categoryService.findById(id);
     }
 
