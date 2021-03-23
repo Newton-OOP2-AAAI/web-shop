@@ -1,9 +1,10 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.models.Customer;
 
 import javax.persistence.*;
 
@@ -19,7 +20,7 @@ public class Account {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "account_id", length = 50, nullable = false)
+    @Column( length = 36, nullable = false)
     private String id;
 
     @OneToOne
