@@ -1,9 +1,10 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -14,16 +15,16 @@ import javax.persistence.*;
 @Entity
 public class Question {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(length = 36, nullable = false)
+    private String id;
 
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "answer_id")
-    private Answer answers;
+    private Answer answer;
 
     @Column(length = 50, nullable = false)
     private String text;
-
 }

@@ -1,54 +1,43 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.exceptions.QuestionNotFoundException;
-import org.newton.webshop.models.Question;
-import org.newton.webshop.repositories.QuestionRepository;
+import org.newton.webshop.models.entities.Question;
+import org.newton.webshop.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
+@RequestMapping("/questions")
 public class QuestionController {
-    private final QuestionRepository repository;
+    private final QuestionService questionService;
 
     @Autowired
-    QuestionController(QuestionRepository repository) {
-        this.repository = repository;
+    public QuestionController(QuestionService questionService) {
+        this.questionService = questionService;
     }
 
-    @GetMapping("/questions")
-    public List<Question> all() {
-        return repository.findAll();
+    @GetMapping("/all")
+    public Iterable<Question> findAll() {
+        return questionService.findAll();
     }
 
-    @PostMapping("/questions")
+    @PostMapping()
     Question newQuestion(@RequestBody Question newQuestion) {
-        return repository.save(newQuestion);
+        return questionService.createQuestion(newQuestion);
     }
 
-    @GetMapping("/questions/{id}")
-    Question one(@PathVariable Integer id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new QuestionNotFoundException(id));
+    @GetMapping
+    Question findById(@RequestParam String id) {
+        return questionService.findById(id);
     }
 
-    @PutMapping("/questions/{id}")
-    Question replaceQuestion(@RequestBody Question newQuestion, @PathVariable Integer id) {
+    @PutMapping
+    Question replace(@RequestBody Question newQuestion, @RequestParam String id) {
 
-        return repository.findById(id)
-                .map(question -> {
-                    question.setText(newQuestion.getText());
-                    return repository.save(question);
-                })
-                .orElseGet(() -> {
-                    newQuestion.setId(id);
-                    return repository.save(newQuestion);
-                });
+        return questionService.replaceQuestion(newQuestion, id);
     }
 
-    @DeleteMapping("/questions/{id}")
-    void deleteEmployee(@PathVariable Integer id) {
-        repository.deleteById(id);
+    @DeleteMapping
+    void delete(@PathVariable String id) {
+        questionService.deleteById(id);
     }
 }
