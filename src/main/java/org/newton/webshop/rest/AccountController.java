@@ -1,7 +1,6 @@
 package org.newton.webshop.rest;
 
 
-
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
