@@ -1,11 +1,9 @@
 package org.newton.webshop.rest;
 
 import org.newton.webshop.exceptions.OrderNotFoundException;
-import org.newton.webshop.models.Order;
+import org.newton.webshop.models.entities.Order;
 import org.newton.webshop.repositories.OrderRepository;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class OrderController {
@@ -16,7 +14,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    List<Order> all() {
+    Iterable<Order> all() {
         return repository.findAll();
     }
 
