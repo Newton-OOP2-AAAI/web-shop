@@ -1,60 +1,48 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.exceptions.ProductNotFoundException;
 import org.newton.webshop.models.Product;
-import org.newton.webshop.repositories.ProductRepository;
+import org.newton.webshop.models.entities.Category;
+import org.newton.webshop.services.CategoryService;
+import org.newton.webshop.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
+@RequestMapping("/product")
 public class ProductController {
+    private final ProductService productService;
+    private final CategoryService categoryService;
 
-    private final ProductRepository repository;
-
-    ProductController(ProductRepository repository) {
-        this.repository = repository;
+    @Autowired
+    public ProductController(ProductService productService, CategoryService categoryService) {
+        this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/products")
-    List<Product> all() {
-        return repository.findAll();
+    Iterable<Product> all() {
+        return productService.findAll();
     }
 
-    @PostMapping("/products")
+    @PostMapping()
     Product newProduct(@RequestBody Product newProduct) {
-        return repository.save(newProduct);
+        return productService.addProduct(newProduct);
     }
-
-    // Single item
 
     @GetMapping("/products/{id}")
-    Product one(@PathVariable Integer id) {
-
-        return repository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException(id));
+    @ResponseBody
+    Product one(@PathVariable String id) {
+        return productService.findById(id);
     }
 
-    @PutMapping("/products/{id}")
-    Product replaceProduct(@RequestBody Product newProduct, @PathVariable Integer id) {
-
-        return repository.findById(id)
-                .map(product -> {
-                    product.setName(newProduct.getName());
-                    product.setPrice(newProduct.getPrice());
-                    product.setCategory(newProduct.getCategory());
-                    product.setDescription(newProduct.getDescription());
-                    return repository.save(product);
-                })
-                .orElseGet(() -> {
-                    newProduct.setId(id);
-                    return repository.save(newProduct);
-                });
+    @PostMapping
+    public Category addCategory(@RequestBody Category newCategory) {
+        return categoryService.addCategory(newCategory);
     }
 
-    @DeleteMapping("/products/{id}")
-    void deleteProduct(@PathVariable Integer id) {
-        repository.deleteById(id);
+    @PostMapping
+    public Category removeCategory(@RequestBody Category delCategory) {
+        return categoryService.removeCategory(delCategory);
     }
-
 }
+

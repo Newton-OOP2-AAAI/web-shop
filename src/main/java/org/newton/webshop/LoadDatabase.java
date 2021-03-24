@@ -1,18 +1,11 @@
 package org.newton.webshop;
 
-import org.newton.webshop.models.*;
-import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.repositories.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Configuration
 class LoadDatabase {
