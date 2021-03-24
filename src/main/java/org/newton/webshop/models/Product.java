@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.newton.webshop.models.entities.Category;
+import org.newton.webshop.models.entities.Inventory;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
