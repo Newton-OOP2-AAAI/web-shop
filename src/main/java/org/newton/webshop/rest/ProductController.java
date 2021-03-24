@@ -1,6 +1,6 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.models.Product;
+import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.services.CategoryService;
 import org.newton.webshop.services.ProductService;

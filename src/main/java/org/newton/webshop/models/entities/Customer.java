@@ -1,4 +1,4 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
 
 import lombok.Getter;
@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.models.entities.Address;
+import org.newton.webshop.models.entities.Cart;
 
 import javax.persistence.*;
 

@@ -1,4 +1,4 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

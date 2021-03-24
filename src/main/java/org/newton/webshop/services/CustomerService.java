@@ -1,6 +1,6 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.Customer;
+import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

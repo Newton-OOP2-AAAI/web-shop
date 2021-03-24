@@ -1,7 +1,7 @@
 package org.newton.webshop.rest;
 
 import org.newton.webshop.exceptions.ItemNotFoundException;
-import org.newton.webshop.models.Item;
+import org.newton.webshop.models.entities.Item;
 import org.newton.webshop.repositories.ItemRepository;
 import org.springframework.web.bind.annotation.*;
 

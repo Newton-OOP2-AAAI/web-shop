@@ -1,6 +1,6 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.models.Customer;
+import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
