@@ -1,8 +1,10 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.models.entities.Question;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -14,11 +16,12 @@ import java.util.Set;
 @Entity
 public class Answer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(length = 36, nullable = false)
+    private String id;
 
-    @OneToMany(mappedBy = "answers")
+    @OneToMany(mappedBy = "answer")
     private Set<Question> questions;
 
     @Column(length = 500, nullable = false)
@@ -26,5 +29,4 @@ public class Answer {
 
     @Column(length = 50, nullable = false)
     private String description;
-
 }

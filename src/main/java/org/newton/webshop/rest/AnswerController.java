@@ -1,55 +1,43 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.exceptions.AnswerNotFoundException;
-import org.newton.webshop.models.Answer;
-import org.newton.webshop.repositories.AnswerRepository;
+import org.newton.webshop.models.entities.Answer;
+import org.newton.webshop.services.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
+@RequestMapping("/answers")
 public class AnswerController {
-    private final AnswerRepository repository;
+    private final AnswerService answerService;
 
     @Autowired
-    AnswerController(AnswerRepository repository) {
-        this.repository = repository;
+    public AnswerController(AnswerService answerService) {
+        this.answerService = answerService;
     }
 
-    @GetMapping("/answers")
-    public List<Answer> all() {
-        return repository.findAll();
+    @GetMapping("/all")
+    public Iterable<Answer> findAll() {
+        return answerService.findAll();
     }
 
-    @PostMapping("/answers")
-    Answer newAnswer(@RequestBody Answer newAnswer) {
-        return repository.save(newAnswer);
+    @GetMapping
+    Answer findById(@RequestParam String id) {
+        return answerService.findById(id);
     }
 
-    @GetMapping("/answers/{id}")
-    Answer one(@PathVariable Integer id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new AnswerNotFoundException(id));
+    @PostMapping
+    Answer create(@RequestBody Answer newAnswer) {
+        return answerService.save(newAnswer);
     }
 
-    @PutMapping("/answers/{id}")
-    Answer replaceAnswer(@RequestBody Answer newAnswer, @PathVariable Integer id) {
-
-        return repository.findById(id)
-                .map(answer -> {
-                    answer.setText(newAnswer.getText());
-                    return repository.save(answer);
-                })
-                .orElseGet(() -> {
-                    newAnswer.setId(id);
-                    return repository.save(newAnswer);
-                });
+    @PutMapping
+    Answer replace(@RequestBody Answer newAnswer, @RequestParam String id) {
+        return answerService.replaceAnswer(newAnswer, id);
     }
 
-    @DeleteMapping("/answers/{id}")
-    void deleteEmployee(@PathVariable Integer id) {
-        repository.deleteById(id);
+    @DeleteMapping
+    void deleteEmployee(@RequestParam String id) {
+        answerService.deleteById(id);
     }
 }
 

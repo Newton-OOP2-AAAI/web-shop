@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,27 +30,38 @@ class LoadDatabase {
 
 
         return args -> {
-            /**
-             * Sample data for three categories
-             */
-//            Category middleCategory = new Category();
-//            middleCategory.setName("Pants");
+//            /**
+//             * Sample data for three categories
+//             */
+//            Category pantsCategory = new Category();
+//            pantsCategory.setName("Pants");
 //
-//            Category childCategory = new Category();
-//            childCategory.setName("Jeans");
+//            Category jeansCategory = new Category();
+//            jeansCategory.setName("Jeans");
 //
-//            Category parentCategory = new Category();
-//            parentCategory.setName("Clothes");
+//            Category clothesCategory = new Category();
+//            clothesCategory.setName("Clothes");
 //
-//            log.info("Preloading " + categoryRepository.save(childCategory));
-//            log.info("Preloading " + categoryRepository.save(parentCategory));
-//            log.info("Preloading " + categoryRepository.save(middleCategory));
+//            log.info("Preloading " + categoryRepository.save(jeansCategory));
+//            log.info("Preloading " + categoryRepository.save(clothesCategory));
+//            log.info("Preloading " + categoryRepository.save(pantsCategory));
 //
-//            childCategory.addParentCategory(middleCategory);
-//            middleCategory.addParentCategory(parentCategory);
+//            jeansCategory.addParentCategory(pantsCategory);
+//            pantsCategory.addParentCategory(clothesCategory);
 //
-//            log.info("Preloading " + categoryRepository.save(childCategory));
-//            log.info("Preloading " + categoryRepository.save(middleCategory));
+//            log.info("Preloading " + categoryRepository.save(jeansCategory));
+//            log.info("Preloading " + categoryRepository.save(pantsCategory));
+//
+//            /**
+//             * Sample data for two products (doesn't work rn)
+//             */
+//            Product levisJeans = new Product();
+//            levisJeans.setDescription("Cool Levis jeans in a traditional style!");
+//            levisJeans.setName("Levis Jeans");
+//            levisJeans.setPrice(new BigDecimal("1000.00"));
+//            levisJeans.setVisible(true);
+//
+//            jeansCategory.addProduct(levisJeans);
         };
     }
 }

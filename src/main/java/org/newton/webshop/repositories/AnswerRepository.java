@@ -1,7 +1,8 @@
 package org.newton.webshop.repositories;
 
-import org.newton.webshop.models.Answer;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.newton.webshop.models.entities.Answer;
+import org.springframework.data.repository.CrudRepository;
 
-public interface AnswerRepository extends JpaRepository<Answer, Integer> {
+public interface AnswerRepository extends CrudRepository<Answer, String> {
+
 }
