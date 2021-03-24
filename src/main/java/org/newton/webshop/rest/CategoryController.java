@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -30,5 +31,10 @@ public class CategoryController {
     @PostMapping
     public Category addCategory(@RequestBody Category newCategory) {
         return categoryService.addCategory(newCategory);
+    }
+
+    @DeleteMapping
+    public Category removeCategory(@RequestBody Category delCategory) {
+        return categoryService.removeCategory(delCategory);
     }
 }
