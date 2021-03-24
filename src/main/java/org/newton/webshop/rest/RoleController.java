@@ -1,58 +1,34 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.exceptions.RoleNotFoundException;
-import org.newton.webshop.models.Role;
-import org.newton.webshop.repositories.RoleRepository;
+import org.newton.webshop.models.entities.Role;
+import org.newton.webshop.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
+@RequestMapping("/roles")
 public class RoleController {
-    private final RoleRepository repository;
+    private final RoleService roleService;
 
     @Autowired
-    RoleController(RoleRepository repository) {
-        this.repository = repository;
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
     }
 
-    @GetMapping("/roles")
-    public List<Role> all() {
-        return repository.findAll();
+    @GetMapping("/all")
+    public Iterable<Role> all() {
+        return roleService.findAll();
     }
 
-    @PostMapping("/roles")
-    Role newRole(@RequestBody Role newRole) {
-        return repository.save(newRole);
+    @GetMapping
+    @ResponseBody
+    public Role one(@RequestParam String id) {
+        return roleService.findById(id);
     }
 
-    @GetMapping("/roles/{id}")
-    Role one(@PathVariable String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RoleNotFoundException(id));
-    }
-
-    @PutMapping("/roles/{id}")
-    Role replaceRole(@RequestBody Role newRole, @PathVariable String id) {
-
-        return repository.findById(id)
-                .map(role -> {
-                    role.setEmployees(newRole.getEmployees());
-                    role.setEmployee(newRole.getEmployee());
-                    role.setChatbot(newRole.getChatbot());
-                    role.setCategories(newRole.getCategories());
-                    role.setProducts(newRole.getProducts());
-                    return repository.save(role);
-                })
-                .orElseGet(() -> {
-                    newRole.setId(id);
-                    return repository.save(newRole);
-                });
-    }
-
-    @DeleteMapping("/roles/{id}")
-    void deleteEmployee(@PathVariable String id) {
-        repository.deleteById(id);
+    @PostMapping
+    public Role addRole(@RequestBody Role newRole) {
+        return roleService.addRole(newRole);
     }
 }

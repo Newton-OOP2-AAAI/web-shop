@@ -1,4 +1,4 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,7 +19,7 @@ public class Employee {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(length = 50, nullable = false)
+    @Column(length = 36, nullable = false)
     private String id;
 
     @ManyToOne
@@ -39,17 +39,8 @@ public class Employee {
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(length = 50, nullable = false)
-    private String streetName;
-
-    @Column(length = 50, nullable = false)
-    private String streetNumber;
-
-    @Column(name = "zip_code", length = 50, nullable = false)
-    private String zipCode;
-
-    @Column(length = 50, nullable = false)
-    private String city;
+    @Embedded
+    private Address address;
 
     @Column(length = 50, nullable = false)
     private String username;

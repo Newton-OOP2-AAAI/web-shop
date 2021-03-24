@@ -1,7 +1,7 @@
 package org.newton.webshop.repositories;
 
-import org.newton.webshop.models.Employee;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.newton.webshop.models.entities.Employee;
+import org.springframework.data.repository.CrudRepository;
 
-public interface EmployeeRepository extends JpaRepository<Employee, String> {
+public interface EmployeeRepository extends CrudRepository<Employee, String> {
 }

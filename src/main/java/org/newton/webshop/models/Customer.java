@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.newton.webshop.models.entities.Account;
+import org.newton.webshop.models.entities.Address;
 
 import javax.persistence.*;
 
@@ -40,16 +41,6 @@ public class Customer {
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(length = 50, nullable = false)
-    private String streetname;
-
-    @Column(length = 50, nullable = false)
-    private Integer streetnumber;
-
-    @Column(length = 50, nullable = false, name = "zip_code")
-    private Integer zipCode;
-
-    @Column(length = 50, nullable = false)
-    private String city;
-
+    @Embedded
+    private Address address;
 }
