@@ -18,7 +18,7 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    Iterable<Category> findAll() {
+    List<Category> findAll() {
         return categoryService.findAll();
     }
 
