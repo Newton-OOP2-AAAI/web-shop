@@ -3,56 +3,46 @@ package org.newton.webshop.rest;
 import org.newton.webshop.exceptions.ItemNotFoundException;
 import org.newton.webshop.models.entities.Item;
 import org.newton.webshop.repositories.ItemRepository;
+import org.newton.webshop.services.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/items")
 public class ItemController {
-    private final ItemRepository repository;
+    private final ItemService itemService;
 
-    ItemController(ItemRepository repository) {
-        this.repository = repository;
+    @Autowired
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
     }
 
-    @GetMapping("/items")
+    @GetMapping("/all")
     List<Item> all() {
-        return repository.findAll();
+        return itemService.findAll();
     }
 
-    @PostMapping("/items")
+    @PostMapping
     Item newItem(@RequestBody Item newItem) {
-        return repository.save(newItem);
+        return itemService.newItem(newItem);
     }
 
     // Single item
 
-    @GetMapping("/items/{id}")
-    Item one(@PathVariable String id) {
-
-        return repository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException(id));
+    @GetMapping
+    Item one(@RequestParam String id) {
+        return itemService.findById(id);
     }
 
-    @PutMapping("/items/{id}")
-    Item replaceItem(@RequestBody Item newItem, @PathVariable String id) {
-
-        return repository.findById(id)
-                .map(item -> {
-                    item.setCart(newItem.getCart());
-                    item.setProduct(newItem.getProduct());
-                    item.setQuantity(newItem.getQuantity());
-                    item.setSize(newItem.getSize());
-                    return repository.save(item);
-                })
-                .orElseGet(() -> {
-                    newItem.setId(id);
-                    return repository.save(newItem);
-                });
+    @PutMapping
+    Item replaceItem(@RequestBody Item newItem, @RequestParam String id) {
+        return itemService.replaceItem(newItem, id);
     }
 
-    @DeleteMapping("/items/{id}")
-    void deleteItem(@PathVariable String id) {
-        repository.deleteById(id);
+    @DeleteMapping
+    void deleteItem(@RequestParam String id) {
+        itemService.deleteItemById(id);
     }
 }
