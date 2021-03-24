@@ -18,7 +18,7 @@ public class Order {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "order_id", length = 50, nullable = false)
+    @Column(length = 36, nullable = false)
     private String id;
 
     @Column(name = "order_on", nullable = false)

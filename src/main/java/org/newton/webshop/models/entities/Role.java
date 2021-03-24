@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.newton.webshop.models.entities.Employee;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -36,5 +35,4 @@ public class Role {
 
     @Column(nullable = false)
     private Boolean products;
-
 }
