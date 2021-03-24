@@ -1,6 +1,6 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.Product;
+import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

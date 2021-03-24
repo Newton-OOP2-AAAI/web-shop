@@ -1,7 +1,7 @@
 package org.newton.webshop.rest;
 
 import org.newton.webshop.exceptions.CartNotFoundException;
-import org.newton.webshop.models.Cart;
+import org.newton.webshop.models.entities.Cart;
 import org.newton.webshop.repositories.CartRepository;
 import org.springframework.web.bind.annotation.*;
 

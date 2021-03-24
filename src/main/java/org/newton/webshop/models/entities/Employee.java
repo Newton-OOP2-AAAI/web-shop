@@ -1,32 +1,31 @@
-package org.newton.webshop.models;
+package org.newton.webshop.models.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.newton.webshop.models.entities.Account;
 
 import javax.persistence.*;
 
 
+@NoArgsConstructor
 @Setter
 @Getter
-@NoArgsConstructor
-@Table(name = "customers")
+@Table(name = "employees")
 @Entity
-public class Customer {
+public class Employee {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length = 36, nullable = false)
     private String id;
 
-    @OneToOne(mappedBy = "customer")
-    private Cart cart;
-
-    @OneToOne(mappedBy = "customer")
-    private Account account;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Column(length = 50, nullable = false)
     private String firstname;
@@ -34,22 +33,19 @@ public class Customer {
     @Column(length = 50, nullable = false)
     private String lastname;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50)
     private String phone;
 
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(length = 50, nullable = false)
-    private String streetname;
+    @Embedded
+    private Address address;
 
     @Column(length = 50, nullable = false)
-    private Integer streetnumber;
-
-    @Column(length = 50, nullable = false, name = "zip_code")
-    private Integer zipCode;
+    private String username;
 
     @Column(length = 50, nullable = false)
-    private String city;
+    private String password;
 
 }
