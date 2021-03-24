@@ -1,15 +1,23 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.models.Customer;
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.repositories.AccountRepository;
+import org.newton.webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
+
 @Component
 public class AccountService {
+
     private final AccountRepository accountRepository;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Autowired
     public AccountService(AccountRepository accountRepository) {
@@ -24,8 +32,16 @@ public class AccountService {
         return accountRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public Account addAccount(@RequestBody Account newAccount) {
-        return accountRepository.save(newAccount);
+    public Account addAccount(String customerId, Account newAccount) {
+        return customerRepository.findById(customerId)
+                .map(customer -> {
+                    newAccount.setCustomer(customer);
+                    return accountRepository.save(newAccount);
+                }).orElseThrow(RuntimeException::new);
     }
 
+    public void deleteById(String id) {
+
+        accountRepository.deleteById(id);
+    }
 }

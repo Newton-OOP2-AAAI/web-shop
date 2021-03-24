@@ -20,7 +20,7 @@ public class Account {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column( length = 36, nullable = false)
+    @Column(length = 36, nullable = false)
     private String id;
 
     @OneToOne
