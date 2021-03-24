@@ -5,6 +5,8 @@ import org.newton.webshop.services.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/answers")
 public class AnswerController {
@@ -16,7 +18,7 @@ public class AnswerController {
     }
 
     @GetMapping("/all")
-    public Iterable<Answer> findAll() {
+    public List<Answer> findAll() {
         return answerService.findAll();
     }
 

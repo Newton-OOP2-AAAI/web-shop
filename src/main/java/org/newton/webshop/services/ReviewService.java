@@ -5,6 +5,8 @@ import org.newton.webshop.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ReviewService {
     private final ReviewRepository reviewRepository;
@@ -14,7 +16,7 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public Iterable<Review> findAll() {
+    public List<Review> findAll() {
         return reviewRepository.findAll();
     }
 

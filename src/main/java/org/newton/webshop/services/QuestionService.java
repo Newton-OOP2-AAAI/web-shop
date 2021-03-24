@@ -6,6 +6,8 @@ import org.newton.webshop.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class QuestionService {
     private final QuestionRepository questionRepository;
@@ -15,7 +17,7 @@ public class QuestionService {
         this.questionRepository = repository;
     }
 
-    public Iterable<Question> findAll() {
+    public List<Question> findAll() {
         return questionRepository.findAll();
     }
 

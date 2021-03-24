@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
@@ -19,7 +21,7 @@ public class ReviewController {
     }
 
     @GetMapping("/all")
-    public Iterable<Review> findAll() {
+    public List<Review> findAll() {
         return reviewService.findAll();
     }
 
