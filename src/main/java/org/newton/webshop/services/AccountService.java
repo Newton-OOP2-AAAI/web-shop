@@ -1,15 +1,13 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.Customer;
+
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.repositories.AccountRepository;
 import org.newton.webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class AccountService {

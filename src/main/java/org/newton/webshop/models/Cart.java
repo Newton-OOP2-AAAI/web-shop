@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.models.entities.Order;
 
 import javax.persistence.*;
 import java.util.Set;
