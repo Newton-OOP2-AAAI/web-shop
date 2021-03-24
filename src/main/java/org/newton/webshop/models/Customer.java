@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.models.entities.Account;
 
 import javax.persistence.*;
 
@@ -18,7 +19,7 @@ public class Customer {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "customer_id", length = 50, nullable = false)
+    @Column(length = 36, nullable = false)
     private String id;
 
     @OneToOne(mappedBy = "customer")
