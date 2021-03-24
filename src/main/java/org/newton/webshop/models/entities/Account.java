@@ -7,7 +7,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.newton.webshop.models.Customer;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
 
 @NoArgsConstructor

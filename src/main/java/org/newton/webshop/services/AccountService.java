@@ -1,6 +1,5 @@
 package org.newton.webshop.services;
 
-
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.repositories.AccountRepository;
 import org.newton.webshop.repositories.CustomerRepository;

@@ -4,7 +4,10 @@ import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -15,7 +18,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Iterable<Category> findAll() {
+    public List<Category> findAll() {
         return categoryRepository.findAll();
     }
 
@@ -26,4 +29,10 @@ public class CategoryService {
     public Category addCategory(@RequestBody Category newCategory) {
         return categoryRepository.save(newCategory);
     }
+
+    @PostMapping
+    public Category removeCategory(@RequestBody Category delCategory) {
+        return categoryRepository.save(delCategory);
+    }
+
 }
