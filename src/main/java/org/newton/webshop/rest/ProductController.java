@@ -24,7 +24,7 @@ public class ProductController {
         return productService.findAll();
     }
 
-    @PostMapping()
+    @PostMapping("/newProduct")
     Product newProduct(@RequestBody Product newProduct) {
         return productService.addProduct(newProduct);
     }
@@ -40,7 +40,7 @@ public class ProductController {
         return categoryService.addCategory(newCategory);
     }
 
-    @PostMapping
+    @DeleteMapping
     public Category removeCategory(@RequestBody Category delCategory) {
         return categoryService.removeCategory(delCategory);
     }
