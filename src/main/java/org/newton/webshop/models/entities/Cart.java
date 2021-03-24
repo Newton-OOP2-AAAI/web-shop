@@ -17,7 +17,7 @@ public class Cart {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "cart_id", length = 50, nullable = false)
+    @Column(length = 36, nullable = false)
     private String id;
 
     @OneToMany(cascade = CascadeType.ALL,
