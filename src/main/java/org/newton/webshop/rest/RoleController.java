@@ -5,6 +5,8 @@ import org.newton.webshop.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/roles")
@@ -17,7 +19,7 @@ public class RoleController {
     }
 
     @GetMapping("/all")
-    public Iterable<Role> all() {
+    public List<Role> all() {
         return roleService.findAll();
     }
 

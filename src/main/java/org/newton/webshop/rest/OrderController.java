@@ -5,6 +5,8 @@ import org.newton.webshop.models.entities.Order;
 import org.newton.webshop.repositories.OrderRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class OrderController {
     private final OrderRepository repository;
@@ -14,7 +16,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    Iterable<Order> all() {
+    List<Order> all() {
         return repository.findAll();
     }
 

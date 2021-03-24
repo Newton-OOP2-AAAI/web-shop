@@ -5,6 +5,8 @@ import org.newton.webshop.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -16,7 +18,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/all")
-    public Iterable<Employee> all() {
+    public List<Employee> all() {
         return employeeService.findAll();
     }
 
