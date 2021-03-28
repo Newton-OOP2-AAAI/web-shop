@@ -1,4 +1,4 @@
-package org.newton.webshop.rest;
+/*package org.newton.webshop.rest;
 
 import org.newton.webshop.models.entities.Question;
 import org.newton.webshop.services.QuestionService;
@@ -43,3 +43,5 @@ public class QuestionController {
         questionService.deleteById(id);
     }
 }
+
+ */

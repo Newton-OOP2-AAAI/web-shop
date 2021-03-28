@@ -1,6 +1,5 @@
 package org.newton.webshop.repositories;
 
-import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.models.entities.Employee;
 import org.springframework.data.repository.CrudRepository;
 

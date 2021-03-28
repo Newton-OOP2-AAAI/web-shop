@@ -1,3 +1,4 @@
+/*
 package org.newton.webshop.rest;
 
 import org.newton.webshop.models.entities.Answer;
@@ -43,3 +44,4 @@ public class AnswerController {
     }
 }
 
+ */

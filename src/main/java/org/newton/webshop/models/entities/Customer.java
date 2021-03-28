@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.newton.webshop.models.entities.Account;
-import org.newton.webshop.models.entities.Address;
-import org.newton.webshop.models.entities.Cart;
 
 import javax.persistence.*;
 
