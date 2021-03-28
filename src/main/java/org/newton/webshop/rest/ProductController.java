@@ -1,7 +1,7 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.models.entities.Category;
+import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.services.CategoryService;
 import org.newton.webshop.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

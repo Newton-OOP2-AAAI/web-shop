@@ -1,7 +1,6 @@
 package org.newton.webshop.services;
 
 import org.newton.webshop.models.entities.Order;
-
 import org.newton.webshop.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

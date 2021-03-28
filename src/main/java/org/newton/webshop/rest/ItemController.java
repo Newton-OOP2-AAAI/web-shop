@@ -1,8 +1,6 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.exceptions.ItemNotFoundException;
 import org.newton.webshop.models.entities.Item;
-import org.newton.webshop.repositories.ItemRepository;
 import org.newton.webshop.services.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
