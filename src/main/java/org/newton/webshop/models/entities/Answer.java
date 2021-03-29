@@ -40,11 +40,6 @@ public class Answer {
     }
 
     public void addQuestion(Question question) {
-        this.getQuestions().add(question);
-        question.setAnswer(this);
-    }
-
-    public void removeQuestion(Question question) {
-        questions.remove(question);
+        this.questions.add(question);
     }
 }

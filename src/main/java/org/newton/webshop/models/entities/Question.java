@@ -36,11 +36,4 @@ public class Question {
     public Question(QuestionCreationDto creationDto) {
         this.questionText = creationDto.getQuestionText();
     }
-
-    public void addAnswer(Answer answer) {
-        this.answer = answer;
-        answer.getQuestions().add(this);
-    }
-
-
 }
