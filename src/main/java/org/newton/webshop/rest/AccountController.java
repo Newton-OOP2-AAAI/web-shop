@@ -1,14 +1,16 @@
 package org.newton.webshop.rest;
 
-
-import org.newton.webshop.models.entities.Account;
+import org.newton.webshop.models.dto.AccountCreationDto;
+import org.newton.webshop.models.dto.CustomerUpdateDto;
+import org.newton.webshop.models.dto.AccountDetailsDto;
+import org.newton.webshop.models.dto.AccountDto;
 import org.newton.webshop.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
+@RequestMapping("/account")
 public class AccountController {
     private final AccountService accountService;
 
@@ -17,25 +19,23 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/accounts")
-    List<Account> all() {
-        return accountService.findAll();
-    }
-
-    @GetMapping("/accounts/{id}")
-    @ResponseBody
-    Account one(@RequestParam String id) {
+    @GetMapping
+    public AccountDetailsDto getAccountById(@RequestParam String id) {
         return accountService.findById(id);
     }
 
-    @PostMapping("/accounts/{customerId}")
-    Account addAccount(@PathVariable String customerId, @RequestBody Account newAccount) {
-        return accountService.addAccount(customerId, newAccount);
+    @PostMapping
+    public AccountDto addAccount(@RequestBody AccountCreationDto accountCreationDto) {
+        return accountService.addAccount(accountCreationDto);
     }
 
-    @DeleteMapping("/accounts/{id}")
-    void deleteAccount(@PathVariable String id) {
-        accountService.deleteById(id);
+    @PutMapping
+    public CustomerUpdateDto editCustomerByAccountId(@RequestParam String id, @RequestBody CustomerUpdateDto customerUpdateDto) {
+        return accountService.editCustomerByAccountId(id, customerUpdateDto);
+    }
 
+    @DeleteMapping
+    public void deleteAccountById(@RequestParam String id) {
+        accountService.deleteAccountById(id);
     }
 }
