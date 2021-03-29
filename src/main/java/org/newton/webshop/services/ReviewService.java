@@ -1,13 +1,10 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.entities.Review;
 import org.newton.webshop.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Component
+@Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
@@ -16,11 +13,21 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public List<Review> findAll() {
-        return reviewRepository.findAll();
-    }
+    /**
+     * Notes:
+     *
+     * Lower level services that only handle one repository should return entities.
+     * AssortmentService should take care of mapping between Entity/DTO
+     *
+     */
 
-    public Review findById(String id) {
-        return reviewRepository.findById(id).orElseThrow(RuntimeException::new);
-    }
+
+    //TODO commented code should be removed unless methods are needed in Assortment Service
+//    public List<Review> findAll() {
+//        return reviewRepository.findAll();
+//    }
+//
+//    public Review findById(String id) {
+//        return reviewRepository.findById(id).orElseThrow(RuntimeException::new);
+//    }
 }

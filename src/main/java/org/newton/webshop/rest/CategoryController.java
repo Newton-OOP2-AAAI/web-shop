@@ -1,13 +1,14 @@
 package org.newton.webshop.rest;
 
-import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-
+/**
+ * @Deprecated Should be removed, but keeping it for reference until AssortmentController is fully implemented
+ * TODO Remove
+ */
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -18,23 +19,26 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/all")
-    List<Category> findAll() {
-        return categoryService.findAll();
-    }
-
-    @GetMapping
-    Category findById(@RequestParam String id) {
-        return categoryService.findById(id);
-    }
-
-    @PostMapping
-    public Category addCategory(@RequestBody Category newCategory) {
-        return categoryService.addCategory(newCategory);
-    }
-
-    @DeleteMapping
-    public Category removeCategory(@RequestBody Category delCategory) {
-        return categoryService.removeCategory(delCategory);
-    }
+    /**
+     * Commented out, but kept until class is removed
+     */
+//    @GetMapping("/all")
+//    List<Category> findAll() {
+//        return categoryService.findAll();
+//    }
+//
+//    @GetMapping
+//    Category findById(@RequestParam String id) {
+//        return categoryService.findById(id);
+//    }
+//
+//    @PostMapping
+//    public Category addCategory(@RequestBody Category newCategory) {
+//        return categoryService.addCategory(newCategory);
+//    }
+//
+//    @DeleteMapping
+//    public Category removeCategory(@RequestBody Category delCategory) {
+//        return categoryService.removeCategory(delCategory);
+//    }
 }

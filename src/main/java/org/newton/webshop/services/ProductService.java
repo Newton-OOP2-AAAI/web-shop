@@ -1,16 +1,10 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.entities.Category;
-import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Component
+@Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
@@ -21,25 +15,35 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
-    public List<Product> findAll() {
-        return (List<Product>) productRepository.findAll();
-    }
+    /**
+     * Notes:
+     *
+     * Lower level services that only handle one repository should return entities.
+     * AssortmentService should take care of mapping between Entity/DTO
+     *
+     */
 
-    public Product findById(String id) {
-        return productRepository.findById(id).orElseThrow(RuntimeException::new);
-    }
 
-    public Product addProduct(@RequestBody Product newProduct) {
-        return productRepository.save(newProduct);
-    }
-
-    @PostMapping
-    public Category addCategory(@RequestBody Category newCategory) {
-        return categoryService.addCategory(newCategory);
-    }
-
-    @PostMapping
-    public Category removeCategory(@RequestBody Category delCategory) {
-        return categoryService.removeCategory(delCategory);
-    }
+    //TODO commented code should be removed unless methods are needed in Assortment Service
+//    public List<Product> findAll() {
+//        return (List<Product>) productRepository.findAll();
+//    }
+//
+//    public Product findById(String id) {
+//        return productRepository.findById(id).orElseThrow(RuntimeException::new);
+//    }
+//
+//    public Product addProduct(@RequestBody Product newProduct) {
+//        return productRepository.save(newProduct);
+//    }
+//
+//    @PostMapping
+//    public Category addCategory(@RequestBody Category newCategory) {
+//        return categoryService.addCategory(newCategory);
+//    }
+//
+//    @PostMapping
+//    public Category removeCategory(@RequestBody Category delCategory) {
+//        return categoryService.removeCategory(delCategory);
+//    }
 }
