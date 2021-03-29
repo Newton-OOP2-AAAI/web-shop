@@ -19,6 +19,9 @@ public class ChatbotService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
 
+    //todo factory for dto-entity mappings
+    //todo replace general RuntimeException with custom exceptions and error handling
+
     @Autowired
     public ChatbotService(QuestionRepository questionRepository, AnswerRepository answerRepository) {
         this.questionRepository = questionRepository;
@@ -29,14 +32,22 @@ public class ChatbotService {
         //AnswerCreationDto to Answer using constructor, then persist
         Answer answer = answerRepository.save(new Answer(creationDto));
 
-        //Set<String> to Questions, associate with answer and persist each question
-        creationDto.getQuestions()
+        //Set<String> to Set<Questions>
+        var questions = creationDto.getQuestions()
                 .stream()
                 .map(Question::new)
-                .forEach(question -> {
-                    question.addAnswer(answer); //todo look into how this can (or if it should) be solved without Shared mutability
-                    questionRepository.save(question);
-                });
+                .collect(Collectors.toSet());
+
+        //associate each question with answer and persist question
+        questions.forEach(question -> {
+            question.setAnswer(answer);
+            questionRepository.save(question);
+        });
+
+        //associate answer with questions
+        answer.setQuestions(questions);
+
+        //return answerdto
         return new AnswerDto(answer);
     }
 
@@ -52,15 +63,25 @@ public class ChatbotService {
     }
 
     public AnswerDto createQuestion(String answerId, QuestionCreationDto questionCreationDto) {
+        //find answer to create the question for
         Answer answer = answerRepository.findById(answerId).orElseThrow(RuntimeException::new);
+
+        //creationdto to question
         Question question = new Question(questionCreationDto);
-        question.addAnswer(answer);
+
+        //set associations
+        question.setAnswer(answer);
+        answer.addQuestion(question);
+
+        //persist question
         questionRepository.save(question);
+
+        //return AnswerDto
         return new AnswerDto(answer);
     }
 
     public void deleteQuestion(String questionId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(RuntimeException::new); //todo return something instead?
+        Question question = questionRepository.findById(questionId).orElseThrow(RuntimeException::new);
         questionRepository.delete(question);
     }
 
