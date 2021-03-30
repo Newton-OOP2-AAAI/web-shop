@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.models.dto.creation.AccountCreationDto;
+
 
 import javax.persistence.*;
 
@@ -15,6 +17,15 @@ import javax.persistence.*;
 @Table(name = "customers")
 @Entity
 public class Customer {
+
+    public Customer(AccountCreationDto accountCreationDto) {
+        this.firstname = accountCreationDto.getFirstname();
+        this.lastname = accountCreationDto.getLastname();
+        this.phone = accountCreationDto.getPhone();
+        this.email = accountCreationDto.getEmail();
+        this.address = new Address(accountCreationDto);
+    }
+
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")

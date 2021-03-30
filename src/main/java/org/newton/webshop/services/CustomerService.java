@@ -1,5 +1,6 @@
 package org.newton.webshop.services;
 
+
 import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 public class CustomerService {
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
     public CustomerService(CustomerRepository customerRepository) {

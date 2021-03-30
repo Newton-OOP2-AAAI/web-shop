@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,6 +15,14 @@ import java.time.LocalDate;
 @Table(name = "accounts")
 @Entity
 public class Account {
+
+    public Account(AccountCreationDto newAccount, Customer customer, LocalDate createDate) {
+        this.username = newAccount.getUsername();
+        this.password = newAccount.getPassword();
+        this.birthDate = newAccount.getBirthDate();
+        this.createDate = createDate;
+        this.customer = customer;
+    }
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -36,6 +45,4 @@ public class Account {
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
-
-
 }
