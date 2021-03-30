@@ -1,9 +1,9 @@
 package org.newton.webshop.services.combined;
 
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
-import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.models.dto.response.AccountDetailsDto;
 import org.newton.webshop.models.dto.response.AccountDto;
+import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.repositories.AccountRepository;

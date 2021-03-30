@@ -28,6 +28,9 @@ public class Role {
     private Boolean employee;
 
     @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
     private Boolean chatbot;
 
     @Column(nullable = false)
@@ -35,4 +38,9 @@ public class Role {
 
     @Column(nullable = false)
     private Boolean products;
+
+
+    public Role(String id) {
+        this.id = id;
+    }
 }

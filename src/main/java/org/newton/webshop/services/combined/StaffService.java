@@ -2,7 +2,9 @@ package org.newton.webshop.services.combined;
 
 import org.newton.webshop.models.dto.creation.EmployeeCreationDto;
 import org.newton.webshop.models.dto.response.EmployeeDto;
+import org.newton.webshop.models.entities.Address;
 import org.newton.webshop.models.entities.Employee;
+import org.newton.webshop.models.entities.Role;
 import org.newton.webshop.services.EmployeeService;
 import org.newton.webshop.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,25 +22,43 @@ public class StaffService {
     }
 
     public EmployeeDto createEmployee(EmployeeCreationDto creationDto) {
-        return null;
+        Employee employee = employeeService.createEmployee(toEntity(creationDto));
+        employee.setRole(roleService.findById(employee.getRole().getId()));
+        return toDto(employee);
+    }
+
+    private static EmployeeDto toDto(Employee employee) {
+        return EmployeeDto.builder()
+                .Id(employee.getId())
+                .role(employee.getRole().getTitle())
+                .firstname(employee.getFirstname())
+                .lastname(employee.getLastname())
+                .phone(employee.getPhone())
+                .email(employee.getEmail())
+                .streetName(employee.getAddress().getStreetName())
+                .streetNumber(employee.getAddress().getStreetNumber())
+                .zipCode(employee.getAddress().getZipCode())
+                .city(employee.getAddress().getCity())
+                .username(employee.getUsername())
+                .build();
     }
 
     private static Employee toEntity(EmployeeCreationDto creationDto) {
-        Employee.builder()
+        return Employee.builder()
+                .role(new Role(creationDto.getRoleId()))
                 .firstname(creationDto.getFirstname())
                 .lastname(creationDto.getLastname())
                 .phone(creationDto.getPhone())
                 .email(creationDto.getEmail())
-                .streetName(creationDto.getStreetName())
-                .streetNumber(creationDto.getStreetNumber())
-                .zipCode(creationDto.getZipCode())
-                .city(creationDto.getCity())
+                .address(Address.builder()
+                        .streetName(creationDto.getStreetName())
+                        .streetNumber(creationDto.getStreetNumber())
+                        .zipCode(creationDto.getZipCode())
+                        .city(creationDto.getCity())
+                        .build())
                 .username(creationDto.getUsername())
-                .password(creationDto.getPassword());
+                .password(creationDto.getPassword())
+                .build();
 
-//        Employee employee = new Employee();
-//        employee.setFirstname(creationDto.getFirstname());
-//        employee.setLastname(creationDto.getLastname());
-//
     }
 }

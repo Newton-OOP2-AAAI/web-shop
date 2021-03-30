@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
-
 import javax.persistence.*;
 
 

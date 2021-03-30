@@ -2,15 +2,14 @@ package org.newton.webshop.models.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Setter
 @Getter
@@ -40,17 +39,8 @@ public class Employee {
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(length = 50, nullable = false)
-    private String streetName;
-
-    @Column(length = 50, nullable = false)
-    private String streetNumber;
-
-    @Column(length = 50, nullable = false)
-    private String zipCode;
-
-    @Column(length = 50, nullable = false)
-    private String city;
+    @Embedded
+    private Address address;
 
     @Column(length = 50, nullable = false)
     private String username;
