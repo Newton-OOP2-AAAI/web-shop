@@ -1,4 +1,4 @@
-package org.newton.webshop.models.dto;
+package org.newton.webshop.models.dto.update;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

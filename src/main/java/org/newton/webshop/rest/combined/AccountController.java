@@ -1,10 +1,10 @@
-package org.newton.webshop.rest;
+package org.newton.webshop.rest.combined;
 
-import org.newton.webshop.models.dto.AccountCreationDto;
-import org.newton.webshop.models.dto.CustomerUpdateDto;
-import org.newton.webshop.models.dto.AccountDetailsDto;
-import org.newton.webshop.models.dto.AccountDto;
-import org.newton.webshop.services.AccountService;
+import org.newton.webshop.models.dto.creation.AccountCreationDto;
+import org.newton.webshop.models.dto.update.CustomerUpdateDto;
+import org.newton.webshop.models.dto.response.AccountDetailsDto;
+import org.newton.webshop.models.dto.response.AccountDto;
+import org.newton.webshop.services.combined.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

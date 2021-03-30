@@ -1,4 +1,4 @@
-package org.newton.webshop.models.dto;
+package org.newton.webshop.models.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package org.newton.webshop.models.dto;
+package org.newton.webshop.models.dto.creation;
 
 
 import lombok.AllArgsConstructor;

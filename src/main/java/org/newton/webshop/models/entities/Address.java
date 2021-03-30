@@ -3,7 +3,7 @@ package org.newton.webshop.models.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.newton.webshop.models.dto.AccountCreationDto;
+import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
