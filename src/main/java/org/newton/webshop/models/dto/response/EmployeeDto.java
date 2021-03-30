@@ -1,30 +1,25 @@
-package org.newton.webshop.models.dto.creation;
+package org.newton.webshop.models.dto.response;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
+@Builder
+@AllArgsConstructor
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class AccountCreationDto {
-
+public class EmployeeDto {
+    private String Id;
+    private String role;
     private String firstname;
     private String lastname;
     private String phone;
     private String email;
-
     private String streetName;
     private String streetNumber;
     private String zipCode;
     private String city;
-
     private String username;
-    private String password;
-    private LocalDate birthDate;
 }

@@ -1,8 +1,6 @@
 package org.newton.webshop.models.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
 import javax.persistence.Column;
@@ -10,6 +8,8 @@ import javax.persistence.Embeddable;
 
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
 

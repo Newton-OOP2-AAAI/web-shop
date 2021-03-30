@@ -2,15 +2,15 @@ package org.newton.webshop.models.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
 @Table(name = "employees")
