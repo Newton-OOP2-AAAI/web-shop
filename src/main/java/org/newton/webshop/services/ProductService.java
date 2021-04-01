@@ -1,8 +1,12 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -46,4 +50,15 @@ public class ProductService {
 //    public Category removeCategory(@RequestBody Category delCategory) {
 //        return categoryService.removeCategory(delCategory);
 //    }
+
+    /**
+     * Find a set of products.
+     * @param productIds a set of product ids
+     * @return a set of products, as long as all ids existed in the database
+     */
+    public Set<Product> findById(Set<String> productIds) {
+        return productIds.stream()
+                .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new))
+                .collect(Collectors.toSet());
+    }
 }
