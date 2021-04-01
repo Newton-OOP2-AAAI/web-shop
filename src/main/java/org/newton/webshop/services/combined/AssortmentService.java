@@ -1,8 +1,12 @@
 package org.newton.webshop.services.combined;
 
+import org.newton.webshop.models.dto.creation.InventoryCreationDto;
+import org.newton.webshop.models.dto.response.ProductDto;
+import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.entities.Category;
+import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.services.CategoryService;
 import org.newton.webshop.services.InventoryService;
@@ -10,8 +14,11 @@ import org.newton.webshop.services.ProductService;
 import org.newton.webshop.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -105,6 +112,73 @@ public class AssortmentService {
                 .parentCategory(parentCategory)
                 .childCategories(childCategories)
                 .products(products)
+                .build();
+    }
+
+
+    /**
+     *
+     */
+    //Customer wants a list of products to get an overview of what the shop has to offer:
+    public List<ProductDto> findAll() {
+        return productService.findAll()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //Employee wants to add product
+    public ProductDto createProduct(ProductCreationDto productCreationDto) {
+        var categoryIds = productCreationDto.getCategoryIds();
+        var categories = categoryIds != null ? categoryService.findById(categoryIds) : null;
+
+
+        Set<Inventory> inventories = productCreationDto.getInventories()
+                .stream()
+                .map(AssortmentService::toEntity)
+                .collect(Collectors.toSet());
+
+        Product product = toEntity(productCreationDto, categories);
+        productService.createProduct(product);
+
+        inventories.forEach(inventory -> {
+            inventory.setProduct(product);
+            inventoryService.createInventory(inventory);
+        });
+
+        return toDto(product);
+    }
+
+
+    // Testat som i staffService:
+    private static ProductDto toDto(Product product) {
+        return ProductDto.builder()
+                .id(product.getId())
+                .inventory(product.getInventory())
+                .name(product.getName())
+                .price(product.getPrice())
+                .category(product.getCategory())
+                .description(product.getDescription())
+                .visible(product.isVisible())
+                .build();
+    }
+
+    private static Product toEntity(ProductCreationDto creationDto, Set<Category> categories) {
+        return Product.builder()
+                .inventory(new HashSet<>())
+                .name(creationDto.getName())
+                .price(creationDto.getPrice())
+                .category(categories)
+                .description(creationDto.getDescription())
+                .visible(creationDto.isVisible())
+                .build();
+    }
+
+    private static Inventory toEntity(InventoryCreationDto creationDto) {
+        return Inventory.builder()
+                .size(creationDto.getSize())
+                .color(creationDto.getColor())
+                .quantity(creationDto.getQuantity())
                 .build();
     }
 

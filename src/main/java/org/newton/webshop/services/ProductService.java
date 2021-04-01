@@ -4,9 +4,12 @@ import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -21,25 +24,27 @@ public class ProductService {
 
     /**
      * Notes:
-     *
+     * <p>
      * Lower level services that only handle one repository should return entities.
      * AssortmentService should take care of mapping between Entity/DTO
-     *
      */
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+    public Product createProduct(Product newProduct) {
+        return productRepository.save(newProduct);
+    }
 
 
     //TODO commented code should be removed unless methods are needed in Assortment Service
-//    public List<Product> findAll() {
-//        return (List<Product>) productRepository.findAll();
-//    }
+
 //
 //    public Product findById(String id) {
 //        return productRepository.findById(id).orElseThrow(RuntimeException::new);
 //    }
 //
-//    public Product addProduct(@RequestBody Product newProduct) {
-//        return productRepository.save(newProduct);
-//    }
+
 //
 //    @PostMapping
 //    public Category addCategory(@RequestBody Category newCategory) {
@@ -53,6 +58,7 @@ public class ProductService {
 
     /**
      * Find a set of products.
+     *
      * @param productIds a set of product ids
      * @return a set of products, as long as all ids existed in the database
      */

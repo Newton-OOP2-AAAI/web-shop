@@ -20,12 +20,13 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category createCategory(@RequestBody Category newCategory) {
+    public Category createCategory(Category newCategory) {
         return categoryRepository.save(newCategory);
     }
 
     /**
      * Find products by ids
+     *
      * @param categoryIds a set of category ids
      * @return a set of categories, if all ids existed in the database
      */
@@ -37,13 +38,13 @@ public class CategoryService {
 
     /**
      * Find a product by id
+     *
      * @param id category id
      * @return category, if the id existed in database
      */
     public Category findById(String id) {
         return categoryRepository.findById(id).orElseThrow(RuntimeException::new);
     }
-
 
 
     //old
@@ -53,8 +54,7 @@ public class CategoryService {
     }
 
 
-
-    public Category removeCategory(@RequestBody Category delCategory) {
+    public Category removeCategory(Category delCategory) {
         return categoryRepository.save(delCategory);
     }
 

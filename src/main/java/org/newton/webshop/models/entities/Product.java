@@ -1,15 +1,16 @@
 package org.newton.webshop.models.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@AllArgsConstructor
 @Table(name = "products")
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -29,17 +30,15 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
+    @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
     @ManyToMany
-    @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "product_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false))
+    @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> category;
 
     @Column(nullable = false, length = 500)
     private String description;
 
     @Column(nullable = false)
-    private Boolean visible;
+    private boolean visible;
 
-    public Product(String id) {
-        this.id = id;
-    }
 }

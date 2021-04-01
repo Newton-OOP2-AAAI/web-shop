@@ -1,5 +1,6 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.repositories.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,11 @@ public class InventoryService {
     @Autowired
     public InventoryService(InventoryRepository inventoryRepository) {
         this.inventoryRepository = inventoryRepository;
+    }
+
+    public Inventory createInventory(Inventory inventory) {
+        return inventoryRepository.save(inventory);
+
     }
 
     /**
