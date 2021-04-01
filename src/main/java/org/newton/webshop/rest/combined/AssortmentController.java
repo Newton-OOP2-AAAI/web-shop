@@ -1,9 +1,11 @@
 package org.newton.webshop.rest.combined;
 
+import org.newton.webshop.models.dto.creation.CategoryCreationDto;
+import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.services.combined.AssortmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * API endpoints to handle the assortment
@@ -30,6 +32,10 @@ public class AssortmentController {
      * Following user stories need to be implemented:
      */
     //Employee wants to add a category to keep products categorized, making them easier to find.
+    @PostMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+    CategoryDto createCategory(@RequestBody CategoryCreationDto creationDto) {
+        return assortmentService.createCategory(creationDto);
+    }
 
     //Employee wants to modify an existing category, to make it easier to update the webshop.
     //Notes: change name,

@@ -2,8 +2,7 @@ package org.newton.webshop.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,6 +11,9 @@ import java.util.Set;
 
 
 @Table(name = "categories")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -40,10 +42,6 @@ public class Category {
             inverseJoinColumns = @JoinColumn(name = "product_id", nullable = false)
     )
     private Set<Product> products;
-
-    public Category() {
-        this.childCategories = new HashSet<>();
-    }
 
     /**
      * Bidirectional utility method to add a parent category.

@@ -38,4 +38,8 @@ public class Product {
 
     @Column(nullable = false)
     private Boolean visible;
+
+    public Product(String id) {
+        this.id = id;
+    }
 }

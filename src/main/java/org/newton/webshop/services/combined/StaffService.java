@@ -22,8 +22,8 @@ public class StaffService {
     }
 
     public EmployeeDto createEmployee(EmployeeCreationDto creationDto) {
-        Employee employee = employeeService.createEmployee(toEntity(creationDto));
-        employee.setRole(roleService.findById(employee.getRole().getId()));
+        Role role = roleService.findById(creationDto.getRoleId());
+        Employee employee = employeeService.createEmployee(toEntity(creationDto, role));
         return toDto(employee);
     }
 
@@ -43,9 +43,29 @@ public class StaffService {
                 .build();
     }
 
-    private static Employee toEntity(EmployeeCreationDto creationDto) {
+    private static Employee toEntity(EmployeeCreationDto creationDto, Role role) {
         return Employee.builder()
-                .role(new Role(creationDto.getRoleId()))
+                .role(role)
+                .firstname(creationDto.getFirstname())
+                .lastname(creationDto.getLastname())
+                .phone(creationDto.getPhone())
+                .email(creationDto.getEmail())
+                .address(Address.builder()
+                        .streetName(creationDto.getStreetName())
+                        .streetNumber(creationDto.getStreetNumber())
+                        .zipCode(creationDto.getZipCode())
+                        .city(creationDto.getCity())
+                        .build())
+                .username(creationDto.getUsername())
+                .password(creationDto.getPassword())
+                .build();
+
+    }
+
+    private static Employee toEntity(EmployeeCreationDto creationDto, Role role, String employeeId) {
+        return Employee.builder()
+                .id(employeeId)
+                .role(role)
                 .firstname(creationDto.getFirstname())
                 .lastname(creationDto.getLastname())
                 .phone(creationDto.getPhone())
