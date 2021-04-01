@@ -25,7 +25,7 @@ public class RoleService {
         return roleRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public Role addRole(@RequestBody Role newRole) {
+    public Role addRole(Role newRole) {
         return roleRepository.save(newRole);
     }
 }

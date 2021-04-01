@@ -2,6 +2,7 @@ package org.newton.webshop.services.combined;
 
 import org.newton.webshop.models.dto.creation.EmployeeCreationDto;
 import org.newton.webshop.models.dto.response.EmployeeDto;
+import org.newton.webshop.models.dto.update.EmployeeUpdateDto;
 import org.newton.webshop.models.entities.Address;
 import org.newton.webshop.models.entities.Employee;
 import org.newton.webshop.models.entities.Role;
@@ -25,6 +26,13 @@ public class StaffService {
         Role role = roleService.findById(creationDto.getRoleId());
         Employee employee = employeeService.createEmployee(toEntity(creationDto, role));
         return toDto(employee);
+    }
+
+    public EmployeeDto editEmployeeById(String employeeId, EmployeeUpdateDto employeeUpdateDto) {
+        Employee employee = toEntity(employeeUpdateDto);
+        Employee returnEmployee = employeeService.updateEmployee(employee, employeeId);
+        returnEmployee.setRole(roleService.findById(employee.getRole().getId()));
+        return toDto(returnEmployee);
     }
 
     private static EmployeeDto toDto(Employee employee) {
@@ -79,6 +87,20 @@ public class StaffService {
                 .username(creationDto.getUsername())
                 .password(creationDto.getPassword())
                 .build();
+    }
 
+    private static Employee toEntity(EmployeeUpdateDto employeeUpdateDto) {
+        return Employee.builder()
+                .role(new Role(employeeUpdateDto.getRoleId()))
+                .firstname(employeeUpdateDto.getFirstname())
+                .lastname(employeeUpdateDto.getLastname())
+                .phone(employeeUpdateDto.getPhone())
+                .address(Address.builder()
+                        .streetName(employeeUpdateDto.getStreetName())
+                        .streetNumber(employeeUpdateDto.getStreetNumber())
+                        .zipCode(employeeUpdateDto.getZipCode())
+                        .city(employeeUpdateDto.getCity())
+                        .build())
+                .build();
     }
 }
