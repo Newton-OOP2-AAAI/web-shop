@@ -1,12 +1,14 @@
 package org.newton.webshop.rest.combined;
 
-import org.newton.webshop.models.dto.creation.CategoryCreationDto;
-import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.services.combined.AssortmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
+import org.newton.webshop.models.dto.creation.ProductCreationDto;
+import org.newton.webshop.models.dto.response.ProductDto;
+import org.newton.webshop.models.dto.creation.CategoryCreationDto;
+import org.newton.webshop.models.dto.response.CategoryDto;
+import java.util.List;
+import org.springframework.http.MediaType;
 /**
  * API endpoints to handle the assortment
  */
@@ -49,6 +51,11 @@ public class AssortmentController {
     //Employee wants to add a new product.
     //Notes: price, name, description, category etc.
 
+        @PostMapping("/newProduct")
+        ProductDto addProduct(@RequestBody ProductCreationDto productCreationDto) {
+        return assortmentService.addProduct(productCreationDto);
+    }
+
     //Employee wants to modify the info about an existing product.
 
     //Employee wants to assign a category to a product to make products that belong in multiple categories easier to find.
@@ -61,6 +68,16 @@ public class AssortmentController {
      * Following user stories need to be implemented:
      */
     //Customer wants a list of products to get an overview of what the shop has to offer.
+    /**
+     * Find all products
+     *
+     * @return list of all products
+     * @author Isa
+     */
+    @GetMapping("/all")
+    List<ProductDto> all() {
+        return assortmentService.findAll();
+    }
 
     //Customer wants to filter products to find products that meet certain criteria.
 

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import java.util.List;
+
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
@@ -26,12 +28,13 @@ public class ProductService {
      * AssortmentService should take care of mapping between Entity/DTO
      *
      */
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
 
 
     //TODO commented code should be removed unless methods are needed in Assortment Service
-//    public List<Product> findAll() {
-//        return (List<Product>) productRepository.findAll();
-//    }
+
 //
 //    public Product findById(String id) {
 //        return productRepository.findById(id).orElseThrow(RuntimeException::new);

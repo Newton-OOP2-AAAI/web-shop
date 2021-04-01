@@ -1,5 +1,6 @@
 package org.newton.webshop.services.combined;
-
+import org.newton.webshop.models.dto.response.ProductDto;
+import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.entities.Category;
@@ -10,8 +11,11 @@ import org.newton.webshop.services.ProductService;
 import org.newton.webshop.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,11 +42,11 @@ public class AssortmentService {
 
     /**
      * Notes:
-     * <p>
+     *
      * 1. No methods in AssortmentService should return en Entity or take an Entity as a parameter. Use DTOs instead.
-     * <p>
+     *
      * 2. Higher level validation that require multiple services (e.g ProductService and InventoryService) should be done in AssortmentService
-     * <p>
+     *
      * 3. Lower level validation that only require one service (e.g only ProductService) should be done in the individual, lower level service layer and passed on to AssortmentService.
      */
     public CategoryDto createCategory(CategoryCreationDto creationDto) {
@@ -106,6 +110,49 @@ public class AssortmentService {
                 .childCategories(childCategories)
                 .products(products)
                 .build();
+    }
+
+
+    /**
+     */
+    //Customer wants a list of products to get an overview of what the shop has to offer:
+
+    public List<ProductDto> findAll() {
+        return productService.findAll()
+                .stream()
+                .map(ProductDto::new)
+                .collect(Collectors.toList());
+    }
+
+    //Employee wants to add product
+    public ProductCreationDto addProduct(ProductCreationDto productCreationDto) {
+        Product product = new Product(productCreationDto);
+        productService.save(product);
+        return productCreationDto;
+    }
+
+
+
+ // Testat som i staffService:
+  private static ProductDto toDto(Product product) {
+        return ProductDto.builder()
+                .id(product.getId())
+                .inventory(product.getInventory())
+                .name(product.getName())
+                .price(product.getPrice())
+                .category(product.getCategory())
+                .build();
+    }
+
+    private static Product toEntity(ProductCreationDto creationDto, Set<Category> categories) {
+        return Product.builder()
+                .inventory(new HashSet<>())
+                .name(creationDto.getName())
+                .price(creationDto.getPrice())
+                .category(categories)
+                .build();
+
+
     }
 
 

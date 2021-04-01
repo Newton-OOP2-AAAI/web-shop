@@ -1,5 +1,6 @@
 package org.newton.webshop.models.entities;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Table(name = "products")
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
