@@ -30,4 +30,14 @@ public class EmployeeService {
     }
 
 
+    public Employee updateEmployee(Employee employee, String employeeId) {
+        return employeeRepository.findById(employeeId).map(employeeUpdate -> {
+            employeeUpdate.setRole(employee.getRole());
+            employeeUpdate.setFirstname(employee.getFirstname());
+            employeeUpdate.setLastname(employee.getLastname());
+            employeeUpdate.setPhone(employee.getPhone());
+            employeeUpdate.setAddress(employee.getAddress());
+            return employeeRepository.save(employeeUpdate);
+        }).orElseThrow(RuntimeException::new);
+    }
 }
