@@ -6,7 +6,13 @@ import org.newton.webshop.models.dto.response.EmployeeDto;
 import org.newton.webshop.models.dto.update.EmployeeUpdateDto;
 import org.newton.webshop.services.combined.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
@@ -27,4 +33,15 @@ public class StaffController {
     public EmployeeDto editEmployeeById(@RequestParam String id, @RequestBody EmployeeUpdateDto employeeUpdateDto) {
         return staffService.editEmployeeById(id, employeeUpdateDto);
     }
+
+    @GetMapping
+    EmployeeDto findEmployeeById(@RequestParam String id){
+        return staffService.findById(id);
+    }
+
+    @GetMapping ("/all")
+    List<EmployeeDto> findAllEmployees(){
+        return staffService.findAll();
+    }
+
 }
