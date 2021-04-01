@@ -7,8 +7,11 @@ import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
+
 import java.util.List;
+
 import org.springframework.http.MediaType;
+
 /**
  * API endpoints to handle the assortment
  */
@@ -30,7 +33,7 @@ public class AssortmentController {
 
     /**
      * Manage categories: /products/categories
-     *
+     * <p>
      * Following user stories need to be implemented:
      */
     //Employee wants to add a category to keep products categorized, making them easier to find.
@@ -45,15 +48,14 @@ public class AssortmentController {
 
     /**
      * Manage products: /products
-     *
+     * <p>
      * Following user stories need to be implemented:
      */
     //Employee wants to add a new product.
     //Notes: price, name, description, category etc.
-
-        @PostMapping("/newProduct")
-        ProductDto addProduct(@RequestBody ProductCreationDto productCreationDto) {
-        return assortmentService.addProduct(productCreationDto);
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    ProductDto createProduct(@RequestBody ProductCreationDto productCreationDto) {
+        return assortmentService.createProduct(productCreationDto);
     }
 
     //Employee wants to modify the info about an existing product.
@@ -68,6 +70,7 @@ public class AssortmentController {
      * Following user stories need to be implemented:
      */
     //Customer wants a list of products to get an overview of what the shop has to offer.
+
     /**
      * Find all products
      *

@@ -1,9 +1,12 @@
 package org.newton.webshop.services.combined;
+
+import org.newton.webshop.models.dto.creation.InventoryCreationDto;
 import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.entities.Category;
+import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.services.CategoryService;
 import org.newton.webshop.services.InventoryService;
@@ -42,11 +45,11 @@ public class AssortmentService {
 
     /**
      * Notes:
-     *
+     * <p>
      * 1. No methods in AssortmentService should return en Entity or take an Entity as a parameter. Use DTOs instead.
-     *
+     * <p>
      * 2. Higher level validation that require multiple services (e.g ProductService and InventoryService) should be done in AssortmentService
-     *
+     * <p>
      * 3. Lower level validation that only require one service (e.g only ProductService) should be done in the individual, lower level service layer and passed on to AssortmentService.
      */
     public CategoryDto createCategory(CategoryCreationDto creationDto) {
@@ -114,33 +117,49 @@ public class AssortmentService {
 
 
     /**
+     *
      */
     //Customer wants a list of products to get an overview of what the shop has to offer:
-
     public List<ProductDto> findAll() {
         return productService.findAll()
                 .stream()
-                .map(ProductDto::new)
+                .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
     }
 
     //Employee wants to add product
-    public ProductCreationDto addProduct(ProductCreationDto productCreationDto) {
-        Product product = new Product(productCreationDto);
-        productService.save(product);
-        return productCreationDto;
+    public ProductDto createProduct(ProductCreationDto productCreationDto) {
+        var categoryIds = productCreationDto.getCategoryIds();
+        var categories = categoryIds != null ? categoryService.findById(categoryIds) : null;
+
+
+        Set<Inventory> inventories = productCreationDto.getInventories()
+                .stream()
+                .map(AssortmentService::toEntity)
+                .collect(Collectors.toSet());
+
+        Product product = toEntity(productCreationDto, categories);
+        productService.createProduct(product);
+
+        inventories.forEach(inventory -> {
+            inventory.setProduct(product);
+            inventoryService.createInventory(inventory);
+        });
+
+        return toDto(product);
     }
 
 
-
- // Testat som i staffService:
-  private static ProductDto toDto(Product product) {
+    // Testat som i staffService:
+    private static ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .id(product.getId())
                 .inventory(product.getInventory())
                 .name(product.getName())
                 .price(product.getPrice())
                 .category(product.getCategory())
+                .description(product.getDescription())
+                .visible(product.isVisible())
                 .build();
     }
 
@@ -150,9 +169,17 @@ public class AssortmentService {
                 .name(creationDto.getName())
                 .price(creationDto.getPrice())
                 .category(categories)
+                .description(creationDto.getDescription())
+                .visible(creationDto.isVisible())
                 .build();
+    }
 
-
+    private static Inventory toEntity(InventoryCreationDto creationDto) {
+        return Inventory.builder()
+                .size(creationDto.getSize())
+                .color(creationDto.getColor())
+                .quantity(creationDto.getQuantity())
+                .build();
     }
 
 

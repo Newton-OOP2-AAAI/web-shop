@@ -16,10 +16,11 @@ import java.util.Set;
 public class ProductCreationDto {
 
 
-    private Set<InventoryCreationDto> inventory;
+    private Set<InventoryCreationDto> inventories;
     private String name;
     private Integer price;
     private Set<String> categoryIds;
     private String description;
+    private boolean visible;
 
 }

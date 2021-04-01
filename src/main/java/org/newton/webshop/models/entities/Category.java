@@ -1,6 +1,7 @@
 package org.newton.webshop.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -35,6 +36,7 @@ public class Category {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentCategory")
     private Set<Category> childCategories;
 
+    @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "categories_products",
