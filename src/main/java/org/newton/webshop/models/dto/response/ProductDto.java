@@ -1,7 +1,8 @@
 package org.newton.webshop.models.dto.response;
 
 import lombok.*;
-import org.newton.webshop.models.entities.*;
+import org.newton.webshop.models.entities.Category;
+import org.newton.webshop.models.entities.Inventory;
 
 import java.util.Set;
 

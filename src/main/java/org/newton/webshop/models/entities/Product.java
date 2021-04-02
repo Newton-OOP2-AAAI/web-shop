@@ -32,7 +32,10 @@ public class Product {
 
     @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
     @ManyToMany
-    @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JoinTable(
+            name = "categories_products",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> category;
 
     @Column(nullable = false, length = 500)
