@@ -4,7 +4,6 @@ import org.newton.webshop.models.entities.Role;
 import org.newton.webshop.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 

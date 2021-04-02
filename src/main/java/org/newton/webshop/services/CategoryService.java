@@ -4,8 +4,6 @@ import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Set;
@@ -20,8 +18,25 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    /**
+     * Create a category
+     *
+     * @param newCategory
+     * @return the created category
+     */
     public Category createCategory(Category newCategory) {
         return categoryRepository.save(newCategory);
+    }
+
+    /**
+     * Update a category
+     * todo: Refactor: See if it's possible to move some of the logic to this service layer. At the moment update() is identical to createCategory()
+     *
+     * @param category
+     * @return the updated category
+     */
+    public Category update(Category category) {
+        return categoryRepository.save(category);
     }
 
     /**
@@ -53,9 +68,9 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-
     public Category removeCategory(Category delCategory) {
         return categoryRepository.save(delCategory);
     }
+
 
 }

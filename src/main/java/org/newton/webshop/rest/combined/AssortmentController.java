@@ -1,16 +1,15 @@
 package org.newton.webshop.rest.combined;
 
+import org.newton.webshop.models.dto.creation.CategoryCreationDto;
+import org.newton.webshop.models.dto.creation.ProductCreationDto;
+import org.newton.webshop.models.dto.response.CategoryDto;
+import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.services.combined.AssortmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.newton.webshop.models.dto.creation.ProductCreationDto;
-import org.newton.webshop.models.dto.response.ProductDto;
-import org.newton.webshop.models.dto.creation.CategoryCreationDto;
-import org.newton.webshop.models.dto.response.CategoryDto;
 
 import java.util.List;
-
-import org.springframework.http.MediaType;
 
 /**
  * API endpoints to handle the assortment
@@ -38,12 +37,16 @@ public class AssortmentController {
      */
     //Employee wants to add a category to keep products categorized, making them easier to find.
     @PostMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
-    CategoryDto createCategory(@RequestBody CategoryCreationDto creationDto) {
+    public CategoryDto createCategory(@RequestBody CategoryCreationDto creationDto) {
         return assortmentService.createCategory(creationDto);
     }
 
     //Employee wants to modify an existing category, to make it easier to update the webshop.
-    //Notes: change name,
+    //Notes: change name, change parentCategory
+    @PutMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CategoryDto updateCategory(@RequestParam String id, @RequestBody CategoryCreationDto updateDto) {
+        return assortmentService.updateCategory(id, updateDto);
+    }
 
 
     /**

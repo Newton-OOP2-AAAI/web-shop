@@ -4,12 +4,10 @@ import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -36,16 +34,12 @@ public class ProductService {
         return productRepository.save(newProduct);
     }
 
+    public Product findById(String id) {
+        return productRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
 
     //TODO commented code should be removed unless methods are needed in Assortment Service
 
-//
-//    public Product findById(String id) {
-//        return productRepository.findById(id).orElseThrow(RuntimeException::new);
-//    }
-//
-
-//
 //    @PostMapping
 //    public Category addCategory(@RequestBody Category newCategory) {
 //        return categoryService.addCategory(newCategory);
