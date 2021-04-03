@@ -199,7 +199,6 @@ public class AssortmentService {
      * @return category entity
      */
     private static Category toEntity(CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
-        //todo Fråga Thor: Bör man ha validering i sina konverteringsmetoder, t.ex name != null
         return Category.builder()
                 .name(dto.getName())
                 .parentCategory(parentCategory)
