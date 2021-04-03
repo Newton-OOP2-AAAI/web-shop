@@ -131,6 +131,29 @@ public class AssortmentService {
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
     }
+    public List<ProductDto> sortByPriceAsc(){
+        return productService.findAllByPriceAsc()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+
+    }
+    public List<ProductDto> sortByPriceDesc(){
+        return productService.findAllByPriceDesc()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+
+    }
+    public List<ProductDto> sortByCategory(){
+        return productService.findAllByCategory()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+
+    }
+
+
 
     /**
      * Create a product

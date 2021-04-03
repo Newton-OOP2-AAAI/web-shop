@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -21,4 +22,6 @@ public class ProductCreationDto {
     private String description;
     private boolean visible;
 
+
 }
+

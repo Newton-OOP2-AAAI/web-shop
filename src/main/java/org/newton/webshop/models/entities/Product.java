@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -42,7 +43,9 @@ public class Product {
     @Column(nullable = false, length = 500)
     private String description;
 
+
     @Column(nullable = false)
     private boolean visible;
+
 
 }
