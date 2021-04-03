@@ -21,6 +21,7 @@ public class Product {
     @Column(length = 36, nullable = false)
     private String id;
 
+
     @OneToMany(mappedBy = "product")
     private Set<Inventory> inventory;
 
