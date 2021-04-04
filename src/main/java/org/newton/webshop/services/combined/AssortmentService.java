@@ -8,10 +8,10 @@ import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
-import org.newton.webshop.repositories.CategoryRepository;
-import org.newton.webshop.repositories.InventoryRepository;
-import org.newton.webshop.repositories.ProductRepository;
-import org.newton.webshop.repositories.ReviewRepository;
+import org.newton.webshop.services.CategoryService;
+import org.newton.webshop.services.InventoryService;
+import org.newton.webshop.services.ProductService;
+import org.newton.webshop.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,20 +30,20 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AssortmentService {
-    private final ProductRepository productRepository;
-    private final InventoryRepository inventoryRepository;
-    private final CategoryRepository categoryRepository;
-    private final ReviewRepository reviewRepository;
+    private final ProductService productService;
+    private final CategoryService categoryService;
+    private final InventoryService inventoryService;
+    private final ReviewService reviewService;
 
     @Autowired
-    public AssortmentService(ProductRepository productRepository,
-                             InventoryRepository inventoryRepository,
-                             CategoryRepository categoryRepository,
-                             ReviewRepository reviewRepository) {
-        this.productRepository = productRepository;
-        this.inventoryRepository = inventoryRepository;
-        this.categoryRepository = categoryRepository;
-        this.reviewRepository = reviewRepository;
+    public AssortmentService(ProductService productService,
+                             CategoryService categoryService,
+                             InventoryService inventoryService,
+                             ReviewService reviewService) {
+        this.productService = productService;
+        this.categoryService = categoryService;
+        this.inventoryService = inventoryService;
+        this.reviewService = reviewService;
     }
 
     /**
@@ -57,14 +57,14 @@ public class AssortmentService {
         var parentCategoryId = creationDto.getParentCategoryId();
         var parentCategory = (parentCategoryId == null)
                 ? null
-                : categoryRepository.findById(parentCategoryId).orElseThrow(RuntimeException::new); //todo Exception: Category not found
+                : categoryService.findById(parentCategoryId);
 
         //Find referenced Child Categories, otherwise leave as empty HashSet
         var childCategoryIds = creationDto.getChildCategoryIds();
         var childCategories = (childCategoryIds == null || childCategoryIds.isEmpty())
                 ? new HashSet<Category>()
                 : childCategoryIds.stream()
-                .map(id -> categoryRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Category not found
+                .map(categoryService::findById)
                 .collect(Collectors.toSet());
 
         //Find referenced Products, otherwise leave as empty HashSet
@@ -72,12 +72,12 @@ public class AssortmentService {
         var products = (productIds == null || productIds.isEmpty())
                 ? new HashSet<Product>()
                 : productIds.stream()
-                .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Product not found
+                .map(productService::findById)
                 .collect(Collectors.toSet());
 
         //Convert Dto to Entity, persist in database and return Dto to Controller
         var categoryEntity = toEntity(creationDto, parentCategory, childCategories, products);
-        categoryRepository.save(categoryEntity);
+        categoryService.save(categoryEntity);
         return toDto(categoryEntity);
     }
 
@@ -94,79 +94,39 @@ public class AssortmentService {
         //todo refactor: see if some of the logic can be done in the inner service layer instead. Perhaps compare methods in entity? (e.g findRemovedChildCategoryIds() and findAddedChildCategoryIds())
         //todo refactor: force user to provide empty sets instead of null values?
         //Find the category
-        var oldCategory = categoryRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Category not found
+        var oldCategory = categoryService.findById(id); //todo Exception: Category not found
 
-        //todo refactor: create equals method for category (and products below)
-        //If parent category id has changed, fetch the new parent category. Ternary operators to avoid nullpointer exceptions.
+        var newParentCategoryId = dto.getParentCategoryId();
         var oldParentCategory = oldCategory.getParentCategory();
-        var oldParentCategoryId = (oldParentCategory == null)
-                ? null
-                : oldParentCategory.getId();
-        var updatedParentCategoryId = dto.getParentCategoryId();
-        var updatedParentCategory = (updatedParentCategoryId == null)
-                ? null
-                : (updatedParentCategoryId.equals(oldParentCategoryId))
-                ? oldParentCategory
-                : categoryRepository.findById(updatedParentCategoryId).orElseThrow(RuntimeException::new); //todo Exception: Category not found
+        var updatedParentCategory = categoryService.getNewCategory(newParentCategoryId, oldParentCategory);
 
         //todo refactor: the exact same logic is done with both child categories and products. Try to create a general method for this
         //Updating child categories
-        var updatedChildCategories = oldCategory.getChildCategories();
-
-        //Remove associations with child categories that shouldn't exist anymore
-        var newChildCategoryIds = (dto.getChildCategoryIds() == null)
+        var newChildCategoryIds = (dto.getChildCategoryIds() == null) //Todo Fråga Thor: Validering i inre lagret? "Variable used in lambda expression should be final or effectively final" när vi assignade om variabeln i inre lagret
                 ? new HashSet<String>()
                 : dto.getChildCategoryIds();
-        updatedChildCategories.removeIf(category -> !newChildCategoryIds.contains(category.getId()));
-
-        //Add associations with child categories which didn't exist before
-        if (!newChildCategoryIds.isEmpty()) {
-            var oldChildCategories = updatedChildCategories
-                    .stream()
-                    .collect(Collectors.toMap(Category::getId, category -> category));
-            var newChildCategories = newChildCategoryIds
-                    .stream()
-                    .filter(categoryId -> !oldChildCategories.containsKey(categoryId))
-                    .map(categoryRepository::findById)
-                    .map(category -> category.orElseThrow(RuntimeException::new)) //todo Exception: Category not found
-                    .collect(Collectors.toSet());
-            updatedChildCategories.addAll(newChildCategories);
-        }
+        var oldChildCategories = oldCategory.getChildCategories();
+        var updatedChildCategories = categoryService.getNewCategories(newChildCategoryIds, oldChildCategories);
 
         //Updating products
-        var updatedProducts = oldCategory.getProducts();
-
-        //Remove associations with child categories that shouldn't exist anymore
         var newProductIds = (dto.getProductIds() == null)
                 ? new HashSet<String>()
                 : dto.getProductIds();
-        updatedProducts.removeIf(product -> !newProductIds.contains(product.getId()));
-
-        //Add associations with child categories which didn't exist before
-        if (!newProductIds.isEmpty()) {
-            var oldProducts = updatedProducts
-                    .stream()
-                    .collect(Collectors.toMap(Product::getId, product -> product));
-            var newProducts = newProductIds
-                    .stream()
-                    .filter(productId -> !oldProducts.containsKey(productId))
-                    .map(productRepository::findById)
-                    .map(product -> product.orElseThrow(RuntimeException::new)) //todo Exception: Product not found
-                    .collect(Collectors.toSet());
-            updatedProducts.addAll(newProducts);
-        }
+        var oldProducts = oldCategory.getProducts();
+        var updatedProducts = productService.getNewProducts(newProductIds, oldProducts);
 
         //Create entity from all components, persist in database and return dto to controller
         var updatedCategory = toEntity(id, dto, updatedParentCategory, updatedChildCategories, updatedProducts);
-        return toDto(categoryRepository.save(updatedCategory));
+        return toDto(categoryService.save(updatedCategory));
     }
 
     /**
      * Find a list of all products
+     *
      * @return list
      */
     public List<ProductDto> findAll() {
-        return productRepository.findAll()
+        return productService.findAll()
                 .stream()
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
@@ -174,6 +134,7 @@ public class AssortmentService {
 
     /**
      * Create a product
+     *
      * @param productCreationDto inventories cannot be empty or null
      * @return dto
      */
@@ -182,7 +143,7 @@ public class AssortmentService {
         var categories = (categoryIds == null)
                 ? new HashSet<Category>()
                 : categoryIds.stream()
-                .map(id -> categoryRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Category not found
+                .map(categoryService::findById)
                 .collect(Collectors.toSet());
 
         var invetoryDtos = productCreationDto.getInventories();
@@ -196,11 +157,11 @@ public class AssortmentService {
                 .collect(Collectors.toSet());
 
         Product product = toEntity(productCreationDto, categories);
-        productRepository.save(product);
+        productService.save(product);
 
         inventories.forEach(inventory -> {
             inventory.setProduct(product);
-            inventoryRepository.save(inventory);
+            inventoryService.save(inventory);
         });
 
         return toDto(product);

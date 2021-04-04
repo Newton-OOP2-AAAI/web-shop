@@ -9,46 +9,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Notes:
+ * Lower level services that only handle one repository should return entities.
+ * AssortmentService should take care of mapping between Entity/DTO
+ */
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryService categoryService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryService categoryService) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.categoryService = categoryService;
     }
 
-    /**
-     * Notes:
-     * <p>
-     * Lower level services that only handle one repository should return entities.
-     * AssortmentService should take care of mapping between Entity/DTO
-     */
     public List<Product> findAll() {
         return productRepository.findAll();
     }
 
-    public Product createProduct(Product newProduct) {
-        return productRepository.save(newProduct);
-    }
-
     public Product findById(String id) {
-        return productRepository.findById(id).orElseThrow(RuntimeException::new);
+        return productRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Product not found
     }
-
-    //TODO commented code should be removed unless methods are needed in Assortment Service
-
-//    @PostMapping
-//    public Category addCategory(@RequestBody Category newCategory) {
-//        return categoryService.addCategory(newCategory);
-//    }
-//
-//    @PostMapping
-//    public Category removeCategory(@RequestBody Category delCategory) {
-//        return categoryService.removeCategory(delCategory);
-//    }
 
     /**
      * Find a set of products.
@@ -60,5 +41,37 @@ public class ProductService {
         return productIds.stream()
                 .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new))
                 .collect(Collectors.toSet());
+    }
+
+    public Set<Product> getNewProducts(Set<String> newProductIds, Set<Product> productsToUpdate) {
+        //Remove associations with child categories that shouldn't exist anymore
+        productsToUpdate.removeIf(product -> !newProductIds.contains(product.getId()));
+
+        //Add associations with child categories which didn't exist before
+        if (!newProductIds.isEmpty()) {
+            var oldProducts = productsToUpdate
+                    .stream()
+                    .collect(Collectors.toMap(Product::getId, product -> product));
+            var newProducts = newProductIds
+                    .stream()
+                    .filter(productId -> !oldProducts.containsKey(productId))
+                    .map(productRepository::findById)
+                    .map(product -> product.orElseThrow(RuntimeException::new)) //todo Exception: Product not found
+                    .collect(Collectors.toSet());
+            productsToUpdate.addAll(newProducts);
+        }
+
+        //Return the updated set of products
+        return productsToUpdate;
+    }
+
+    /**
+     * Persists product in database.
+     *
+     * @param product entity to create or update
+     * @return persisted product
+     */
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 }

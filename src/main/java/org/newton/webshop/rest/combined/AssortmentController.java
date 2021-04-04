@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * API endpoints to handle the assortment
+ * Notes: If a new user story is added, make sure it's also added to the project document!
  */
 @RestController
 @RequestMapping("/products")
@@ -25,14 +26,7 @@ public class AssortmentController {
     }
 
     /**
-     * Notes:
-     * If a new user story is added, make sure it's also added to the project document!
-     *
-     */
-
-    /**
      * Manage categories: /products/categories
-     * <p>
      * Following user stories need to be implemented:
      */
     //Employee wants to add a category to keep products categorized, making them easier to find.
@@ -41,8 +35,16 @@ public class AssortmentController {
         return assortmentService.createCategory(creationDto);
     }
 
-    //Employee wants to modify an existing category, to make it easier to update the webshop.
-    //Notes: change name, change parentCategory
+
+    /**
+     * Update a category
+     *
+     * @param id        id of category
+     * @param updateDto CategoryCreationDto
+     * @return CategoryDto
+     * Employee wants to modify an existing category, to make it easier to update the webshop.
+     * Notes: change name, change parentCategory
+     */
     @PutMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public CategoryDto updateCategory(@RequestParam String id, @RequestBody CategoryCreationDto updateDto) {
         return assortmentService.updateCategory(id, updateDto);
@@ -51,11 +53,16 @@ public class AssortmentController {
 
     /**
      * Manage products: /products
-     * <p>
      * Following user stories need to be implemented:
      */
-    //Employee wants to add a new product.
-    //Notes: price, name, description, category etc.
+
+    /**
+     * Create a product
+     *
+     * @param productCreationDto
+     * @return Employee wants to add a new product.
+     * Notes: price, name, description, category etc.
+     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     ProductDto createProduct(@RequestBody ProductCreationDto productCreationDto) {
         return assortmentService.createProduct(productCreationDto);
@@ -69,13 +76,12 @@ public class AssortmentController {
 
     /**
      * View products: /products
-     *
      * Following user stories need to be implemented:
      */
     //Customer wants a list of products to get an overview of what the shop has to offer.
 
     /**
-     * Find all products
+     * Find all products: /products/all
      *
      * @return list of all products
      * @author Isa

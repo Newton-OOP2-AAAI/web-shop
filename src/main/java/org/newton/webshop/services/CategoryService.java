@@ -19,23 +19,12 @@ public class CategoryService {
     }
 
     /**
-     * Create a category
-     *
-     * @param newCategory
-     * @return the created category
-     */
-    public Category createCategory(Category newCategory) {
-        return categoryRepository.save(newCategory);
-    }
-
-    /**
-     * Update a category
-     * todo: Refactor: See if it's possible to move some of the logic to this service layer. At the moment update() is identical to createCategory()
+     * Create or update a category.
      *
      * @param category
-     * @return the updated category
+     * @return the persisted category
      */
-    public Category update(Category category) {
+    public Category save(Category category) {
         return categoryRepository.save(category);
     }
 
@@ -58,11 +47,50 @@ public class CategoryService {
      * @return category, if the id existed in database
      */
     public Category findById(String id) {
-        return categoryRepository.findById(id).orElseThrow(RuntimeException::new);
+        return categoryRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Category not found
     }
 
+    /**
+     * Compares two categories and returns the updated category
+     *
+     * @param newCategoryId id of the new category Nullable todo: Fråga Thor: Nullable Annotations?
+     * @param oldCategory   old category Nullable todo: Fråga Thor: Nullable Annotations?
+     * @return new category
+     */
+    public Category getNewCategory(String newCategoryId, Category oldCategory) {
+        //todo Fråga Thor: Kan man använda Equals metod på ett smartare sätt här?
+        //If category id has changed, fetch the new parent category. Ternary operators to avoid nullpointer exceptions.
+        var oldCategoryId = (oldCategory == null)
+                ? null
+                : oldCategory.getId();
+        return (newCategoryId == null)
+                ? null
+                : (newCategoryId.equals(oldCategoryId))
+                ? oldCategory
+                : categoryRepository.findById(newCategoryId).orElseThrow(RuntimeException::new);
+    }
 
-    //old
+    public Set<Category> getNewCategories(Set<String> newCategoryIds, Set<Category> categoriesToUpdate) {
+        //Remove categories which are not in newCategoryIds
+        categoriesToUpdate.removeIf(category -> !newCategoryIds.contains(category.getId()));
+
+        //Add new categories from newCategoryIds
+        if (!newCategoryIds.isEmpty()) {
+            var oldChildCategories = categoriesToUpdate
+                    .stream()
+                    .collect(Collectors.toMap(Category::getId, category -> category));
+            var newChildCategories = newCategoryIds
+                    .stream()
+                    .filter(categoryId -> !oldChildCategories.containsKey(categoryId))
+                    .map(categoryRepository::findById)
+                    .map(category -> category.orElseThrow(RuntimeException::new)) //todo Exception: Category not found
+                    .collect(Collectors.toSet());
+            categoriesToUpdate.addAll(newChildCategories);
+        }
+
+        //Return the updated set of categories
+        return categoriesToUpdate;
+    }
 
     public List<Category> findAll() {
         return categoryRepository.findAll();
@@ -71,6 +99,4 @@ public class CategoryService {
     public Category removeCategory(Category delCategory) {
         return categoryRepository.save(delCategory);
     }
-
-
 }
