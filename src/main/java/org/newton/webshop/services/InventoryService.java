@@ -5,6 +5,11 @@ import org.newton.webshop.repositories.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Notes:
+ * Lower level services that only handle one repository should return entities.
+ * AssortmentService should take care of mapping between Entity/DTO
+ */
 @Service
 public class InventoryService {
     private InventoryRepository inventoryRepository;
@@ -14,22 +19,13 @@ public class InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
-    public Inventory createInventory(Inventory inventory) {
-        return inventoryRepository.save(inventory);
-
-    }
-
     /**
-     * Notes:
+     * Create or update a inventory.
      *
-     * Lower level services that only handle one repository should return entities.
-     * AssortmentService should take care of mapping between Entity/DTO
-     *
+     * @param inventory
+     * @return the persisted inventory
      */
-
-
-    //TODO commented code should be removed unless methods are needed in Assortment Service
-//    public List<Inventory> findAll() {
-//        return inventoryRepository.findAll();
-//    }
+    public Inventory save(Inventory inventory) {
+        return inventoryRepository.save(inventory);
+    }
 }

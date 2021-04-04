@@ -15,10 +15,10 @@ import java.util.Set;
 public class ProductDto {
 
     private String id;
-    private Set<Inventory> inventory;
+    private Set<Inventory> inventory; //todo inventory dto
     private String name;
     private Integer price;
-    private Set<Category> category;
+    private Set<Category> category; //todo category dto
     private String description;
     private boolean visible;
 
