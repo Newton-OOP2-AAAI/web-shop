@@ -47,8 +47,7 @@ public class AssortmentService {
     }
 
     /**
-     * Create a new category and set associations (parent category, child categories, products). Referenced entities must exist in database, otherwise exception is thrown.
-     *
+     * Creates a new category and sets associations (parent category, child categories, products). Referenced entities must already exist in database, otherwise exception is thrown.
      * @param creationDto CategoryCreationDto
      * @return CategoryDto
      */
@@ -74,45 +73,49 @@ public class AssortmentService {
     }
 
     /**
-     * Updates a category
-     *
-     * @param id  id of category to update
-     * @param dto CategoryCreationDto
+     * Updates given category with the fields in dto
+     * @param id id of category which should be updated
+     * @param dto contains the fields and associations to update
      * @return Dto
      */
     public CategoryDto updateCategory(String id, CategoryCreationDto dto) {
-        //todo refactor: see if some of the logic can be done in the inner service layer instead
+        //todo refactor: see if some of the logic can be done in the inner service layer instead. Perhaps compare methods in entity? (e.g findRemovedChildCategoryIds() and findAddedChildCategoryIds())
+        //todo refactor: force user to provide empty sets instead of null values?
         //Find the category
         var categoryToUpdate = categoryService.findById(id);
 
+        //todo refactor: create equals method for category (and products below)
         //If parent category id has changed, fetch the new parent category.
-        var oldParentCategoryId = categoryToUpdate.getId();
+        var oldParentCategory = categoryToUpdate.getParentCategory();
+        var oldParentCategoryId = oldParentCategory == null ? null : oldParentCategory.getId();
         var newParentCategoryId = dto.getParentCategoryId();
-        var newParentCategory = oldParentCategoryId.equals(newParentCategoryId) ? categoryToUpdate.getParentCategory() : categoryService.findById(newParentCategoryId);
+        var newParentCategory = newParentCategoryId == null ? null : newParentCategoryId.equals(oldParentCategoryId) ? oldParentCategory : categoryService.findById(newParentCategoryId);
 
         //todo refactor: the exact same logic is done with both child categories and products. Try to create a general method for this
         //Remove associations with child categories that shouldn't exist anymore
-        var childCategories = categoryToUpdate.getChildCategories();
-        var newChildCategoryIds = dto.getChildCategoryIds();
+        var childCategories = categoryToUpdate.getChildCategories() == null ? new HashSet<Category>() : categoryToUpdate.getChildCategories();
         childCategories.removeIf(category -> !dto.getChildCategoryIds().contains(category.getId()));
 
         //Add associations with child categories which didn't exist before
-        var oldChildCategories = childCategories
-                .stream()
-                .collect(Collectors.toMap(Category::getId, category -> category));
-        var newChildCategories = newChildCategoryIds
-                .stream()
-                .filter(categoryId -> !oldChildCategories.containsKey(categoryId))
-                .map(categoryService::findById)
-                .collect(Collectors.toSet());
-        childCategories.addAll(newChildCategories);
+        var newChildCategoryIds = dto.getChildCategoryIds() == null ? new HashSet<String>() : dto.getChildCategoryIds();
+        if(!newChildCategoryIds.isEmpty()) {
+            var oldChildCategories = childCategories
+                    .stream()
+                    .collect(Collectors.toMap(Category::getId, category -> category));
+            var newChildCategories = newChildCategoryIds
+                    .stream()
+                    .filter(categoryId -> !oldChildCategories.containsKey(categoryId))
+                    .map(categoryService::findById)
+                    .collect(Collectors.toSet());
+            childCategories.addAll(newChildCategories);
+        }
 
-        //Remove associations with child categories that shouldn't exist anymore
+        //Remove associations with products that shouldn't exist anymore
         var productIds = dto.getProductIds();
         var products = categoryToUpdate.getProducts();
         products.removeIf(product -> !dto.getProductIds().contains(product.getId()));
 
-        //Add associations with child categories which didn't exist before
+        //Add associations with products which didn't exist before
         var oldProducts = products
                 .stream()
                 .collect(Collectors.toMap(Product::getId, product -> product));
@@ -125,63 +128,6 @@ public class AssortmentService {
 
         return toDto(categoryService.update(toEntity(id, dto, newParentCategory, childCategories, products)));
     }
-
-    /**
-     * Converts Entity to Dto
-     *
-     * @param category the category to convert
-     * @return CategoryDto
-     */
-    private static CategoryDto toDto(Category category) {
-        //todo microoptimeringar
-        //todo flytta konvertering till inre servicelagret
-
-        var parentCategory = category.getParentCategory();
-        var parentCategoryId = parentCategory != null ? parentCategory.getId() : null;
-        var parentCategoryName = parentCategory != null ? parentCategory.getName() : null;
-
-        return CategoryDto.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .parentCategoryId(parentCategoryId)
-                .parentCategoryName(parentCategoryName)
-                .childCategories(category.getChildCategories()
-                        .stream()
-                        .collect(Collectors.toMap(Category::getId, Category::getName)))
-                .products(category.getProducts()
-                        .stream()
-                        .collect(Collectors.toMap(Product::getId, Product::getName)))
-                .build();
-    }
-
-    /**
-     * Converts CategoryCreationDto to Entity. The composite fields references already existing Entities, so they must be provided as parameters
-     *
-     * @param dto             contains all scalar fields and references to already existing composite fields
-     * @param parentCategory  one parent category
-     * @param childCategories set of child categories
-     * @param products        set of products
-     * @return category entity
-     */
-    private static Category toEntity(CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
-        return Category.builder()
-                .name(dto.getName())
-                .parentCategory(parentCategory)
-                .childCategories(childCategories)
-                .products(products)
-                .build();
-    }
-
-    private static Category toEntity(String id, CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
-        return Category.builder()
-                .id(id)
-                .name(dto.getName())
-                .parentCategory(parentCategory)
-                .childCategories(childCategories)
-                .products(products)
-                .build();
-    }
-
 
     /**
      *
@@ -216,6 +162,68 @@ public class AssortmentService {
         return toDto(product);
     }
 
+    /**
+     * Converts CategoryCreationDto to Entity without id
+     * @param dto             contains all scalar fields and references to already existing composite fields
+     * @param parentCategory  one parent category
+     * @param childCategories set of child categories
+     * @param products        set of products
+     * @return category entity
+     */
+    private static Category toEntity(CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
+        return Category.builder()
+                .name(dto.getName())
+                .parentCategory(parentCategory)
+                .childCategories(childCategories)
+                .products(products)
+                .build();
+    }
+
+    /**
+     * Converts CategoryCreationDto to Entity with id
+     * @param id an existing id
+     * @param dto CategoryCreationDto
+     * @param parentCategory Set of already persisted parent categories
+     * @param childCategories Set of already persisted child categories
+     * @param products set of already persisted products
+     * @return category entity
+     */
+    private static Category toEntity(String id, CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
+        return Category.builder()
+                .id(id)
+                .name(dto.getName())
+                .parentCategory(parentCategory)
+                .childCategories(childCategories)
+                .products(products)
+                .build();
+    }
+
+    /**
+     * Converts Entity to Dto
+     *
+     * @param category the category to convert
+     * @return CategoryDto
+     */
+    private static CategoryDto toDto(Category category) {
+        //todo microoptimeringar: Fråga Thor
+        //todo flytta konvertering till egen factory klass
+        var parentCategory = category.getParentCategory();
+        var parentCategoryId = parentCategory != null ? parentCategory.getId() : null;
+        var parentCategoryName = parentCategory != null ? parentCategory.getName() : null;
+
+        return CategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .parentCategoryId(parentCategoryId)
+                .parentCategoryName(parentCategoryName)
+                .childCategories(category.getChildCategories()
+                        .stream()
+                        .collect(Collectors.toMap(Category::getId, Category::getName)))
+                .products(category.getProducts()
+                        .stream()
+                        .collect(Collectors.toMap(Product::getId, Product::getName)))
+                .build();
+    }
 
     // Testat som i staffService:
     private static ProductDto toDto(Product product) {
