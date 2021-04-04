@@ -8,10 +8,10 @@ import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
-import org.newton.webshop.services.CategoryService;
-import org.newton.webshop.services.InventoryService;
-import org.newton.webshop.services.ProductService;
-import org.newton.webshop.services.ReviewService;
+import org.newton.webshop.repositories.CategoryRepository;
+import org.newton.webshop.repositories.InventoryRepository;
+import org.newton.webshop.repositories.ProductRepository;
+import org.newton.webshop.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,133 +30,177 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AssortmentService {
-    private final ProductService productService;
-    private final InventoryService inventoryService;
-    private final CategoryService categoryService;
-    private final ReviewService reviewService;
+    private final ProductRepository productRepository;
+    private final InventoryRepository inventoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
-    public AssortmentService(ProductService productService,
-                             InventoryService inventoryService,
-                             CategoryService categoryService,
-                             ReviewService reviewService) {
-        this.productService = productService;
-        this.inventoryService = inventoryService;
-        this.categoryService = categoryService;
-        this.reviewService = reviewService;
+    public AssortmentService(ProductRepository productRepository,
+                             InventoryRepository inventoryRepository,
+                             CategoryRepository categoryRepository,
+                             ReviewRepository reviewRepository) {
+        this.productRepository = productRepository;
+        this.inventoryRepository = inventoryRepository;
+        this.categoryRepository = categoryRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     /**
      * Creates a new category and sets associations (parent category, child categories, products). Referenced entities must already exist in database, otherwise exception is thrown.
+     *
      * @param creationDto CategoryCreationDto
      * @return CategoryDto
      */
     public CategoryDto createCategory(CategoryCreationDto creationDto) {
         //Find referenced Parent Category, otherwise leave as null
         var parentCategoryId = creationDto.getParentCategoryId();
-        var parentCategory = parentCategoryId != null ? categoryService.findById(parentCategoryId) : null;
+        var parentCategory = (parentCategoryId == null)
+                ? null
+                : categoryRepository.findById(parentCategoryId).orElseThrow(RuntimeException::new); //todo Exception: Category not found
 
         //Find referenced Child Categories, otherwise leave as empty HashSet
         var childCategoryIds = creationDto.getChildCategoryIds();
-        var childCategories = childCategoryIds != null ? categoryService.findById(childCategoryIds) : new HashSet<Category>();
+        var childCategories = (childCategoryIds == null || childCategoryIds.isEmpty())
+                ? new HashSet<Category>()
+                : childCategoryIds.stream()
+                .map(id -> categoryRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Category not found
+                .collect(Collectors.toSet());
 
         //Find referenced Products, otherwise leave as empty HashSet
         var productIds = creationDto.getProductIds();
-        var products = productIds != null ? productService.findById(productIds) : new HashSet<Product>();
+        var products = (productIds == null || productIds.isEmpty())
+                ? new HashSet<Product>()
+                : productIds.stream()
+                .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Product not found
+                .collect(Collectors.toSet());
 
-        //Convert Dto to Entity and persist in database
+        //Convert Dto to Entity, persist in database and return Dto to Controller
         var categoryEntity = toEntity(creationDto, parentCategory, childCategories, products);
-        categoryService.createCategory(categoryEntity);
-
-        //Return Dto to Controller
+        categoryRepository.save(categoryEntity);
         return toDto(categoryEntity);
     }
 
     /**
      * Updates given category with the fields in dto
-     * @param id id of category which should be updated
+     *
+     * @param id  id of category which should be updated
      * @param dto contains the fields and associations to update
      * @return Dto
      */
     public CategoryDto updateCategory(String id, CategoryCreationDto dto) {
+        //todo Fråga Thor: Ett eller två service lager?
+
         //todo refactor: see if some of the logic can be done in the inner service layer instead. Perhaps compare methods in entity? (e.g findRemovedChildCategoryIds() and findAddedChildCategoryIds())
         //todo refactor: force user to provide empty sets instead of null values?
         //Find the category
-        var categoryToUpdate = categoryService.findById(id);
+        var oldCategory = categoryRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Category not found
 
         //todo refactor: create equals method for category (and products below)
-        //If parent category id has changed, fetch the new parent category.
-        var oldParentCategory = categoryToUpdate.getParentCategory();
-        var oldParentCategoryId = oldParentCategory == null ? null : oldParentCategory.getId();
-        var newParentCategoryId = dto.getParentCategoryId();
-        var newParentCategory = newParentCategoryId == null ? null : newParentCategoryId.equals(oldParentCategoryId) ? oldParentCategory : categoryService.findById(newParentCategoryId);
+        //If parent category id has changed, fetch the new parent category. Ternary operators to avoid nullpointer exceptions.
+        var oldParentCategory = oldCategory.getParentCategory();
+        var oldParentCategoryId = (oldParentCategory == null)
+                ? null
+                : oldParentCategory.getId();
+        var updatedParentCategoryId = dto.getParentCategoryId();
+        var updatedParentCategory = (updatedParentCategoryId == null)
+                ? null
+                : (updatedParentCategoryId.equals(oldParentCategoryId))
+                ? oldParentCategory
+                : categoryRepository.findById(updatedParentCategoryId).orElseThrow(RuntimeException::new); //todo Exception: Category not found
 
         //todo refactor: the exact same logic is done with both child categories and products. Try to create a general method for this
+        //Updating child categories
+        var updatedChildCategories = oldCategory.getChildCategories();
+
         //Remove associations with child categories that shouldn't exist anymore
-        var childCategories = categoryToUpdate.getChildCategories() == null ? new HashSet<Category>() : categoryToUpdate.getChildCategories();
-        childCategories.removeIf(category -> !dto.getChildCategoryIds().contains(category.getId()));
+        var newChildCategoryIds = (dto.getChildCategoryIds() == null)
+                ? new HashSet<String>()
+                : dto.getChildCategoryIds();
+        updatedChildCategories.removeIf(category -> !newChildCategoryIds.contains(category.getId()));
 
         //Add associations with child categories which didn't exist before
-        var newChildCategoryIds = dto.getChildCategoryIds() == null ? new HashSet<String>() : dto.getChildCategoryIds();
-        if(!newChildCategoryIds.isEmpty()) {
-            var oldChildCategories = childCategories
+        if (!newChildCategoryIds.isEmpty()) {
+            var oldChildCategories = updatedChildCategories
                     .stream()
                     .collect(Collectors.toMap(Category::getId, category -> category));
             var newChildCategories = newChildCategoryIds
                     .stream()
                     .filter(categoryId -> !oldChildCategories.containsKey(categoryId))
-                    .map(categoryService::findById)
+                    .map(categoryRepository::findById)
+                    .map(category -> category.orElseThrow(RuntimeException::new)) //todo Exception: Category not found
                     .collect(Collectors.toSet());
-            childCategories.addAll(newChildCategories);
+            updatedChildCategories.addAll(newChildCategories);
         }
 
-        //Remove associations with products that shouldn't exist anymore
-        var productIds = dto.getProductIds();
-        var products = categoryToUpdate.getProducts();
-        products.removeIf(product -> !dto.getProductIds().contains(product.getId()));
+        //Updating products
+        var updatedProducts = oldCategory.getProducts();
 
-        //Add associations with products which didn't exist before
-        var oldProducts = products
-                .stream()
-                .collect(Collectors.toMap(Product::getId, product -> product));
-        var newProducts = productIds
-                .stream()
-                .filter(productId -> !oldProducts.containsKey(productId))
-                .map(productService::findById)
-                .collect(Collectors.toSet());
-        products.addAll(newProducts);
+        //Remove associations with child categories that shouldn't exist anymore
+        var newProductIds = (dto.getProductIds() == null)
+                ? new HashSet<String>()
+                : dto.getProductIds();
+        updatedProducts.removeIf(product -> !newProductIds.contains(product.getId()));
 
-        return toDto(categoryService.update(toEntity(id, dto, newParentCategory, childCategories, products)));
+        //Add associations with child categories which didn't exist before
+        if (!newProductIds.isEmpty()) {
+            var oldProducts = updatedProducts
+                    .stream()
+                    .collect(Collectors.toMap(Product::getId, product -> product));
+            var newProducts = newProductIds
+                    .stream()
+                    .filter(productId -> !oldProducts.containsKey(productId))
+                    .map(productRepository::findById)
+                    .map(product -> product.orElseThrow(RuntimeException::new)) //todo Exception: Product not found
+                    .collect(Collectors.toSet());
+            updatedProducts.addAll(newProducts);
+        }
+
+        //Create entity from all components, persist in database and return dto to controller
+        var updatedCategory = toEntity(id, dto, updatedParentCategory, updatedChildCategories, updatedProducts);
+        return toDto(categoryRepository.save(updatedCategory));
     }
 
     /**
-     *
+     * Find a list of all products
+     * @return list
      */
-    //Customer wants a list of products to get an overview of what the shop has to offer:
     public List<ProductDto> findAll() {
-        return productService.findAll()
+        return productRepository.findAll()
                 .stream()
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
     }
 
-    //Employee wants to add product
+    /**
+     * Create a product
+     * @param productCreationDto inventories cannot be empty or null
+     * @return dto
+     */
     public ProductDto createProduct(ProductCreationDto productCreationDto) {
         var categoryIds = productCreationDto.getCategoryIds();
-        var categories = categoryIds != null ? categoryService.findById(categoryIds) : null;
+        var categories = (categoryIds == null)
+                ? new HashSet<Category>()
+                : categoryIds.stream()
+                .map(id -> categoryRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Category not found
+                .collect(Collectors.toSet());
 
+        var invetoryDtos = productCreationDto.getInventories();
+        if (invetoryDtos == null || invetoryDtos.isEmpty()) {
+            throw new RuntimeException(); //todo Exception: Inventory must exist, set quantity to 0 if product isn't in stock yet
+        }
 
-        Set<Inventory> inventories = productCreationDto.getInventories()
+        Set<Inventory> inventories = invetoryDtos
                 .stream()
                 .map(AssortmentService::toEntity)
                 .collect(Collectors.toSet());
 
         Product product = toEntity(productCreationDto, categories);
-        productService.createProduct(product);
+        productRepository.save(product);
 
         inventories.forEach(inventory -> {
             inventory.setProduct(product);
-            inventoryService.createInventory(inventory);
+            inventoryRepository.save(inventory);
         });
 
         return toDto(product);
@@ -164,6 +208,7 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity without id
+     *
      * @param dto             contains all scalar fields and references to already existing composite fields
      * @param parentCategory  one parent category
      * @param childCategories set of child categories
@@ -171,6 +216,7 @@ public class AssortmentService {
      * @return category entity
      */
     private static Category toEntity(CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
+        //todo Fråga Thor: Bör man ha validering i sina konverteringsmetoder, t.ex name != null
         return Category.builder()
                 .name(dto.getName())
                 .parentCategory(parentCategory)
@@ -181,11 +227,12 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity with id
-     * @param id an existing id
-     * @param dto CategoryCreationDto
-     * @param parentCategory Set of already persisted parent categories
+     *
+     * @param id              an existing id
+     * @param dto             CategoryCreationDto
+     * @param parentCategory  Set of already persisted parent categories
      * @param childCategories Set of already persisted child categories
-     * @param products set of already persisted products
+     * @param products        set of already persisted products
      * @return category entity
      */
     private static Category toEntity(String id, CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
