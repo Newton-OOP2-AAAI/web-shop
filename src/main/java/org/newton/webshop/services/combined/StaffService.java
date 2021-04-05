@@ -76,34 +76,21 @@ public class StaffService {
 
     }
 
-    private static Employee toEntity(EmployeeCreationDto creationDto, Role role, String employeeId) {
-        return Employee.builder()
-                .id(employeeId)
-                .role(role)
-                .firstname(creationDto.getFirstname())
-                .lastname(creationDto.getLastname())
-                .phone(creationDto.getPhone())
-                .email(creationDto.getEmail())
-                .address(Address.builder()
-                        .streetName(creationDto.getStreetName())
-                        .streetNumber(creationDto.getStreetNumber())
-                        .zipCode(creationDto.getZipCode())
-                        .city(creationDto.getCity())
-                        .build())
-                .username(creationDto.getUsername())
-                .password(creationDto.getPassword())
-                .build();
-    }
 
     public EmployeeDto findById(String id) {
-        return new EmployeeDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new));
+        return new EmployeeDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new)); //TODO Manage exception for not finding employee
     }
 
-    public List<EmployeeDto> findAll(){
-        return employeeRepository.findAll()
+    public List<EmployeeDto> findAll() {
+        return employeeService.findAll()
                 .stream()
-                .map(EmployeeDto::new)
+                .map(StaffService::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteEmployeeById(String id) {
+        Employee deleteEmployee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
+        employeeRepository.delete(deleteEmployee);
     }
 
     private static Employee toEntity(EmployeeUpdateDto employeeUpdateDto) {
