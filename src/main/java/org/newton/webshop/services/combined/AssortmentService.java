@@ -31,24 +31,23 @@ import java.util.stream.Collectors;
 @Service
 public class AssortmentService {
     private final ProductService productService;
-    private final CategoryService categoryService;
     private final InventoryService inventoryService;
+    private final CategoryService categoryService;
     private final ReviewService reviewService;
 
     @Autowired
     public AssortmentService(ProductService productService,
-                             CategoryService categoryService,
                              InventoryService inventoryService,
+                             CategoryService categoryService,
                              ReviewService reviewService) {
         this.productService = productService;
-        this.categoryService = categoryService;
         this.inventoryService = inventoryService;
+        this.categoryService = categoryService;
         this.reviewService = reviewService;
     }
 
     /**
      * Creates a new category and sets associations (parent category, child categories, products). Referenced entities must already exist in database, otherwise exception is thrown.
-     *
      * @param creationDto CategoryCreationDto
      * @return CategoryDto
      */
@@ -170,7 +169,6 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity without id
-     *
      * @param dto             contains all scalar fields and references to already existing composite fields
      * @param parentCategory  one parent category
      * @param childCategories set of child categories
@@ -189,10 +187,9 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity with id
-     *
-     * @param id              an existing id
-     * @param dto             CategoryCreationDto
-     * @param parentCategory  Set of already persisted parent categories
+     * @param id an existing id
+     * @param dto CategoryCreationDto
+     * @param parentCategory Set of already persisted parent categories
      * @param childCategories Set of already persisted child categories
      * @param products        set of already persisted products
      * @return category entity
@@ -267,4 +264,7 @@ public class AssortmentService {
     }
 
 
+    public void deleteCategoryById(String id) {
+        categoryService.deleteCategory(id);
+    }
 }

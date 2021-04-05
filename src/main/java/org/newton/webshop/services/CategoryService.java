@@ -96,7 +96,8 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Category removeCategory(Category delCategory) {
-        return categoryRepository.save(delCategory);
+    public void deleteCategory(String id) {
+        Category category = categoryRepository.findById(id).orElseThrow(RuntimeException::new);
+        categoryRepository.delete(category);
     }
 }
