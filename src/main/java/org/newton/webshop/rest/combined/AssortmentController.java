@@ -70,6 +70,11 @@ public class AssortmentController {
 
     //Employee wants to modify the info about an existing product.
 
+    //Employee wants to delete an existing category
+    @DeleteMapping
+    public void deleteCategoryById(@RequestParam String id) {
+        assortmentService.deleteCategoryById(id);
+    }
     //Employee wants to assign a category to a product to make products that belong in multiple categories easier to find.
 
     //Employee wants to choose if a product is displayed in the webshop to be able to keep information about a product even if it's no longer offered.
