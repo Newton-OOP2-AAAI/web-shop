@@ -96,6 +96,7 @@ public class AssortmentService {
         //Find the category
         var oldCategory = categoryService.findById(id); //todo Exception: Category not found
 
+        //Updating parent category
         var newParentCategoryId = dto.getParentCategoryId();
         var oldParentCategory = oldCategory.getParentCategory();
         var updatedParentCategory = categoryService.getNewCategory(newParentCategoryId, oldParentCategory);
@@ -146,12 +147,12 @@ public class AssortmentService {
                 .map(categoryService::findById)
                 .collect(Collectors.toSet());
 
-        var invetoryDtos = productCreationDto.getInventories();
-        if (invetoryDtos == null || invetoryDtos.isEmpty()) {
+        var inventoryDtos = productCreationDto.getInventories();
+        if (inventoryDtos == null || inventoryDtos.isEmpty()) {
             throw new RuntimeException(); //todo Exception: Inventory must exist, set quantity to 0 if product isn't in stock yet
         }
 
-        Set<Inventory> inventories = invetoryDtos
+        Set<Inventory> inventories = inventoryDtos
                 .stream()
                 .map(AssortmentService::toEntity)
                 .collect(Collectors.toSet());
