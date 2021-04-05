@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class Product {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length = 36, nullable = false)
     private String id;
+
 
     @OneToMany(mappedBy = "product")
     private Set<Inventory> inventory;
@@ -43,5 +45,6 @@ public class Product {
 
     @Column(nullable = false)
     private boolean visible;
+
 
 }

@@ -100,6 +100,18 @@ public class AssortmentController {
 
     //Customer wants to sort products to find the most relevant product first.
     //Notes: Sort by category, date added, most sales
+    @GetMapping("sort/price/asc")
+    List<ProductDto> priceAsc() {
+        return assortmentService.sortByPriceAsc();
+    }
+    @GetMapping("sort/price/desc")
+    List<ProductDto> priceDesc() {
+        return assortmentService.sortByPriceDesc();
+    }
+    @GetMapping("sort/category")
+    List<ProductDto> category() {
+        return assortmentService.sortByCategory();
+    }
 
     //Customer wants to get detailed information about a product to assess if the product meet their needs
     //Notes: Show name, price, number in stock, description, material type

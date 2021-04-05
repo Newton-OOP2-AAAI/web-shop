@@ -131,6 +131,29 @@ public class AssortmentService {
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
     }
+    public List<ProductDto> sortByPriceAsc(){
+        return productService.findAllByPriceAsc()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+
+    }
+    public List<ProductDto> sortByPriceDesc(){
+        return productService.findAllByPriceDesc()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+
+    }
+    public List<ProductDto> sortByCategory(){
+        return productService.findAllByCategory()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+
+    }
+
+
 
     /**
      * Create a product
@@ -176,7 +199,6 @@ public class AssortmentService {
      * @return category entity
      */
     private static Category toEntity(CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
-        //todo Fråga Thor: Bör man ha validering i sina konverteringsmetoder, t.ex name != null
         return Category.builder()
                 .name(dto.getName())
                 .parentCategory(parentCategory)
@@ -231,7 +253,7 @@ public class AssortmentService {
                 .build();
     }
 
-    // Testat som i staffService:
+
     private static ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .id(product.getId())

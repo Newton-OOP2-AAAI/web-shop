@@ -1,5 +1,6 @@
 package org.newton.webshop.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,6 +22,7 @@ public class Inventory {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
     private Product product;
 
     @Column(length = 5)

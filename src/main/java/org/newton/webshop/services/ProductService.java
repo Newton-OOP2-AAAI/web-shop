@@ -27,6 +27,18 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public List<Product> findAllByPriceAsc() {
+        return productRepository.findAllByOrderByPriceAsc();
+    }
+
+    public List<Product> findAllByPriceDesc() {
+        return productRepository.findAllByOrderByPriceDesc();
+    }
+
+    public List<Product> findAllByCategory() {
+        return productRepository.findAllByOrderByCategory();
+    }
+
     public Product findById(String id) {
         return productRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Product not found
     }
