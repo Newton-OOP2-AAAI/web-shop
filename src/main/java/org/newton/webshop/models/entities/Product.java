@@ -43,7 +43,6 @@ public class Product {
     @Column(nullable = false, length = 500)
     private String description;
 
-
     @Column(nullable = false)
     private boolean visible;
 

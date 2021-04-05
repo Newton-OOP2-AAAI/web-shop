@@ -253,7 +253,7 @@ public class AssortmentService {
                 .build();
     }
 
-    // Testat som i staffService:
+
     private static ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .id(product.getId())
