@@ -1,5 +1,6 @@
 package org.newton.webshop.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,8 +32,9 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
-    @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
-    @ManyToMany
+//    @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
+   @JsonBackReference
+   @ManyToMany
     @JoinTable(
             name = "categories_products",
             joinColumns = @JoinColumn(name = "product_id"),

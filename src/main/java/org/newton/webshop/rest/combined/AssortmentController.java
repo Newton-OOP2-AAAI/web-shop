@@ -4,12 +4,21 @@ import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.dto.response.ProductDto;
+import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.services.combined.AssortmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * API endpoints to handle the assortment
@@ -50,6 +59,10 @@ public class AssortmentController {
         return assortmentService.updateCategory(id, updateDto);
     }
 
+    @GetMapping("/categories/all")
+    public List<CategoryDto> allCategories() {
+        return assortmentService.findAllCategories();
+    }
 
     /**
      * Manage products: /products
@@ -96,25 +109,60 @@ public class AssortmentController {
         return assortmentService.findAll();
     }
 
-    //Customer wants to filter products to find products that meet certain criteria.
 
     //Customer wants to sort products to find the most relevant product first.
     //Notes: Sort by category, date added, most sales
-    @GetMapping("sort/price/asc")
-    List<ProductDto> priceAsc() {
-        return assortmentService.sortByPriceAsc();
+
+
+    @GetMapping("/sort")
+    Page<Product> all(Pageable pageable) {
+        return assortmentService.findAll2(pageable);
     }
 
-    @GetMapping("sort/price/desc")
-    List<ProductDto> priceDesc() {
-        return assortmentService.sortByPriceDesc();
+    //Customer wants to filter products to find products that meet certain criteria.
+
+    @GetMapping("/filter")
+    public ResponseEntity<Map<String, Object>> filterProductsByName(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+
+        try {
+            List<Product> products = new ArrayList<>();
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<Product> pageProducts;
+            if (name == null)
+                pageProducts = assortmentService.findAll2(paging);
+            else
+                pageProducts = assortmentService.findByName(name, paging);
+            products = pageProducts.getContent();
+
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("Products", products);
+            response.put("currentPage", pageProducts.getNumber());
+            response.put("totalItems", pageProducts.getTotalElements());
+            response.put("totalPages", pageProducts.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping("sort/category")
-    List<ProductDto> category() {
-        return assortmentService.sortByCategory();
+    @GetMapping("/filter/categoryid")
+    Page<Product> findProductByCategoryId(String categoryId, Pageable pageable) {
+        return assortmentService.findByCategoryId(categoryId, pageable);
     }
+
+    @GetMapping("/filter/categoryname")
+    Page<Product> findProductByCategoryName(String name, Pageable pageable) {
+        return assortmentService.findByCategoryName(name, pageable);
+    }
+
 
     //Customer wants to get detailed information about a product to assess if the product meet their needs
-    //Notes: Show name, price, number in stock, description, material type
+    //Notes: Show name, price, number in stock, description
 }

@@ -13,6 +13,8 @@ import org.newton.webshop.services.InventoryService;
 import org.newton.webshop.services.ProductService;
 import org.newton.webshop.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -48,7 +50,6 @@ public class AssortmentService {
 
     /**
      * Creates a new category and sets associations (parent category, child categories, products). Referenced entities must already exist in database, otherwise exception is thrown.
-     *
      * @param creationDto CategoryCreationDto
      * @return CategoryDto
      */
@@ -120,6 +121,18 @@ public class AssortmentService {
         var updatedCategory = toEntity(id, dto, updatedParentCategory, updatedChildCategories, updatedProducts);
         return toDto(categoryService.save(updatedCategory));
     }
+    /**
+     * Find a list of all categories
+     *
+     * @return list
+     */
+    public List<CategoryDto> findAllCategories() {
+        return categoryService.findAll()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * Find a list of all products
@@ -132,30 +145,20 @@ public class AssortmentService {
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
     }
-
-    public List<ProductDto> sortByPriceAsc() {
-        return productService.findAllByPriceAsc()
-                .stream()
-                .map(AssortmentService::toDto)
-                .collect(Collectors.toList());
-
+    public Page<Product> findAll2(Pageable pageable) {
+        return productService.findAll2(pageable);
+    }
+    public Page<Product> findByName(String name,Pageable pageable) {
+        return productService.findByName(name,pageable);
     }
 
-    public List<ProductDto> sortByPriceDesc() {
-        return productService.findAllByPriceDesc()
-                .stream()
-                .map(AssortmentService::toDto)
-                .collect(Collectors.toList());
-
+    public Page<Product> findByCategoryId(String categoryId,Pageable pageable) {
+        return productService.getAllProductsByCategoryId(categoryId,pageable);
+    }
+    public Page<Product> findByCategoryName(String name,Pageable pageable) {
+        return productService.getAllProductsByCategoryName(name,pageable);
     }
 
-    public List<ProductDto> sortByCategory() {
-        return productService.findAllByCategory()
-                .stream()
-                .map(AssortmentService::toDto)
-                .collect(Collectors.toList());
-
-    }
 
 
     /**
@@ -195,7 +198,6 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity without id
-     *
      * @param dto             contains all scalar fields and references to already existing composite fields
      * @param parentCategory  one parent category
      * @param childCategories set of child categories
@@ -213,10 +215,9 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity with id
-     *
-     * @param id              an existing id
-     * @param dto             CategoryCreationDto
-     * @param parentCategory  Set of already persisted parent categories
+     * @param id an existing id
+     * @param dto CategoryCreationDto
+     * @param parentCategory Set of already persisted parent categories
      * @param childCategories Set of already persisted child categories
      * @param products        set of already persisted products
      * @return category entity

@@ -3,6 +3,8 @@ package org.newton.webshop.services;
 import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,18 +28,19 @@ public class ProductService {
     public List<Product> findAll() {
         return productRepository.findAll();
     }
-
-    public List<Product> findAllByPriceAsc() {
-        return productRepository.findAllByOrderByPriceAsc();
+    public Page<Product> findAll2(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+    public Page<Product> findByName(String name, Pageable pageable) {
+        return productRepository.findByNameContaining(name,pageable);
+    }
+    public Page<Product> getAllProductsByCategoryId(String categoryId, Pageable pageable){
+        return productRepository.getAllProductsByCategoryId(categoryId, pageable);
+    }
+    public Page<Product> getAllProductsByCategoryName(String name, Pageable pageable){
+        return productRepository.getAllProductsByCategoryName(name, pageable);
     }
 
-    public List<Product> findAllByPriceDesc() {
-        return productRepository.findAllByOrderByPriceDesc();
-    }
-
-    public List<Product> findAllByCategory() {
-        return productRepository.findAllByOrderByCategory();
-    }
 
     public Product findById(String id) {
         return productRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Product not found
