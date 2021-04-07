@@ -22,8 +22,8 @@ public class Product {
     @Column(length = 36, nullable = false)
     private String id;
 
-
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Inventory> inventory;
 
     @Column(nullable = false, length = 50)
@@ -32,8 +32,8 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
-    //@JsonIgnore //TODO: kolla vilken jsonignore som ska användas
-    @JsonBackReference //Lade till för att få sorting att fungera
+    //TODO: kolla vilken jsonignore som ska användas
+    @JsonBackReference //Sorting funkade inte med JsonIgnore (kanske inte)
     @ManyToMany
     @JoinTable(
             name = "categories_products",
@@ -46,6 +46,9 @@ public class Product {
 
     @Column(nullable = false)
     private boolean visible;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private Set<Review> reviews;
 
     public void addInventory(Inventory inventory) {
         this.inventory.add(inventory);

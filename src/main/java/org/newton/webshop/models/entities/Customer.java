@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Setter
@@ -31,8 +32,8 @@ public class Customer {
     @Column(length = 36, nullable = false)
     private String id;
 
-    @OneToOne(mappedBy = "customer")
-    private Cart cart;
+    @OneToMany(mappedBy = "customer")
+    private Set<Order> cart;
 
     @OneToOne(mappedBy = "customer")
     private Account account;

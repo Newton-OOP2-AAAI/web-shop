@@ -95,8 +95,6 @@ public class AssortmentService {
      * @return Dto
      */
     public CategoryDto updateCategory(String id, CategoryCreationDto dto) {
-        //todo Fråga Thor: Ett eller två service lager?
-
         //todo refactor: see if some of the logic can be done in the inner service layer instead. Perhaps compare methods in entity? (e.g findRemovedChildCategoryIds() and findAddedChildCategoryIds())
         //todo refactor: force user to provide empty sets instead of null values?
         //Find the category
@@ -183,7 +181,6 @@ public class AssortmentService {
         return new PageImpl<>(allItems);
 
     }
-
 
     /**
      * Create a product

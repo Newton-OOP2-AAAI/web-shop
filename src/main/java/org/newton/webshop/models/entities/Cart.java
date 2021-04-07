@@ -2,13 +2,18 @@ package org.newton.webshop.models.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Table(name = "carts")
@@ -26,13 +31,12 @@ public class Cart {
     @JsonIgnore
     private Set<Item> items;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
-
     @OneToOne(mappedBy = "cart")
     private Order order;
 
+    public Cart() {
+        this.items = new HashSet<>();
+    }
 }
 
 

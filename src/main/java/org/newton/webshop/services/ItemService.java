@@ -1,5 +1,6 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.models.entities.Item;
 import org.newton.webshop.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,18 @@ public class ItemService {
     @Autowired
     public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
+    }
+
+    public Item save(Item item) {
+        return itemRepository.save(item);
+    }
+
+    public Item findById(String id) {
+        return itemRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Item not found
+    }
+
+    public void delete(Item item) {
+        itemRepository.delete(item);
     }
 
     /**
@@ -31,25 +44,9 @@ public class ItemService {
 //        return itemRepository.save(newItem);
 //    }
 //
-//    public Item findById(String id) {
-//        return itemRepository.findById(id)
-//                .orElseThrow(() -> new ItemNotFoundException(id));
-//    }
+
 //
-//    public Item replaceItem(Item newItem, String id) {
-//        return itemRepository.findById(id)
-//                .map(item -> {
-//                    item.setCart(newItem.getCart());
-//                    item.setProduct(newItem.getProduct());
-//                    item.setQuantity(newItem.getQuantity());
-//                    item.setSize(newItem.getSize());
-//                    return itemRepository.save(item);
-//                })
-//                .orElseGet(() -> {
-//                    newItem.setId(id);
-//                    return itemRepository.save(newItem);
-//                });
-//    }
+
 //
 //    public void deleteItemById(String id) {
 //        itemRepository.deleteById(id);
