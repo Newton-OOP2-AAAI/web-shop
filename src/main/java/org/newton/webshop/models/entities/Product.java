@@ -32,9 +32,9 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
-//    @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
-   @JsonBackReference
-   @ManyToMany
+    //@JsonIgnore //TODO: kolla vilken jsonignore som ska användas
+    @JsonBackReference //Lade till för att få sorting att fungera
+    @ManyToMany
     @JoinTable(
             name = "categories_products",
             joinColumns = @JoinColumn(name = "product_id"),

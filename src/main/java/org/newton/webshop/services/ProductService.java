@@ -1,5 +1,6 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,10 @@ public class ProductService {
     public List<Product> findAll() {
         return productRepository.findAll();
     }
-    public Page<Product> findAll2(Pageable pageable) {
+    public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+
     public Page<Product> findByName(String name, Pageable pageable) {
         return productRepository.findByNameContaining(name,pageable);
     }

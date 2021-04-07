@@ -1,5 +1,6 @@
 package org.newton.webshop.models.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +15,12 @@ import java.util.Map;
 public class CategoryDto {
     private String id;
     private String name;
+    @JsonIgnore
     private String parentCategoryId;
+    @JsonIgnore
     private String parentCategoryName;
+    @JsonIgnore
     private Map<String, String> childCategories;
+
     private Map<String, String> products;
 }

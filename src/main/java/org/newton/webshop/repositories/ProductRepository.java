@@ -16,6 +16,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, S
 
     Page<Product> findByNameContaining(String name, Pageable pageable);
 
+
     Page<Product> findAll(Pageable pageable);
 
     //@Query("SELECT 'product_id' FROM 'categories_products' WHERE 'category_id'==?1")
