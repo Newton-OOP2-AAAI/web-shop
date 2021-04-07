@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -36,6 +37,32 @@ public class Cart {
 
     public Cart() {
         this.items = new HashSet<>();
+    }
+
+    /**
+     * Helper method that finds item in cart with matching inventory id.
+     *
+     * @param inventoryId inventory id to look for
+     * @return Optional that is either empty or contains the matching item
+     */
+    public Optional<Item> findItemByInventoryId(String inventoryId) {
+        return this.getItems()
+                .stream()
+                .filter(item -> item.getInventory().getId().equals(inventoryId))
+                .findFirst();
+    }
+
+    /**
+     * Helper method that finds item in cart with matching inventory id.
+     *
+     * @param itemId inventory id to look for
+     * @return Optional that is either empty or contains the matching item
+     */
+    public Optional<Item> findItembyItemId(String itemId) {
+        return this.getItems()
+                .stream()
+                .filter(item -> item.getId().equals(itemId))
+                .findFirst();
     }
 }
 

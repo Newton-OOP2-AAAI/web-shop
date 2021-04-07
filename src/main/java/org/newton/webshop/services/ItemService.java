@@ -26,6 +26,10 @@ public class ItemService {
         itemRepository.delete(item);
     }
 
+    public void delete(String itemId) {
+        itemRepository.deleteById(itemId);
+    }
+
     /**
      * Notes:
      *
