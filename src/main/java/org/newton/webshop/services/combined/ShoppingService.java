@@ -10,7 +10,6 @@ import org.newton.webshop.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -76,7 +75,7 @@ public class ShoppingService {
         var inventoryId = dto.getInventoryId();
 
         //Optional is present if the item were trying to add already existed in the cart
-        var optionalExistingItem = findExistingItem(cart, inventoryId);
+        var optionalExistingItem = cart.findItemByInventoryId(inventoryId);
         Item newItem;
 
         //Adding an item is handled differently depending on whether the item already existed in the cart
@@ -136,8 +135,8 @@ public class ShoppingService {
         //Variable to hold the item we actually want to update
         Item actualItemToUpdate;
 
-        //Check if the desired properties for our item already exists in another item
-        var optionalExistingItem = findExistingItem(cart, newInventoryId);
+        //Check if the cart contains another item with the desired properties
+        var optionalExistingItem = cart.findItemByInventoryId(newInventoryId);
         if (optionalExistingItem.isPresent()) {
             //If we found a matching item, that is the item we actually want to update
             actualItemToUpdate = optionalExistingItem.get();
@@ -164,18 +163,38 @@ public class ShoppingService {
     }
 
     /**
-     * Find item in cart with matching inventory id.
+     * Delete item from cart
      *
-     * @param cart        cart to look in
-     * @param inventoryId inventory id to look for
-     * @return Optional that is either empty or contains the matching item
+     * @param cartId id of cart to delete from
+     * @param itemId id of item to delete
      */
-    private Optional<Item> findExistingItem(Cart cart, String inventoryId) {
-        return cart.getItems()
-                .stream()
-                .filter(item -> item.getInventory().getId().equals(inventoryId))
-                .findFirst();
+    public void deleteItem(String cartId, String itemId) {
+        var cart = cartService.findById(cartId);
+
+        var existingItem = cart.findItembyItemId(itemId);
+
+        if (existingItem.isEmpty()) {
+            throw new RuntimeException(); //todo Exception: cartId doesn't match itemId
+        }
+
+        //Need to remove the item from the cart variable because the item we want to delete is persisted here
+        cart.getItems().remove(existingItem.get());
+
+        //Delete item
+        itemService.delete(existingItem.get());
     }
+
+    /**
+     * Find a cart by cart id
+     *
+     * @param cartId cart id
+     * @return CartDto
+     */
+    public CartDto findCart(String cartId) {
+        var cart = cartService.findById(cartId);
+        return toDto(cart);
+    }
+
 
     /**
      * Converts ItemCreationDto to entity. Associated entites are supplied as parameters

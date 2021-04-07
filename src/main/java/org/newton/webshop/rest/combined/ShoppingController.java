@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/carts")
 public class ShoppingController {
     private final ShoppingService shoppingService;
 
@@ -22,18 +21,28 @@ public class ShoppingController {
         return shoppingService.createCart(creationDto);
     }
 
-    @PostMapping(value = "/{cart_id}/items", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/carts/{cart_id}/items", produces = MediaType.APPLICATION_JSON_VALUE)
     public CartDto addItem(@PathVariable(name = "cart_id") String cartId, @RequestBody ItemCreationDto creationDto) {
         return shoppingService.addItem(cartId, creationDto);
     }
 
-    @PutMapping(value = "/{cart_id}/items/{item_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/carts/{cart_id}/items/{item_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CartDto modifyItem(@PathVariable(name = "cart_id") String cartId,
                               @PathVariable(name = "item_id") String itemId,
                               @RequestBody ItemCreationDto dto) {
         return shoppingService.updateItem(cartId, itemId, dto);
     }
 
+    @DeleteMapping(value = "/carts/{cart_id}/items/{item_id}")
+    public void deleteItem(@PathVariable(name = "cart_id") String cartId,
+                           @PathVariable(name = "item_id") String itemId) {
+        shoppingService.deleteItem(cartId, itemId);
+    }
+
+    @GetMapping(value = "/carts/{cart_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CartDto findCartById(@PathVariable(name = "cart_id") String cartId) {
+        return shoppingService.findCart(cartId);
+    }
 }
 
 
