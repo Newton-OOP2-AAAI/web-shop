@@ -15,11 +15,8 @@ import java.util.Map;
 public class CategoryDto {
     private String id;
     private String name;
-    @JsonIgnore
     private String parentCategoryId;
-    @JsonIgnore
     private String parentCategoryName;
-    @JsonIgnore
     private Map<String, String> childCategories;
 
     private Map<String, String> products;
