@@ -47,6 +47,9 @@ public class ProductService {
     }
 
     public Product findById(String id) {
+        if (id == null) {
+            throw new RuntimeException(); //todo Exception: Product not found
+        }
         return productRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Product not found
     }
 

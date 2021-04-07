@@ -1,13 +1,13 @@
 package org.newton.webshop.models.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Table(name = "items")
@@ -19,16 +19,13 @@ public class Item {
     @Column(length = 36)
     private String id;
 
-    @OneToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
     @ManyToOne
-    @JoinColumn(name = "cart_id", nullable = false)
-    private Cart cart;
+    @JoinColumn(nullable = false)
+    private Inventory inventory;
 
-    @OneToOne(mappedBy = "item")
-    private Review review;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Cart cart;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -38,6 +35,10 @@ public class Item {
 
     @Column(length = 50)
     private String color;
+
+    public void addQuantity(Integer quantity) {
+        this.quantity += quantity;
+    }
 }
 
 

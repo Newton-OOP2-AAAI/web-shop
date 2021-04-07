@@ -3,6 +3,7 @@ package org.newton.webshop.services;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.repositories.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -50,5 +51,19 @@ public class InventoryService {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(RuntimeException::new);
         inventoryRepository.delete(inventory);
 
+    }
+
+    /**
+     * Compares new and old inventory ids and fetches the new inventory from database if necessary
+     *
+     * @param newInventoryId new inventory id
+     * @param oldInventory   old inventory entity
+     * @return the new inventory entity
+     */
+    public Inventory getNewInventory(@NonNull String newInventoryId, @NonNull Inventory oldInventory) {
+        var oldInventoryId = oldInventory.getId();
+        return (newInventoryId.equals(oldInventoryId))
+                ? oldInventory
+                : inventoryRepository.findById(newInventoryId).orElseThrow(RuntimeException::new);
     }
 }

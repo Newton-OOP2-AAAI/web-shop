@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Builder
 @Table(name = "inventory")
@@ -24,6 +25,10 @@ public class Inventory {
     @JoinColumn(name = "product_id", nullable = false)
     @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
     private Product product;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Item> items;
 
     @Column(length = 5)
     private String size;

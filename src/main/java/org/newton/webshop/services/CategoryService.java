@@ -4,6 +4,7 @@ import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,11 +56,10 @@ public class CategoryService {
      * Compares two categories and returns the updated category
      *
      * @param newCategoryId id of the new category Nullable todo: Fråga Thor: Nullable Annotations?
-     * @param oldCategory   old category Nullable todo: Fråga Thor: Nullable Annotations?
+     * @param oldCategory   old category Nullable todo: Nullable: Kolla vad den gör
      * @return new category
      */
-    public Category getNewCategory(String newCategoryId, Category oldCategory) {
-        //todo Fråga Thor: Kan man använda Equals metod på ett smartare sätt här?
+    public Category getNewCategory(@Nullable String newCategoryId, @Nullable Category oldCategory) {
         //If category id has changed, fetch the new parent category. Ternary operators to avoid nullpointer exceptions.
         var oldCategoryId = (oldCategory == null)
                 ? null

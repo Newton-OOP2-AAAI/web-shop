@@ -19,5 +19,19 @@ public class CartService {
     public List<Cart> findAll() {
         return cartRepository.findAll();
     }
+
+    /**
+     * Save cart.
+     *
+     * @param cart
+     * @return saved cart
+     */
+    public Cart save(Cart cart) {
+        return cartRepository.save(cart);
+    }
+
+    public Cart findById(String id) {
+        return cartRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Cart not found
+    }
 }
 
