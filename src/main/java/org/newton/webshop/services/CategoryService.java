@@ -1,6 +1,5 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
