@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+
+  webshop-backend:
+    image: backend:latest
+    build:
+      context: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://webshop-db:3306/demo-db-webshop?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: Newton123
+    ports:
+      - 8080:8080
+    depends_on:
+      webshop-db:
+        condition: service_healthy
+    networks:
+      - webshop
+    restart: always
+
+  webshop-db:
+    image: mysql:8.0.23
+    environment:
+      MYSQL_USER: user
+      MYSQL_ROOT_PASSWORD: Newton123
+      MYSQL_PASSWORD: Newton123
+      MYSQL_DATABASE: demo-db-webshop
+    ports:
+      - 3306:3306
+    networks:
+      - webshop
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+networks:
+  webshop:
+    driver: bridge
