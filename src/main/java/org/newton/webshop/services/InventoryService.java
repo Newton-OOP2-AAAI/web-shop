@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
-
 /**
  * Notes:
  * Lower level services that only handle one repository should return entities.
