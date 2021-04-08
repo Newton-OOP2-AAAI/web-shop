@@ -5,6 +5,7 @@ import org.newton.webshop.models.dto.creation.InventoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.dto.response.ProductDto;
+import org.newton.webshop.models.dto.response.ProductSimpleDto;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
@@ -13,6 +14,9 @@ import org.newton.webshop.services.InventoryService;
 import org.newton.webshop.services.ProductService;
 import org.newton.webshop.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -122,6 +126,18 @@ public class AssortmentService {
     }
 
     /**
+     * Find a list of all categories
+     *
+     * @return list
+     */
+    public List<CategoryDto> findAllCategories() {
+        return categoryService.findAll()
+                .stream()
+                .map(AssortmentService::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Find a list of all products
      *
      * @return list
@@ -133,30 +149,38 @@ public class AssortmentService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProductDto> sortByPriceAsc() {
-        return productService.findAllByPriceAsc()
+    public Page<ProductSimpleDto> findAll(Pageable pageable) {
+        List<ProductSimpleDto> allItems = productService.findAll(pageable)
                 .stream()
-                .map(AssortmentService::toDto)
+                .map(AssortmentService::toSimpleDto)
                 .collect(Collectors.toList());
-
+        return new PageImpl<>(allItems);
     }
 
-    public List<ProductDto> sortByPriceDesc() {
-        return productService.findAllByPriceDesc()
+    public Page<ProductSimpleDto> findByName(String name, Pageable pageable) {
+        List<ProductSimpleDto> allItems = productService.findByName(name, pageable)
                 .stream()
-                .map(AssortmentService::toDto)
+                .map(AssortmentService::toSimpleDto)
                 .collect(Collectors.toList());
-
+        return new PageImpl<>(allItems);
     }
 
-    public List<ProductDto> sortByCategory() {
-        return productService.findAllByCategory()
+    public Page<ProductSimpleDto> findByCategoryId(String categoryId, Pageable pageable) {
+        List<ProductSimpleDto> allItems = productService.getAllProductsByCategoryId(categoryId, pageable)
                 .stream()
-                .map(AssortmentService::toDto)
+                .map(AssortmentService::toSimpleDto)
                 .collect(Collectors.toList());
-
+        return new PageImpl(allItems);
     }
 
+    public Page<ProductSimpleDto> findByCategoryName(String name, Pageable pageable) {
+        List<ProductSimpleDto> allItems = productService.getAllProductsByCategoryName(name, pageable)
+                .stream()
+                .map(AssortmentService::toSimpleDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(allItems);
+
+    }
 
     /**
      * Create a product
@@ -202,7 +226,8 @@ public class AssortmentService {
      * @param products        set of products
      * @return category entity
      */
-    private static Category toEntity(CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
+    private static Category toEntity(CategoryCreationDto dto, Category
+            parentCategory, Set<Category> childCategories, Set<Product> products) {
         return Category.builder()
                 .name(dto.getName())
                 .parentCategory(parentCategory)
@@ -221,7 +246,8 @@ public class AssortmentService {
      * @param products        set of already persisted products
      * @return category entity
      */
-    private static Category toEntity(String id, CategoryCreationDto dto, Category parentCategory, Set<Category> childCategories, Set<Product> products) {
+    private static Category toEntity(String id, CategoryCreationDto dto, Category
+            parentCategory, Set<Category> childCategories, Set<Product> products) {
         return Category.builder()
                 .id(id)
                 .name(dto.getName())
@@ -268,6 +294,15 @@ public class AssortmentService {
                 .category(product.getCategory())
                 .description(product.getDescription())
                 .visible(product.isVisible())
+                .build();
+    }
+
+    private static ProductSimpleDto toSimpleDto(Product product) {
+        return ProductSimpleDto.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .description(product.getDescription())
                 .build();
     }
 

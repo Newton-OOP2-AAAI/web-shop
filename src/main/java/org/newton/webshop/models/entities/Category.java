@@ -35,7 +35,8 @@ public class Category {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentCategory")
     private Set<Category> childCategories;
 
-    @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
+    // @JsonIgnore //TODO: kolla vilken jsonignore som ska användas
+    @JsonManagedReference //lade till för att sorting skulle funka
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "categories_products",

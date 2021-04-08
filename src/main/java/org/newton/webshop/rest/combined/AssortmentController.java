@@ -4,8 +4,11 @@ import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
 import org.newton.webshop.models.dto.response.ProductDto;
+import org.newton.webshop.models.dto.response.ProductSimpleDto;
 import org.newton.webshop.services.combined.AssortmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +53,10 @@ public class AssortmentController {
         return assortmentService.updateCategory(id, updateDto);
     }
 
+    @GetMapping("/categories/all")
+    public List<CategoryDto> allCategories() {
+        return assortmentService.findAllCategories();
+    }
 
     /**
      * Manage products: /products
@@ -96,25 +103,34 @@ public class AssortmentController {
         return assortmentService.findAll();
     }
 
-    //Customer wants to filter products to find products that meet certain criteria.
 
     //Customer wants to sort products to find the most relevant product first.
     //Notes: Sort by category, date added, most sales
-    @GetMapping("sort/price/asc")
-    List<ProductDto> priceAsc() {
-        return assortmentService.sortByPriceAsc();
+
+
+    @GetMapping("/sort")
+    Page<ProductSimpleDto> all(Pageable pageable) {
+        return assortmentService.findAll(pageable);
     }
 
-    @GetMapping("sort/price/desc")
-    List<ProductDto> priceDesc() {
-        return assortmentService.sortByPriceDesc();
+    //Customer wants to filter products to find products that meet certain criteria.
+
+    @GetMapping("/filter")
+    Page<ProductSimpleDto> findProductsByName(String name, Pageable pageable) {
+        return assortmentService.findByName(name, pageable);
     }
 
-    @GetMapping("sort/category")
-    List<ProductDto> category() {
-        return assortmentService.sortByCategory();
+    @GetMapping("/filter/categoryid")
+    Page<ProductSimpleDto> findProductByCategoryId(String categoryId, Pageable pageable) {
+        return assortmentService.findByCategoryId(categoryId, pageable);
     }
+
+    @GetMapping("/filter/categoryname")
+    Page<ProductSimpleDto> findProductByCategoryName(String name, Pageable pageable) {
+        return assortmentService.findByCategoryName(name, pageable);
+    }
+
 
     //Customer wants to get detailed information about a product to assess if the product meet their needs
-    //Notes: Show name, price, number in stock, description, material type
+    //Notes: Show name, price, number in stock, description
 }
