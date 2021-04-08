@@ -1,5 +1,6 @@
 package org.newton.webshop.services.combined;
 
+<<<<<<< Updated upstream
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.creation.InventoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
@@ -11,6 +12,11 @@ import org.newton.webshop.models.dto.update.ProductUpdateDto;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
+=======
+import org.newton.webshop.models.dto.creation.AnswerCreationDto;
+import org.newton.webshop.models.dto.response.AnswerDto;
+import org.newton.webshop.models.entities.Answer;
+>>>>>>> Stashed changes
 import org.newton.webshop.services.CategoryService;
 import org.newton.webshop.services.InventoryService;
 import org.newton.webshop.services.ProductService;
@@ -263,6 +269,7 @@ public class AssortmentService {
      * @param category the category to convert
      * @return CategoryDto
      */
+<<<<<<< Updated upstream
     private static CategoryDto toDto(Category category) {
         //todo microoptimeringar: Fråga Thor
         //todo flytta konvertering till egen factory klass
@@ -390,4 +397,6 @@ public class AssortmentService {
     public void deleteInventoryById(String id) {
         inventoryService.deleteInventory(id);
     }
+=======
+>>>>>>> Stashed changes
 }
