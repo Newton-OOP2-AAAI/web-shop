@@ -1,7 +1,9 @@
 package org.newton.webshop.rest.combined;
 
+import org.newton.webshop.models.dto.creation.CustomerCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
+import org.newton.webshop.models.dto.response.OrderDto;
 import org.newton.webshop.services.combined.ShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,6 +44,11 @@ public class ShoppingController {
     @GetMapping(value = "/carts/{cart_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CartDto findCartById(@PathVariable(name = "cart_id") String cartId) {
         return shoppingService.findCart(cartId);
+    }
+
+    @PostMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    public OrderDto createOrder(@RequestParam(name = "cart_id") String cartId, @RequestBody CustomerCreationDto customerCreationDto) {
+        return shoppingService.createOrder(cartId, customerCreationDto);
     }
 }
 

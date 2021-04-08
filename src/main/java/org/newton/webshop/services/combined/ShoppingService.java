@@ -1,8 +1,10 @@
 package org.newton.webshop.services.combined;
 
+import org.newton.webshop.models.dto.creation.CustomerCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
 import org.newton.webshop.models.dto.response.ItemDto;
+import org.newton.webshop.models.dto.response.OrderDto;
 import org.newton.webshop.models.entities.Cart;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Item;
@@ -195,6 +197,10 @@ public class ShoppingService {
         return toDto(cart);
     }
 
+    public OrderDto createOrder(String cartId, CustomerCreationDto customerCreationDto) {
+        //todo: Create order, toDto method for Order, customerService
+        return new OrderDto();
+    }
 
     /**
      * Converts ItemCreationDto to entity. Associated entites are supplied as parameters
