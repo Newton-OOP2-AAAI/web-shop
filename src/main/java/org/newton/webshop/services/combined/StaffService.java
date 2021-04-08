@@ -6,20 +6,26 @@ import org.newton.webshop.models.dto.update.EmployeeUpdateDto;
 import org.newton.webshop.models.entities.Address;
 import org.newton.webshop.models.entities.Employee;
 import org.newton.webshop.models.entities.Role;
+import org.newton.webshop.repositories.EmployeeRepository;
 import org.newton.webshop.services.EmployeeService;
 import org.newton.webshop.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class StaffService {
     private final EmployeeService employeeService;
     private final RoleService roleService;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public StaffService(EmployeeService employeeService, RoleService roleService) {
+    public StaffService(EmployeeService employeeService, RoleService roleService, EmployeeRepository employeeRepository) {
         this.employeeService = employeeService;
         this.roleService = roleService;
+        this.employeeRepository = employeeRepository;
     }
 
     public EmployeeDto createEmployee(EmployeeCreationDto creationDto) {
@@ -70,23 +76,21 @@ public class StaffService {
 
     }
 
-    private static Employee toEntity(EmployeeCreationDto creationDto, Role role, String employeeId) {
-        return Employee.builder()
-                .id(employeeId)
-                .role(role)
-                .firstname(creationDto.getFirstname())
-                .lastname(creationDto.getLastname())
-                .phone(creationDto.getPhone())
-                .email(creationDto.getEmail())
-                .address(Address.builder()
-                        .streetName(creationDto.getStreetName())
-                        .streetNumber(creationDto.getStreetNumber())
-                        .zipCode(creationDto.getZipCode())
-                        .city(creationDto.getCity())
-                        .build())
-                .username(creationDto.getUsername())
-                .password(creationDto.getPassword())
-                .build();
+
+    public EmployeeDto findById(String id) {
+        return new EmployeeDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new)); //TODO Manage exception for not finding employee
+    }
+
+    public List<EmployeeDto> findAll() {
+        return employeeService.findAll()
+                .stream()
+                .map(StaffService::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteEmployeeById(String id) {
+        Employee deleteEmployee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
+        employeeRepository.delete(deleteEmployee);
     }
 
     private static Employee toEntity(EmployeeUpdateDto employeeUpdateDto) {
