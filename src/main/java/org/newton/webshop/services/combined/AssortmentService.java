@@ -4,9 +4,11 @@ import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.creation.InventoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
+import org.newton.webshop.models.dto.response.InventoryDto;
 import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.dto.response.ProductSimpleDto;
 import org.newton.webshop.models.entities.Category;
+import org.newton.webshop.models.dto.update.ProductUpdateDto;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.services.CategoryService;
@@ -182,6 +184,7 @@ public class AssortmentService {
 
     }
 
+
     /**
      * Create a product
      *
@@ -206,7 +209,7 @@ public class AssortmentService {
                 .map(AssortmentService::toEntity)
                 .collect(Collectors.toSet());
 
-        Product product = toEntity(productCreationDto, categories);
+        Product product = toEntity(productCreationDto, categories, inventories);
         productService.save(product);
 
         inventories.forEach(inventory -> {
@@ -288,10 +291,10 @@ public class AssortmentService {
     private static ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .id(product.getId())
-                .inventory(product.getInventory())
+                .inventory(product.getInventory().stream().map(AssortmentService::toDto).collect(Collectors.toSet()))
                 .name(product.getName())
                 .price(product.getPrice())
-                .category(product.getCategory())
+                .categories(product.getCategory().stream().collect(Collectors.toMap(Category::getId, Category::getName)))
                 .description(product.getDescription())
                 .visible(product.isVisible())
                 .build();
@@ -306,9 +309,9 @@ public class AssortmentService {
                 .build();
     }
 
-    private static Product toEntity(ProductCreationDto creationDto, Set<Category> categories) {
+    private static Product toEntity(ProductCreationDto creationDto, Set<Category> categories, Set<Inventory> inventories) {
         return Product.builder()
-                .inventory(new HashSet<>())
+                .inventory(inventories)
                 .name(creationDto.getName())
                 .price(creationDto.getPrice())
                 .category(categories)
@@ -328,5 +331,66 @@ public class AssortmentService {
 
     public void deleteCategoryById(String id) {
         categoryService.deleteCategory(id);
+    }
+
+    public ProductDto updateProduct(String id, ProductUpdateDto updateDto) {
+        var categoryIds = updateDto.getCategoryIds();
+        var categories = (categoryIds == null)
+                ? new HashSet<Category>()
+                : categoryIds.stream()
+                .map(categoryService::findById)
+                .collect(Collectors.toSet());
+
+        Product product = toEntity(updateDto, categories);
+        Product updateProduct = productService.updateProduct(id, product);
+        return toDto(updateProduct);
+    }
+
+    private static Product toEntity(ProductUpdateDto creationDto, Set<Category> categories) {
+        return Product.builder()
+                .name(creationDto.getName())
+                .price(creationDto.getPrice())
+                .category(categories)
+                .description(creationDto.getDescription())
+                .visible(creationDto.isVisible())
+                .build();
+    }
+
+    private static InventoryDto toDto(Inventory inventory) {
+        return InventoryDto.builder()
+                .id(inventory.getId())
+                .size(inventory.getSize())
+                .color(inventory.getColor())
+                .quantity(inventory.getQuantity())
+                .build();
+    }
+
+    public ProductDto createInventory(String productId, InventoryCreationDto updateDto) {
+        Product product = productService.findById(productId);
+
+        Inventory inventory = toEntity(updateDto);
+
+        inventory.setProduct(product);
+        product.addInventory(inventory);
+
+        inventoryService.save(inventory);
+        return toDto(product);
+    }
+
+    public InventoryDto updateInventories(String inventoryId, InventoryCreationDto creationDto) {
+        Inventory inventory = toEntity(creationDto);
+        Inventory updateInventories = inventoryService.updateInventories(inventoryId, inventory);
+
+        return toDto(updateInventories);
+    }
+
+    public List<Inventory> findAll(String id) {
+        Product product = productService.findById(id);
+
+        return product.getInventory().stream().collect(Collectors.toList());
+    }
+
+    public void deleteInventoryById(String id) {
+        inventoryService.deleteInventory(id);
     }
 }

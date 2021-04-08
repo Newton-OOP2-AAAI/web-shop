@@ -1,13 +1,17 @@
 package org.newton.webshop.rest.combined;
 
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
+import org.newton.webshop.models.dto.creation.InventoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
 import org.newton.webshop.models.dto.response.CategoryDto;
+import org.newton.webshop.models.dto.response.InventoryDto;
 import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.dto.response.ProductSimpleDto;
 import org.newton.webshop.services.combined.AssortmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.newton.webshop.models.dto.update.ProductUpdateDto;
+import org.newton.webshop.models.entities.Inventory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +80,30 @@ public class AssortmentController {
     }
 
     //Employee wants to modify the info about an existing product.
+    @PutMapping
+    public ProductDto updateProduct(@RequestParam String id, @RequestBody ProductUpdateDto updateDto) {
+        return assortmentService.updateProduct(id, updateDto);
+    }
+
+    @GetMapping("/all/inventories")
+    public List<Inventory> allInventories(@RequestParam String id) {
+        return assortmentService.findAll(id);
+    }
+
+    @PostMapping("/{product_id}/inventories")
+    public ProductDto createInventory(@PathVariable(name = "product_id") String productId, @RequestBody InventoryCreationDto creationDto) {
+        return assortmentService.createInventory(productId, creationDto);
+    }
+
+    @PutMapping("/update/inventories")
+    public InventoryDto updateInventories(@RequestParam String id, @RequestBody InventoryCreationDto creationDto) {
+        return assortmentService.updateInventories(id, creationDto);
+    }
+
+    @DeleteMapping("/delete/inventory")
+    public void deleteInventoryById(@RequestParam String id) {
+        assortmentService.deleteInventoryById(id);
+    }
 
     //Employee wants to delete an existing category
     @DeleteMapping
@@ -103,6 +131,7 @@ public class AssortmentController {
         return assortmentService.findAll();
     }
 
+    //Customer wants to filter products to find products that meet certain criteria.
 
     //Customer wants to sort products to find the most relevant product first.
     //Notes: Sort by category, date added, most sales

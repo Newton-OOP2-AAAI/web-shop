@@ -5,6 +5,9 @@ import org.newton.webshop.repositories.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * Notes:
  * Lower level services that only handle one repository should return entities.
@@ -19,6 +22,11 @@ public class InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
+
+    public Inventory findById(String id) {
+        return inventoryRepository.findById(id).orElseThrow(RuntimeException::new);//todo Exception: Inventory not found
+    }
+
     /**
      * Create or update a inventory.
      *
@@ -27,5 +35,20 @@ public class InventoryService {
      */
     public Inventory save(Inventory inventory) {
         return inventoryRepository.save(inventory);
+    }
+
+    public Inventory updateInventories(String inventoryId, Inventory inventory) {
+        return inventoryRepository.findById(inventoryId).map(inventoryUpdate -> {
+            inventoryUpdate.setSize(inventory.getSize());
+            inventoryUpdate.setColor(inventory.getColor());
+            inventoryUpdate.setQuantity(inventory.getQuantity());
+            return inventoryRepository.save(inventoryUpdate);
+        }).orElseThrow(RuntimeException::new);//todo Exception: Inventory not found
+    }
+
+    public void deleteInventory(String id) {
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(RuntimeException::new);
+        inventoryRepository.delete(inventory);
+
     }
 }
