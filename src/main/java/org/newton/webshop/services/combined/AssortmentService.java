@@ -29,11 +29,6 @@ import java.util.stream.Collectors;
 
 /**
  * Handles requests by AssortmentController.
- * Notes:
- * 1. No methods in AssortmentService should return en Entity or take an Entity as a parameter. Use DTOs instead.
- * 2. Higher level validation that require multiple services (e.g ProductService and InventoryService) should be done in AssortmentService
- * 3. Lower-level validation that only require one service (e.g only ProductService) should be done in
- * the individual, lower-level service layer and passed on to AssortmentService.
  */
 @Service
 public class AssortmentService {
@@ -150,6 +145,12 @@ public class AssortmentService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * todo: Write java docs
+     *
+     * @param pageable
+     * @return
+     */
     public Page<ProductSimpleDto> findAll(Pageable pageable) {
         List<ProductSimpleDto> allItems = productService.findAll(pageable)
                 .stream()
@@ -158,6 +159,13 @@ public class AssortmentService {
         return new PageImpl<>(allItems);
     }
 
+    /**
+     * todo: Write java docs
+     *
+     * @param name
+     * @param pageable
+     * @return
+     */
     public Page<ProductSimpleDto> findByName(String name, Pageable pageable) {
         List<ProductSimpleDto> allItems = productService.findByName(name, pageable)
                 .stream()
@@ -166,6 +174,13 @@ public class AssortmentService {
         return new PageImpl<>(allItems);
     }
 
+    /**
+     * todo: Write java docs
+     *
+     * @param categoryId
+     * @param pageable
+     * @return
+     */
     public Page<ProductSimpleDto> findByCategoryId(String categoryId, Pageable pageable) {
         List<ProductSimpleDto> allItems = productService.getAllProductsByCategoryId(categoryId, pageable)
                 .stream()
@@ -174,6 +189,13 @@ public class AssortmentService {
         return new PageImpl(allItems);
     }
 
+    /**
+     * todo: Write java docs
+     *
+     * @param name
+     * @param pageable
+     * @return
+     */
     public Page<ProductSimpleDto> findByCategoryName(String name, Pageable pageable) {
         List<ProductSimpleDto> allItems = productService.getAllProductsByCategoryName(name, pageable)
                 .stream()
@@ -219,12 +241,85 @@ public class AssortmentService {
     }
 
     /**
+     * Delete category by category id
+     *
+     * @param id category id
+     */
+    public void deleteCategoryById(String id) {
+        categoryService.deleteCategory(id);
+    }
+
+    /**
+     * Update a product entity and it's related inventory entities
+     *
+     * @param id        the id of the product
+     * @param updateDto dto that contains the new values in each field
+     * @return dto of the updated product
+     */
+    public ProductDto updateProduct(String id, ProductUpdateDto updateDto) {
+        var categoryIds = updateDto.getCategoryIds();
+        var categories = (categoryIds == null)
+                ? new HashSet<Category>()
+                : categoryIds.stream()
+                .map(categoryService::findById)
+                .collect(Collectors.toSet());
+
+        Product product = toEntity(updateDto, categories);
+        Product updateProduct = productService.updateProduct(id, product);
+        return toDto(updateProduct);
+    }
+
+    /**
+     * Creates a new inventory entity associated with given product id.
+     * An inventory is a variation of a product. For example a product with two available colors has two inventory entities describing the variations.
+     *
+     * @param productId id of the product
+     * @param updateDto details about the inventory
+     * @return productdto after the inventory was created
+     */
+    public ProductDto createInventory(String productId, InventoryCreationDto updateDto) {
+        Product product = productService.findById(productId);
+
+        Inventory inventory = toEntity(updateDto);
+
+        inventory.setProduct(product);
+        product.addInventory(inventory);
+
+        inventoryService.save(inventory);
+        return toDto(product);
+    }
+
+    /**
+     * Update an inventory
+     *
+     * @param inventoryId inventory id
+     * @param creationDto contains values to update the inventory with
+     * @return dto containing the updated inventory todo should maybe return entire resource (productdto)?
+     */
+    public InventoryDto updateInventories(String inventoryId, InventoryCreationDto creationDto) {
+        Inventory inventory = toEntity(creationDto);
+        Inventory updateInventories = inventoryService.updateInventories(inventoryId, inventory);
+
+        return toDto(updateInventories);
+    }
+
+    public List<Inventory> findAll(String id) {
+        Product product = productService.findById(id);
+
+        return product.getInventory().stream().collect(Collectors.toList());
+    }
+
+    public void deleteInventoryById(String id) {
+        inventoryService.deleteInventory(id);
+    }
+
+    /**
      * Converts CategoryCreationDto to Entity without id
      *
-     * @param dto             contains all scalar fields and references to already existing composite fields
-     * @param parentCategory  one parent category
-     * @param childCategories set of child categories
-     * @param products        set of products
+     * @param dto             contains details about the category. The entities referenced by id in the dto should be supplied as additional parameters
+     * @param parentCategory  one parent category, already persisted in the database
+     * @param childCategories set of child categories, already persisted in the database
+     * @param products        set of products, already persisted in the database
      * @return category entity
      */
     private static Category toEntity(CategoryCreationDto dto, Category
@@ -286,6 +381,12 @@ public class AssortmentService {
     }
 
 
+    /**
+     * Converts a product entity to a response dto
+     *
+     * @param product product to convert
+     * @return response dto
+     */
     private static ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .id(product.getId())
@@ -298,6 +399,12 @@ public class AssortmentService {
                 .build();
     }
 
+    /**
+     * Converts a product entity to a response dto which only contains some information about the product
+     *
+     * @param product the product to convert
+     * @return a response dto
+     */
     private static ProductSimpleDto toSimpleDto(Product product) {
         return ProductSimpleDto.builder()
                 .id(product.getId())
@@ -307,6 +414,14 @@ public class AssortmentService {
                 .build();
     }
 
+    /**
+     * Converts creationDto to Product entity. The referenced entities in the creationDto must be supplied as additional parameters.
+     *
+     * @param creationDto details about the category
+     * @param categories  category entities to associate the product with
+     * @param inventories inventory entities to associate the product with
+     * @return Product entity
+     */
     private static Product toEntity(ProductCreationDto creationDto, Set<Category> categories, Set<Inventory> inventories) {
         return Product.builder()
                 .inventory(inventories)
@@ -318,6 +433,12 @@ public class AssortmentService {
                 .build();
     }
 
+    /**
+     * Converts dto to Inventory entity.
+     *
+     * @param creationDto
+     * @return
+     */
     private static Inventory toEntity(InventoryCreationDto creationDto) {
         return Inventory.builder()
                 .size(creationDto.getSize())
@@ -326,24 +447,13 @@ public class AssortmentService {
                 .build();
     }
 
-
-    public void deleteCategoryById(String id) {
-        categoryService.deleteCategory(id);
-    }
-
-    public ProductDto updateProduct(String id, ProductUpdateDto updateDto) {
-        var categoryIds = updateDto.getCategoryIds();
-        var categories = (categoryIds == null)
-                ? new HashSet<Category>()
-                : categoryIds.stream()
-                .map(categoryService::findById)
-                .collect(Collectors.toSet());
-
-        Product product = toEntity(updateDto, categories);
-        Product updateProduct = productService.updateProduct(id, product);
-        return toDto(updateProduct);
-    }
-
+    /**
+     * Converts dto to Product entity. Associated Category entities are supplied as additional parameters.
+     *
+     * @param creationDto contains details about the product
+     * @param categories  set of category entities
+     * @return product entity
+     */
     private static Product toEntity(ProductUpdateDto creationDto, Set<Category> categories) {
         return Product.builder()
                 .name(creationDto.getName())
@@ -354,6 +464,12 @@ public class AssortmentService {
                 .build();
     }
 
+    /**
+     * Converts Inventory entity to dto.
+     *
+     * @param inventory the inventory entity
+     * @return dto
+     */
     private static InventoryDto toDto(Inventory inventory) {
         return InventoryDto.builder()
                 .id(inventory.getId())
@@ -361,34 +477,5 @@ public class AssortmentService {
                 .color(inventory.getColor())
                 .quantity(inventory.getQuantity())
                 .build();
-    }
-
-    public ProductDto createInventory(String productId, InventoryCreationDto updateDto) {
-        Product product = productService.findById(productId);
-
-        Inventory inventory = toEntity(updateDto);
-
-        inventory.setProduct(product);
-        product.addInventory(inventory);
-
-        inventoryService.save(inventory);
-        return toDto(product);
-    }
-
-    public InventoryDto updateInventories(String inventoryId, InventoryCreationDto creationDto) {
-        Inventory inventory = toEntity(creationDto);
-        Inventory updateInventories = inventoryService.updateInventories(inventoryId, inventory);
-
-        return toDto(updateInventories);
-    }
-
-    public List<Inventory> findAll(String id) {
-        Product product = productService.findById(id);
-
-        return product.getInventory().stream().collect(Collectors.toList());
-    }
-
-    public void deleteInventoryById(String id) {
-        inventoryService.deleteInventory(id);
     }
 }

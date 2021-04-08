@@ -14,8 +14,6 @@ import java.util.List;
  * Manages Chatbot
  * FAQ: "Frequently Asked Question" that the chatbot will respond to.
  * Each FAQ contains: Answer (response), questions (words/phrases to respond to) and a description
- *
- * @author Alex
  */
 @RestController
 @RequestMapping("/chatbot")
@@ -98,7 +96,7 @@ public class ChatbotController {
      */
     @PutMapping("/answers")
     AnswerDto replaceAnswer(@RequestParam String id, @RequestBody AnswerUpdateDto updateDto) {
-        return chatbotService.replaceAnswer(id, updateDto);
+        return chatbotService.updateAnswer(id, updateDto);
     }
 
     @DeleteMapping("/answers")
