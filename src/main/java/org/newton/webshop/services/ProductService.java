@@ -46,7 +46,6 @@ public class ProductService {
         return productRepository.getAllProductsByCategoryName(name, pageable);
     }
 
-
     public Product findById(String id) {
         return productRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Product not found
     }
@@ -83,6 +82,17 @@ public class ProductService {
 
         //Return the updated set of products
         return productsToUpdate;
+    }
+
+    public Product updateProduct(String productId, Product product) {
+        return productRepository.findById(productId).map(productUpdate -> {
+            productUpdate.setName(product.getName());
+            productUpdate.setPrice(product.getPrice());
+            productUpdate.setCategory(product.getCategory());
+            productUpdate.setDescription(product.getDescription());
+            productUpdate.setVisible(product.isVisible());
+            return productRepository.save(productUpdate);
+        }).orElseThrow(RuntimeException::new);//todo Exception: Product not found
     }
 
     /**

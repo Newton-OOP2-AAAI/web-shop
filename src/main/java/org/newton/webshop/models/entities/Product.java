@@ -47,5 +47,7 @@ public class Product {
     @Column(nullable = false)
     private boolean visible;
 
-
+    public void addInventory(Inventory inventory) {
+        this.inventory.add(inventory);
+    }
 }
