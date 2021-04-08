@@ -174,7 +174,7 @@ public class AssortmentService {
     }
 
     public Page<ProductSimpleDto> findByCategoryName(String name, Pageable pageable) {
-        List<ProductSimpleDto> allItems =productService.getAllProductsByCategoryName(name,pageable)
+        List<ProductSimpleDto> allItems = productService.getAllProductsByCategoryName(name, pageable)
                 .stream()
                 .map(AssortmentService::toSimpleDto)
                 .collect(Collectors.toList());

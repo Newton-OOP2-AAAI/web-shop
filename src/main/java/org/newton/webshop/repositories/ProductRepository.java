@@ -21,10 +21,10 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, S
 
     //@Query("SELECT 'product_id' FROM 'categories_products' WHERE 'category_id'==?1")
     @Query("SELECT p FROM Category c JOIN c.products p where c.id = ?1")
-    Page<Product> getAllProductsByCategoryId(String categoryId , Pageable pageable);
+    Page<Product> getAllProductsByCategoryId(String categoryId, Pageable pageable);
 
     @Query("SELECT p FROM Category c JOIN c.products p where c.name = ?1")
-    Page<Product> getAllProductsByCategoryName(String name , Pageable pageable);
+    Page<Product> getAllProductsByCategoryName(String name, Pageable pageable);
 
 
 }
