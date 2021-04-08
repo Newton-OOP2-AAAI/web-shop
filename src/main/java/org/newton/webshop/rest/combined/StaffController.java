@@ -28,7 +28,7 @@ public class StaffController {
 
     @PutMapping
     public EmployeeDto editEmployeeById(@RequestParam String id, @RequestBody EmployeeUpdateDto employeeUpdateDto) {
-        return staffService.editEmployeeById(id, employeeUpdateDto);
+        return staffService.updateEmployee(id, employeeUpdateDto);
     }
 
     @GetMapping

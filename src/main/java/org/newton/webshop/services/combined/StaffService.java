@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Handles requests by StaffController.
+ */
 @Service
 public class StaffService {
     private final EmployeeService employeeService;
@@ -28,19 +31,71 @@ public class StaffService {
         this.employeeRepository = employeeRepository;
     }
 
+    /**
+     * Create employee
+     *
+     * @param creationDto dto with required fields
+     * @return dto, including the id of the new entity
+     */
     public EmployeeDto createEmployee(EmployeeCreationDto creationDto) {
         Role role = roleService.findById(creationDto.getRoleId());
         Employee employee = employeeService.createEmployee(toEntity(creationDto, role));
         return toDto(employee);
     }
 
-    public EmployeeDto editEmployeeById(String employeeId, EmployeeUpdateDto employeeUpdateDto) {
+    /**
+     * Update employee
+     *
+     * @param employeeId        the id of the employee to update
+     * @param employeeUpdateDto dto containing all required fields
+     * @return dto of the employee resource
+     */
+    public EmployeeDto updateEmployee(String employeeId, EmployeeUpdateDto employeeUpdateDto) {
         Employee employee = toEntity(employeeUpdateDto);
         Employee returnEmployee = employeeService.updateEmployee(employee, employeeId);
         returnEmployee.setRole(roleService.findById(employee.getRole().getId()));
         return toDto(returnEmployee);
     }
 
+    /**
+     * Find employee by id.
+     *
+     * @param id employee id
+     * @return dto containing
+     */
+    public EmployeeDto findById(String id) {
+        //todo use toEntity() method
+        return new EmployeeDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new)); //TODO Manage exception for not finding employee
+    }
+
+    /**
+     * Find all employees
+     *
+     * @return list of employees, each contained in an dto
+     */
+    public List<EmployeeDto> findAll() {
+        return employeeService.findAll()
+                .stream()
+                .map(StaffService::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Delete employee
+     *
+     * @param id id of employee
+     */
+    public void deleteEmployeeById(String id) {
+        Employee deleteEmployee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
+        employeeRepository.delete(deleteEmployee);
+    }
+
+    /**
+     * Converts employee to response dto
+     *
+     * @param employee employee to convert
+     * @return response dto
+     */
     private static EmployeeDto toDto(Employee employee) {
         return EmployeeDto.builder()
                 .Id(employee.getId())
@@ -57,6 +112,13 @@ public class StaffService {
                 .build();
     }
 
+    /**
+     * Converts dto to employee.
+     *
+     * @param creationDto contains required information to create an employee entity. The role id field references a role that must be supplied as an additional parameter.
+     * @param role        an existing role entity
+     * @return employee entity
+     */
     private static Employee toEntity(EmployeeCreationDto creationDto, Role role) {
         return Employee.builder()
                 .role(role)
@@ -74,23 +136,6 @@ public class StaffService {
                 .password(creationDto.getPassword())
                 .build();
 
-    }
-
-
-    public EmployeeDto findById(String id) {
-        return new EmployeeDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new)); //TODO Manage exception for not finding employee
-    }
-
-    public List<EmployeeDto> findAll() {
-        return employeeService.findAll()
-                .stream()
-                .map(StaffService::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public void deleteEmployeeById(String id) {
-        Employee deleteEmployee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
-        employeeRepository.delete(deleteEmployee);
     }
 
     private static Employee toEntity(EmployeeUpdateDto employeeUpdateDto) {

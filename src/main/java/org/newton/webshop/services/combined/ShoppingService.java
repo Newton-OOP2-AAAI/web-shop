@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 /**
- * @author Alexander
+ * Service that handles requests from ShoppingController, which takes care of the shopping carts, from adding items to creating an order
+ * Each entity has it's own lower-level service because some of them are used by other controllers.
  */
 @Service
 public class ShoppingService {

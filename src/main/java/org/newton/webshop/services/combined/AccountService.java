@@ -26,12 +26,22 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    //Customer wants to see the account
+    /**
+     * Find account details by account id
+     *
+     * @param id account id
+     * @return dto containing account details
+     */
     public AccountDetailsDto findById(String id) {
         return new AccountDetailsDto(accountRepository.findById(id).orElseThrow(RuntimeException::new));
     }
 
-    //Customer wants to create an account
+    /**
+     * Creates an Account entity (login details) and an associated Customer entity (personal details like name and adress)
+     *
+     * @param accountCreationDto dto containing all details needed
+     * @return dto, including ids of created entites
+     */
     public AccountDto addAccount(@RequestBody AccountCreationDto accountCreationDto) {
         Customer createCustomer = new Customer(accountCreationDto);
         customerRepository.save(createCustomer);
@@ -40,7 +50,13 @@ public class AccountService {
         return new AccountDto(accountRepository.save(createAccount));
     }
 
-    //Customer wants to modify personal information
+    /**
+     * Updates an Account entity and the associated Customer entity
+     *
+     * @param accountId         id of account that should be updated
+     * @param customerUpdateDto dto containing the fields that can be updated
+     * @return dto
+     */
     public CustomerUpdateDto editCustomerByAccountId(String accountId, CustomerUpdateDto customerUpdateDto) {
         Customer updatedCustomer = customerRepository.findCustomerByAccount_Id(accountId)
                 .map(customer -> {
@@ -56,7 +72,11 @@ public class AccountService {
         return new CustomerUpdateDto(updatedCustomer);
     }
 
-    //Customer wants to delete account
+    /**
+     * Delete account by account id
+     *
+     * @param id account id
+     */
     public void deleteAccountById(String id) {
         Account deleteAccount = accountRepository.findById(id).orElseThrow(RuntimeException::new);
         accountRepository.delete(deleteAccount);
