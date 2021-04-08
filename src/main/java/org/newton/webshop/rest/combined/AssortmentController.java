@@ -104,10 +104,12 @@ public class AssortmentController {
     List<ProductDto> priceAsc() {
         return assortmentService.sortByPriceAsc();
     }
+
     @GetMapping("sort/price/desc")
     List<ProductDto> priceDesc() {
         return assortmentService.sortByPriceDesc();
     }
+
     @GetMapping("sort/category")
     List<ProductDto> category() {
         return assortmentService.sortByCategory();

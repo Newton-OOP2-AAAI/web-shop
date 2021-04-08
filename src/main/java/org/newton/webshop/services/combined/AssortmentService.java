@@ -48,6 +48,7 @@ public class AssortmentService {
 
     /**
      * Creates a new category and sets associations (parent category, child categories, products). Referenced entities must already exist in database, otherwise exception is thrown.
+     *
      * @param creationDto CategoryCreationDto
      * @return CategoryDto
      */
@@ -131,28 +132,30 @@ public class AssortmentService {
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
     }
-    public List<ProductDto> sortByPriceAsc(){
+
+    public List<ProductDto> sortByPriceAsc() {
         return productService.findAllByPriceAsc()
                 .stream()
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
 
     }
-    public List<ProductDto> sortByPriceDesc(){
+
+    public List<ProductDto> sortByPriceDesc() {
         return productService.findAllByPriceDesc()
                 .stream()
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
 
     }
-    public List<ProductDto> sortByCategory(){
+
+    public List<ProductDto> sortByCategory() {
         return productService.findAllByCategory()
                 .stream()
                 .map(AssortmentService::toDto)
                 .collect(Collectors.toList());
 
     }
-
 
 
     /**
@@ -192,6 +195,7 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity without id
+     *
      * @param dto             contains all scalar fields and references to already existing composite fields
      * @param parentCategory  one parent category
      * @param childCategories set of child categories
@@ -209,9 +213,10 @@ public class AssortmentService {
 
     /**
      * Converts CategoryCreationDto to Entity with id
-     * @param id an existing id
-     * @param dto CategoryCreationDto
-     * @param parentCategory Set of already persisted parent categories
+     *
+     * @param id              an existing id
+     * @param dto             CategoryCreationDto
+     * @param parentCategory  Set of already persisted parent categories
      * @param childCategories Set of already persisted child categories
      * @param products        set of already persisted products
      * @return category entity
