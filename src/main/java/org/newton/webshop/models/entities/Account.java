@@ -1,29 +1,19 @@
 package org.newton.webshop.models.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "accounts")
 @Entity
 public class Account {
-
-    public Account(AccountCreationDto newAccount, Customer customer, LocalDate createDate) {
-        this.username = newAccount.getUsername();
-        this.password = newAccount.getPassword();
-        this.birthDate = newAccount.getBirthDate();
-        this.createDate = createDate;
-        this.customer = customer;
-    }
-
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")

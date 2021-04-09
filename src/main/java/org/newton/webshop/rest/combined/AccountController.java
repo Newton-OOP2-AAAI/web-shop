@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 public class AccountController {
     private final AccountService accountService;
 
@@ -25,7 +25,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public AccountDto addAccount(@RequestBody AccountCreationDto accountCreationDto) {
+    public AccountDto createAccount(@RequestBody AccountCreationDto accountCreationDto) {
         return accountService.addAccount(accountCreationDto);
     }
 
