@@ -51,10 +51,10 @@ public class StaffService {
      * @return dto of the employee resource
      */
     public EmployeeDto updateEmployee(String employeeId, EmployeeUpdateDto employeeUpdateDto) {
-        Employee employee = toEntity(employeeUpdateDto);
-        Employee returnEmployee = employeeService.updateEmployee(employee, employeeId);
-        returnEmployee.setRole(roleService.findById(employee.getRole().getId()));
-        return toDto(returnEmployee);
+        var role = roleService.findById(employeeUpdateDto.getRoleId());
+        var employee = toEntity(employeeUpdateDto, role);
+        var updatedEmployee = employeeService.updateEmployee(employee, employeeId);
+        return toDto(updatedEmployee);
     }
 
     /**
@@ -138,9 +138,9 @@ public class StaffService {
 
     }
 
-    private static Employee toEntity(EmployeeUpdateDto employeeUpdateDto) {
+    private static Employee toEntity(EmployeeUpdateDto employeeUpdateDto, Role role) {
         return Employee.builder()
-                .role(new Role(employeeUpdateDto.getRoleId()))
+                .role(role)
                 .firstname(employeeUpdateDto.getFirstname())
                 .lastname(employeeUpdateDto.getLastname())
                 .phone(employeeUpdateDto.getPhone())

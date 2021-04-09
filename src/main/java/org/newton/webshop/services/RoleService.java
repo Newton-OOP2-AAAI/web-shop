@@ -21,7 +21,7 @@ public class RoleService {
     }
 
     public Role findById(String id) {
-        return roleRepository.findById(id).orElseThrow(RuntimeException::new);
+        return roleRepository.findById(id).orElseThrow(RuntimeException::new); //todo exception: Role not found
     }
 
     public Role addRole(Role newRole) {

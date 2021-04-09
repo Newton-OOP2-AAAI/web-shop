@@ -17,6 +17,5 @@ public class CategoryDto {
     private String parentCategoryId;
     private String parentCategoryName;
     private Map<String, String> childCategories;
-
     private Map<String, String> products;
 }
