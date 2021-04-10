@@ -1,13 +1,14 @@
 package org.newton.webshop.models.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.newton.webshop.models.entities.Answer;
-import org.newton.webshop.models.entities.Question;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class AnswerDto {
@@ -15,13 +16,4 @@ public class AnswerDto {
     private String description;
     private Map<String, String> questions;
     private String answerText;
-
-    public AnswerDto(Answer answer) {
-        this.id = answer.getId();
-        this.description = answer.getDescription();
-        this.questions = answer.getQuestions()
-                .stream()
-                .collect(Collectors.toMap(Question::getId, Question::getQuestionText));
-        this.answerText = answer.getAnswerText();
-    }
 }

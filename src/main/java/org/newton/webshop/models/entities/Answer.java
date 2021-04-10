@@ -1,16 +1,14 @@
 package org.newton.webshop.models.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.newton.webshop.models.dto.creation.AnswerCreationDto;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
 @Table(name = "answers")
@@ -33,13 +31,15 @@ public class Answer {
     @Column(length = 50, nullable = false)
     private String description;
 
-    public Answer(AnswerCreationDto creationDto) {
-        this.questions = new HashSet<>();
-        this.answerText = creationDto.getAnswerText();
-        this.description = creationDto.getDescription();
-    }
-
+    /**
+     * Utility method that sets a bidirectional association.
+     * Use this method for setting associations between two entities. That's what the method was written for.
+     * Don't use this method for changing associations. If this use case comes up in the future, the method should be rewritten.
+     *
+     * @param question question entity to be associated with
+     */
     public void addQuestion(Question question) {
         this.questions.add(question);
+        question.setAnswer(this);
     }
 }

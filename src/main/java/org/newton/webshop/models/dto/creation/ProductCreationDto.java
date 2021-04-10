@@ -12,15 +12,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCreationDto {
-
-
     private Set<InventoryCreationDto> inventories;
     private String name;
     private Integer price;
     private Set<String> categoryIds;
     private String description;
     private boolean visible;
-
-
 }
 

@@ -5,9 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-
 public class InventoryCreationDto {
-
     private String size;
     private String color;
     private Integer quantity;

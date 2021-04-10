@@ -11,6 +11,7 @@ import org.newton.webshop.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,14 +39,14 @@ public class ChatbotService {
      * @param creationDto contains info about the entities to create
      * @return dto that contains the created entities and their ids
      */
-    public AnswerDto create(AnswerCreationDto creationDto) {
+    public AnswerDto createFaq(AnswerCreationDto creationDto) {
         //AnswerCreationDto to Answer using constructor, then persist
-        Answer answer = answerRepository.save(new Answer(creationDto));
+        Answer answer = answerRepository.save(toEntity(creationDto));
 
         //Set<String> to Set<Questions>
         var questions = creationDto.getQuestions()
                 .stream()
-                .map(Question::new)
+                .map(ChatbotService::toEntity)
                 .collect(Collectors.toSet());
 
         //associate each question with answer and persist question
@@ -58,8 +59,9 @@ public class ChatbotService {
         answer.setQuestions(questions);
 
         //return answerdto
-        return new AnswerDto(answer);
+        return toDto(answer);
     }
+
 
     /**
      * Find FAQ by answer id
@@ -67,8 +69,9 @@ public class ChatbotService {
      * @param id answer id
      * @return dto, containing the info in the created FAQ and the respective ids
      */
-    public AnswerDto findById(String id) {
-        return new AnswerDto(answerRepository.findById(id).orElseThrow(RuntimeException::new));
+    public AnswerDto findFaqById(String id) {
+        var answer = answerRepository.findById(id).orElseThrow(RuntimeException::new);
+        return toDto(answer);
     }
 
 
@@ -77,10 +80,10 @@ public class ChatbotService {
      *
      * @return list of all FAQs, each one contained in a dto
      */
-    public List<AnswerDto> findAll() {
+    public List<AnswerDto> findAllFaq() {
         return answerRepository.findAll()
                 .stream()
-                .map(AnswerDto::new)
+                .map(ChatbotService::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -93,20 +96,19 @@ public class ChatbotService {
      */
     public AnswerDto createQuestion(String answerId, QuestionCreationDto questionCreationDto) {
         //find answer to create the question for
-        Answer answer = answerRepository.findById(answerId).orElseThrow(RuntimeException::new);
+        var answer = answerRepository.findById(answerId).orElseThrow(RuntimeException::new);
 
         //creationdto to question
-        Question question = new Question(questionCreationDto);
+        var question = toEntity(questionCreationDto);
 
         //set associations
-        question.setAnswer(answer);
         answer.addQuestion(question);
 
         //persist question
         questionRepository.save(question);
 
         //return AnswerDto
-        return new AnswerDto(answer);
+        return toDto(answer);
     }
 
     /**
@@ -133,7 +135,7 @@ public class ChatbotService {
             return answerRepository.save(answer);
         }).orElseThrow(RuntimeException::new);
 
-        return new AnswerDto(updatedAnswer);
+        return toDto(updatedAnswer);
     }
 
     /**
@@ -141,8 +143,67 @@ public class ChatbotService {
      *
      * @param id answer id
      */
-    public void deleteFAQ(String id) {
+    public void deleteFaq(String id) {
         Answer answer = answerRepository.findById(id).orElseThrow(RuntimeException::new);
         answerRepository.delete(answer);
+    }
+
+    /**
+     * Converts Answer entity to a response dto. The set of Question entities in the Answer entity is mapped to a Hashmap (key = question id, value = question text)
+     *
+     * @param answer entity to convert
+     * @return response dto
+     */
+    private static AnswerDto toDto(Answer answer) {
+        return AnswerDto.builder()
+                .id(answer.getId())
+                .description(answer.getDescription())
+                .questions(answer.getQuestions()
+                        .stream()
+                        .collect(Collectors.toMap(Question::getId, Question::getQuestionText)))
+                .answerText(answer.getAnswerText())
+                .build();
+    }
+
+    /**
+     * Converts dto to Question entity. Leaves answer-field as null. Leaves id-field as null.
+     *
+     * @param creationDto dto containing required details to create a question entity
+     * @return Question entity
+     */
+    private static Question toEntity(QuestionCreationDto creationDto) {
+        return Question.builder()
+                .questionText(creationDto.getQuestionText())
+                .build();
+    }
+
+    /**
+     * Converts dto to Question entity. Leaves answer-field as null. Leaves id-field as null.
+     * This method is an alternative to the toEntity-method that take a QuestionCreationDto (which currently only contains one field).
+     * See documentation on org.newton.webshop.models.dto.creation.AnswerCreationDto.java for more information.
+     *
+     * @param questionText the question phrase/text
+     * @return Question entity
+     */
+    private static Question toEntity(String questionText) {
+        return Question.builder()
+                .questionText(questionText)
+                .build();
+    }
+
+    /**
+     * Converts dto to Answer entity. Leaves questions-field as empty HashSet. Leaves id-field as null.
+     * This method is an alternative to the toEntity-method that take a QuestionCreationDto (which currently only contains one field).
+     * See documentation on org.newton.webshop.models.dto.creation.AnswerCreationDto.java for more information.
+     *
+     * @param creationDto
+     * @return
+     */
+    private static Answer toEntity(AnswerCreationDto creationDto) {
+        return Answer.builder()
+                .questions(new HashSet<>())
+                .answerText(creationDto.getAnswerText())
+                .description(creationDto.getDescription())
+                .build();
     }
 }
