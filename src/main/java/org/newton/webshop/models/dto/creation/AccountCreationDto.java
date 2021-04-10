@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountCreationDto {
-
     private String firstname;
     private String lastname;
     private String phone;

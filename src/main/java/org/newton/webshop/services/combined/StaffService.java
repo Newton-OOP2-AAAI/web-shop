@@ -64,8 +64,7 @@ public class StaffService {
      * @return dto containing
      */
     public EmployeeDto findById(String id) {
-        //todo use toEntity() method
-        return new EmployeeDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new)); //TODO Manage exception for not finding employee
+        return toDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new)); //TODO Manage exception for not finding employee
     }
 
     /**

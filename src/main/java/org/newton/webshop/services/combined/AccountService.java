@@ -60,9 +60,9 @@ public class AccountService {
      *
      * @param accountId         id of account that should be updated
      * @param customerUpdateDto dto containing the fields that can be updated
-     * @return dto
+     * @return dto, containing the fields in the Account and Customer entity, including the fields which are currently not allowed to be updated
      */
-    public CustomerUpdateDto editCustomerByAccountId(String accountId, CustomerUpdateDto customerUpdateDto) {
+    public AccountDto editCustomerByAccountId(String accountId, CustomerUpdateDto customerUpdateDto) {
         Customer updatedCustomer = customerRepository.findCustomerByAccount_Id(accountId)
                 .map(customer -> {
                     customer.setFirstname(customerUpdateDto.getFirstname());
@@ -74,7 +74,7 @@ public class AccountService {
                     customer.getAddress().setCity(customerUpdateDto.getCity());
                     return customerRepository.save(customer);
                 }).orElseThrow(RuntimeException::new);
-        return new CustomerUpdateDto(updatedCustomer);
+        return toDto(updatedCustomer);
     }
 
     /**
@@ -147,6 +147,30 @@ public class AccountService {
      */
     private static AccountDto toDto(Account account) {
         var customer = account.getCustomer();
+
+        return toDto(customer, account);
+    }
+
+    /**
+     * Converts Customer entity to a AccountDto, which bundles the details in an Account entity and a Customer entity.
+     *
+     * @param customer Customer entity to convert
+     * @return ResponseDto that bundles
+     * @throws NullPointerException if account-field or the address-field is null.
+     */
+    private static AccountDto toDto(Customer customer) {
+
+        var account = customer.getAccount();
+
+        return toDto(customer, account);
+    }
+
+    /**
+     * @param customer
+     * @param account
+     * @return
+     */
+    private static AccountDto toDto(Customer customer, Account account) {
         var address = customer.getAddress();
 
         return AccountDto.builder()

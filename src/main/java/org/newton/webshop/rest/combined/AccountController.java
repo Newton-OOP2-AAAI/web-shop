@@ -30,7 +30,7 @@ public class AccountController {
     }
 
     @PutMapping
-    public CustomerUpdateDto editCustomerByAccountId(@RequestParam String id, @RequestBody CustomerUpdateDto customerUpdateDto) {
+    public AccountDto editCustomerByAccountId(@RequestParam String id, @RequestBody CustomerUpdateDto customerUpdateDto) {
         return accountService.editCustomerByAccountId(id, customerUpdateDto);
     }
 
