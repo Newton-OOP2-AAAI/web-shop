@@ -38,6 +38,6 @@ public class EmployeeService {
             employeeUpdate.setPhone(employee.getPhone());
             employeeUpdate.setAddress(employee.getAddress());
             return employeeRepository.save(employeeUpdate);
-        }).orElseThrow(RuntimeException::new);
+        }).orElseThrow(RuntimeException::new); //todo Exception: Employee not found
     }
 }

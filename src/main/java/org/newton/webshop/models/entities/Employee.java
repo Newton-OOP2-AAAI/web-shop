@@ -47,5 +47,4 @@ public class Employee {
 
     @Column(length = 50, nullable = false)
     private String password;
-
 }

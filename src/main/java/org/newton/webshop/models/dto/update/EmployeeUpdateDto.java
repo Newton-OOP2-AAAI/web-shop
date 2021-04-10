@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 public class EmployeeUpdateDto {
     private String roleId;
-    private String role;
     private String firstname;
     private String lastname;
     private String phone;

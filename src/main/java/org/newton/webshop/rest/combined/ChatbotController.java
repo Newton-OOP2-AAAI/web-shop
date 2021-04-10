@@ -36,7 +36,7 @@ public class ChatbotController {
      */
     @PostMapping("/answers")
     AnswerDto createFAQ(@RequestBody AnswerCreationDto answerAndQuestionCreationDto) {
-        return chatbotService.create(answerAndQuestionCreationDto);
+        return chatbotService.createFaq(answerAndQuestionCreationDto);
     }
 
     /**
@@ -48,7 +48,7 @@ public class ChatbotController {
      */
     @GetMapping("/answers")
     AnswerDto findFAQbyId(@RequestParam String id) {
-        return chatbotService.findById(id);
+        return chatbotService.findFaqById(id);
     }
 
     /**
@@ -59,7 +59,7 @@ public class ChatbotController {
      */
     @GetMapping("/answers/all")
     List<AnswerDto> findAllFAQs() {
-        return chatbotService.findAll();
+        return chatbotService.findAllFaq();
     }
 
     /**
@@ -101,6 +101,6 @@ public class ChatbotController {
 
     @DeleteMapping("/answers")
     void deleteFAQ(@RequestParam String id) {
-        chatbotService.deleteFAQ(id);
+        chatbotService.deleteFaq(id);
     }
 }

@@ -3,7 +3,6 @@ package org.newton.webshop.models.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.newton.webshop.models.dto.creation.QuestionCreationDto;
 
 import javax.persistence.*;
 
@@ -28,12 +27,4 @@ public class Question {
 
     @Column(length = 50, nullable = false)
     private String questionText;
-
-    public Question(String questionText) {
-        this.questionText = questionText;
-    }
-
-    public Question(QuestionCreationDto creationDto) {
-        this.questionText = creationDto.getQuestionText();
-    }
 }

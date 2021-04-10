@@ -38,9 +38,4 @@ public class Role {
 
     @Column(nullable = false)
     private Boolean products;
-
-
-    public Role(String id) {
-        this.id = id;
-    }
 }

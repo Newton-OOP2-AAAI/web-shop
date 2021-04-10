@@ -1,16 +1,15 @@
 package org.newton.webshop.models.entities;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
 import javax.persistence.*;
 import java.util.Set;
 
-
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor
@@ -33,7 +32,7 @@ public class Customer {
     private String id;
 
     @OneToMany(mappedBy = "customer")
-    private Set<Order> cart;
+    private Set<Order> orders;
 
     @OneToOne(mappedBy = "customer")
     private Account account;
@@ -52,4 +51,18 @@ public class Customer {
 
     @Embedded
     private Address address;
+
+    /**
+     * Utility method that establishes sets the bidirectional relation between an Account instance
+     * Method should only be used to avoid having to use respective setters twice.
+     * Method does not check for existing associations on either side and will simply overwrite existing associations.
+     * Keep in mind that either the invoking Customer entity or the Account entity should be persisted in the database,
+     * otherwise neither can be persisted after this method is called.
+     *
+     * @param account Account instance.
+     */
+    public void setAccountAssociation(Account account) {
+        this.account = account;
+        account.setCustomer(this);
+    }
 }

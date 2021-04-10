@@ -12,7 +12,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDto {
-
     private String id;
     private Set<InventoryDto> inventory;
     private String name;
@@ -20,6 +19,4 @@ public class ProductDto {
     private Map<String, String> categories;
     private String description;
     private boolean visible;
-
-
 }

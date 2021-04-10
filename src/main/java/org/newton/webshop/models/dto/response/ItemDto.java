@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemDto {
     private String itemId;
-    private String inventoryId; //todo is inventoryId necessary?
+    private String inventoryId;
     private Integer quantity;
     private String name;
     private Integer price;
