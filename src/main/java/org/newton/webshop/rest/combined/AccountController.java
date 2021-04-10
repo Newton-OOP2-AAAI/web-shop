@@ -1,8 +1,8 @@
 package org.newton.webshop.rest.combined;
 
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
-import org.newton.webshop.models.dto.response.AccountDetailsDto;
 import org.newton.webshop.models.dto.response.AccountDto;
+import org.newton.webshop.models.dto.response.AccountSimpleDto;
 import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.services.combined.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public AccountDetailsDto getAccountById(@RequestParam String id) {
+    public AccountSimpleDto getAccountById(@RequestParam String id) {
         return accountService.findById(id);
     }
 

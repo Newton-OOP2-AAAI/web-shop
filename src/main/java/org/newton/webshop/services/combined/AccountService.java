@@ -1,8 +1,8 @@
 package org.newton.webshop.services.combined;
 
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
-import org.newton.webshop.models.dto.response.AccountDetailsDto;
 import org.newton.webshop.models.dto.response.AccountDto;
+import org.newton.webshop.models.dto.response.AccountSimpleDto;
 import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.models.entities.Address;
@@ -34,8 +34,9 @@ public class AccountService {
      * @param id account id
      * @return dto containing account details
      */
-    public AccountDetailsDto findById(String id) {
-        return new AccountDetailsDto(accountRepository.findById(id).orElseThrow(RuntimeException::new));
+    public AccountSimpleDto findById(String id) {
+        var account = accountRepository.findById(id).orElseThrow(RuntimeException::new);
+        return toSimpleDto(account);
     }
 
     /**
@@ -95,8 +96,7 @@ public class AccountService {
      * @return customer entity. Use getAccount-method to access account entity
      */
     private static Customer toEntity(AccountCreationDto dto) {
-        //Build customer entity
-        var customer = Customer.builder()
+        return Customer.builder()
                 .orders(new HashSet<>())
                 .firstname(dto.getFirstname())
                 .lastname(dto.getLastname())
@@ -109,9 +109,6 @@ public class AccountService {
                         .city(dto.getCity())
                         .build())
                 .build();
-
-        //Return customer entity, containing account entity
-        return customer;
     }
 
     /**
@@ -167,4 +164,12 @@ public class AccountService {
                 .birthDate(account.getBirthDate())
                 .build();
     }
+
+    private static AccountSimpleDto toSimpleDto(Account account) {
+        return AccountSimpleDto.builder()
+                .username(account.getUsername())
+                .birthDate(account.getBirthDate())
+                .build();
+    }
+
 }
