@@ -26,7 +26,7 @@ public class EmployeeService {
     }
 
     public List<Employee> findAll() {
-        return (List<Employee>) employeeRepository.findAll();
+        return employeeRepository.findAll();
     }
 
 

@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 /target
+apikey.properties
+app-env
 # mvnw not in gitignore: https://stackoverflow.com/questions/47240546/should-the-mvnw-files-be-added-to-the-repository
 
 ### NetBeans ###
