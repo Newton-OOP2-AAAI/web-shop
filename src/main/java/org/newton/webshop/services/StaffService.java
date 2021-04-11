@@ -1,7 +1,9 @@
 package org.newton.webshop.services;
 
 import org.newton.webshop.models.dto.creation.EmployeeCreationDto;
+import org.newton.webshop.models.dto.creation.RoleCreationDto;
 import org.newton.webshop.models.dto.response.EmployeeDto;
+import org.newton.webshop.models.dto.response.RoleDto;
 import org.newton.webshop.models.dto.update.EmployeeUpdateDto;
 import org.newton.webshop.models.entities.Address;
 import org.newton.webshop.models.entities.Employee;
@@ -22,13 +24,12 @@ import java.util.stream.Collectors;
 public class StaffService {
     private final EmployeeService employeeService;
     private final RoleService roleService;
-    private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public StaffService(EmployeeService employeeService, RoleService roleService, EmployeeRepository employeeRepository) {
+    public StaffService(EmployeeService employeeService, RoleService roleService) {
         this.employeeService = employeeService;
         this.roleService = roleService;
-        this.employeeRepository = employeeRepository;
+
     }
 
     /**
@@ -64,7 +65,8 @@ public class StaffService {
      * @return dto containing
      */
     public EmployeeDto findById(String id) {
-        return toDto(employeeRepository.findById(id).orElseThrow(RuntimeException::new)); //TODO Manage exception for not finding employee
+        Employee employee = employeeService.findById(id);
+        return toDto(employee);
     }
 
     /**
@@ -85,8 +87,52 @@ public class StaffService {
      * @param id id of employee
      */
     public void deleteEmployeeById(String id) {
-        Employee deleteEmployee = employeeRepository.findById(id).orElseThrow(RuntimeException::new);
-        employeeRepository.delete(deleteEmployee);
+        employeeService.deleteEmployee(id);
+    }
+
+    /**
+     * Find all roles
+     *
+     * @return list of roles, each contained in an dto
+     */
+    public List<RoleDto> findAllRoles() {
+        return roleService.findAll()
+                .stream()
+                .map(StaffService::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Create role
+     *
+     * @param creationDto dto with required fields
+     * @return dto, including the id of the new entity
+     */
+    public RoleDto createRole(RoleCreationDto creationDto) {
+        Role newRole = roleService.createRole(toEntity(creationDto));
+        return toDto(newRole);
+    }
+
+    /**
+     * Update role
+     *
+     * @param roleId     the id of the role to update
+     * @param updateRole dto containing all required fields
+     * @return dto of the role resource
+     */
+    public RoleDto updateRole(String roleId, RoleCreationDto updateRole) {
+        Role oldRole = toEntity(updateRole);
+        Role updatedRole = roleService.updateRole(oldRole, roleId);
+        return toDto(updatedRole);
+    }
+
+    /**
+     * Delete role
+     *
+     * @param id id of role
+     */
+    public void deleteRoleById(String id) {
+        roleService.deleteRole(id);
     }
 
     /**
@@ -149,6 +195,40 @@ public class StaffService {
                         .zipCode(employeeUpdateDto.getZipCode())
                         .city(employeeUpdateDto.getCity())
                         .build())
+                .build();
+    }
+
+    /**
+     * Converts dto to role.
+     *
+     * @param creationDto contains required information to create an role entity
+     * @return role entity
+     */
+    private static Role toEntity(RoleCreationDto creationDto) {
+        return Role.builder()
+                .id(creationDto.getId())
+                .employee(creationDto.getEmployee())
+                .title(creationDto.getTitle())
+                .chatbot(creationDto.getChatbot())
+                .categories(creationDto.getCategories())
+                .products(creationDto.getProducts())
+                .build();
+    }
+
+    /**
+     * Converts role to response dto
+     *
+     * @param role role to convert
+     * @return response dto
+     */
+    private static RoleDto toDto(Role role) {
+        return RoleDto.builder()
+                .id(role.getId())
+                .employee(role.getEmployee())
+                .title(role.getTitle())
+                .chatbot(role.getChatbot())
+                .categories(role.getCategories())
+                .products(role.getProducts())
                 .build();
     }
 }
