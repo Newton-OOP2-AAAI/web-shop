@@ -2,7 +2,9 @@ package org.newton.webshop.rest;
 
 
 import org.newton.webshop.models.dto.creation.EmployeeCreationDto;
+import org.newton.webshop.models.dto.creation.RoleCreationDto;
 import org.newton.webshop.models.dto.response.EmployeeDto;
+import org.newton.webshop.models.dto.response.RoleDto;
 import org.newton.webshop.models.dto.update.EmployeeUpdateDto;
 import org.newton.webshop.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +34,38 @@ public class StaffController {
     }
 
     @GetMapping
-    EmployeeDto findEmployeeById(@RequestParam String id) {
+    public EmployeeDto findEmployeeById(@RequestParam String id) {
         return staffService.findById(id);
     }
 
     @GetMapping("/all")
-    List<EmployeeDto> findAllEmployees() {
+    public List<EmployeeDto> findAllEmployees() {
         return staffService.findAll();
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, params = {"employeeId"})
     @DeleteMapping
-    public void deleteEmployeeById(@RequestParam String id) {
-        staffService.deleteEmployeeById(id);
+    public void deleteEmployeeById(@RequestParam String employeeId) {
+        staffService.deleteEmployeeById(employeeId);
     }
 
+    @GetMapping("roles")
+    public List<RoleDto> findAllRoles() {
+        return staffService.findAllRoles();
+    }
+
+    @PostMapping("/createRole")
+    public RoleDto createRole(@RequestBody RoleCreationDto creationDto) {
+        return staffService.createRole(creationDto);
+    }
+
+    @PutMapping("/updateRole")
+    public RoleDto updateRoleById(@RequestParam String id, @RequestBody RoleCreationDto updateRole) {
+        return staffService.updateRole(id, updateRole);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, params = {"roleId"})
+    public void deleteRoleById(@RequestParam String roleId) {
+        staffService.deleteRoleById(roleId);
+    }
 }

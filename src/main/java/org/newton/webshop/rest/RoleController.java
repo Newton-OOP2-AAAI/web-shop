@@ -29,8 +29,4 @@ public class RoleController {
         return roleService.findById(id);
     }
 
-    @PostMapping
-    public Role addRole(@RequestBody Role newRole) {
-        return roleService.addRole(newRole);
-    }
 }

@@ -40,4 +40,9 @@ public class EmployeeService {
             return employeeRepository.save(employeeUpdate);
         }).orElseThrow(RuntimeException::new); //todo Exception: Employee not found
     }
+
+    public void deleteEmployee(String id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Employee not found
+        employeeRepository.delete(employee);
+    }
 }

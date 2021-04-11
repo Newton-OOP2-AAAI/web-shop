@@ -1,15 +1,14 @@
 package org.newton.webshop.models.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Set;
 
-
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 @Table(name = "roles")
