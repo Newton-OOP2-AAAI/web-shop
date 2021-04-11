@@ -12,6 +12,7 @@ import java.util.Map;
 @Getter
 @Builder
 public class CategoryDto {
+
     private String id;
     private String name;
     private String parentCategoryId;

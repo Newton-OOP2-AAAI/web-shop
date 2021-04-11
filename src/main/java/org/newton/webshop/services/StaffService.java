@@ -1,4 +1,4 @@
-package org.newton.webshop.services.combined;
+package org.newton.webshop.services;
 
 import org.newton.webshop.models.dto.creation.EmployeeCreationDto;
 import org.newton.webshop.models.dto.response.EmployeeDto;
@@ -7,8 +7,8 @@ import org.newton.webshop.models.entities.Address;
 import org.newton.webshop.models.entities.Employee;
 import org.newton.webshop.models.entities.Role;
 import org.newton.webshop.repositories.EmployeeRepository;
-import org.newton.webshop.services.EmployeeService;
-import org.newton.webshop.services.RoleService;
+import org.newton.webshop.services.shared.EmployeeService;
+import org.newton.webshop.services.shared.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

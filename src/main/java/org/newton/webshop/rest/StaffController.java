@@ -1,10 +1,10 @@
-package org.newton.webshop.rest.combined;
+package org.newton.webshop.rest;
 
 
 import org.newton.webshop.models.dto.creation.EmployeeCreationDto;
 import org.newton.webshop.models.dto.response.EmployeeDto;
 import org.newton.webshop.models.dto.update.EmployeeUpdateDto;
-import org.newton.webshop.services.combined.StaffService;
+import org.newton.webshop.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

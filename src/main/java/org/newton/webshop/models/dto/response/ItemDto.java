@@ -10,6 +10,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class ItemDto {
+
     private String itemId;
     private String inventoryId;
     private Integer quantity;

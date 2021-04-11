@@ -1,7 +1,7 @@
 package org.newton.webshop.rest;
 
 import org.newton.webshop.models.entities.Role;
-import org.newton.webshop.services.RoleService;
+import org.newton.webshop.services.shared.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

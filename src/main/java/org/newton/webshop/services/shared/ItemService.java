@@ -1,4 +1,4 @@
-package org.newton.webshop.services;
+package org.newton.webshop.services.shared;
 
 import org.newton.webshop.models.entities.Item;
 import org.newton.webshop.repositories.ItemRepository;
@@ -37,22 +37,4 @@ public class ItemService {
      * AssortmentService should take care of mapping between Entity/DTO
      *
      */
-
-
-    //TODO commented code should be removed unless methods are needed in Assortment Service
-//    public List<Item> findAll() {
-//        return itemRepository.findAll();
-//    }
-//
-//    public Item newItem(Item newItem) {
-//        return itemRepository.save(newItem);
-//    }
-//
-
-//
-
-//
-//    public void deleteItemById(String id) {
-//        itemRepository.deleteById(id);
-//    }
 }

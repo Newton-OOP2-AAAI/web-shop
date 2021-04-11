@@ -1,4 +1,4 @@
-package org.newton.webshop.services.combined;
+package org.newton.webshop.services;
 
 
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
@@ -12,10 +12,10 @@ import org.newton.webshop.models.dto.update.ProductUpdateDto;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Product;
-import org.newton.webshop.services.CategoryService;
-import org.newton.webshop.services.InventoryService;
-import org.newton.webshop.services.ProductService;
-import org.newton.webshop.services.ReviewService;
+import org.newton.webshop.services.shared.CategoryService;
+import org.newton.webshop.services.shared.InventoryService;
+import org.newton.webshop.services.shared.ProductService;
+import org.newton.webshop.services.shared.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

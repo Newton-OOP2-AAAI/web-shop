@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionCreationDto {
+
     private String questionText;
 }
 

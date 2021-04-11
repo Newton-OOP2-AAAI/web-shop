@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductSimpleDto {
+
     private String id;
     private String name;
     private Integer price;

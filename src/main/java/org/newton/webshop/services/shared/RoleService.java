@@ -1,4 +1,4 @@
-package org.newton.webshop.services;
+package org.newton.webshop.services.shared;
 
 import org.newton.webshop.models.entities.Role;
 import org.newton.webshop.repositories.RoleRepository;
@@ -17,7 +17,7 @@ public class RoleService {
     }
 
     public List<Role> findAll() {
-        return (List<Role>) roleRepository.findAll();
+        return roleRepository.findAll();
     }
 
     public Role findById(String id) {

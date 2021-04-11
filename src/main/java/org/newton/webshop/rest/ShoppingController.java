@@ -1,10 +1,10 @@
-package org.newton.webshop.rest.combined;
+package org.newton.webshop.rest;
 
 import org.newton.webshop.models.dto.creation.CustomerCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
 import org.newton.webshop.models.dto.response.OrderDto;
-import org.newton.webshop.services.combined.ShoppingService;
+import org.newton.webshop.services.ShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

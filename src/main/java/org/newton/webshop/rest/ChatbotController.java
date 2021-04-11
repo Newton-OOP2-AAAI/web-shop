@@ -1,10 +1,10 @@
-package org.newton.webshop.rest.combined;
+package org.newton.webshop.rest;
 
 import org.newton.webshop.models.dto.creation.AnswerCreationDto;
 import org.newton.webshop.models.dto.creation.QuestionCreationDto;
 import org.newton.webshop.models.dto.response.AnswerDto;
 import org.newton.webshop.models.dto.update.AnswerUpdateDto;
-import org.newton.webshop.services.combined.ChatbotService;
+import org.newton.webshop.services.ChatbotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
