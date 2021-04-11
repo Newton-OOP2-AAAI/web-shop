@@ -1,7 +1,6 @@
 package org.newton.webshop.rest;
 
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
-import org.newton.webshop.models.dto.response.AccountDto;
 import org.newton.webshop.models.dto.response.AccountSimpleDto;
 import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.services.AccountService;
