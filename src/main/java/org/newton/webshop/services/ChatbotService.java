@@ -1,4 +1,4 @@
-package org.newton.webshop.services.combined;
+package org.newton.webshop.services;
 
 import org.newton.webshop.models.dto.creation.AnswerCreationDto;
 import org.newton.webshop.models.dto.creation.QuestionCreationDto;
