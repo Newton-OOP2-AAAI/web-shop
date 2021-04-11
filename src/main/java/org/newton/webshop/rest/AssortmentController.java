@@ -1,4 +1,4 @@
-package org.newton.webshop.rest.combined;
+package org.newton.webshop.rest;
 
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.creation.InventoryCreationDto;

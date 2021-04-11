@@ -1,4 +1,4 @@
-package org.newton.webshop.rest.combined;
+package org.newton.webshop.rest;
 
 import org.newton.webshop.models.dto.creation.AnswerCreationDto;
 import org.newton.webshop.models.dto.creation.QuestionCreationDto;

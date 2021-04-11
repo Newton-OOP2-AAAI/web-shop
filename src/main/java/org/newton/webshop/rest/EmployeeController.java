@@ -1,7 +1,7 @@
 package org.newton.webshop.rest;
 
 import org.newton.webshop.models.entities.Employee;
-import org.newton.webshop.services.EmployeeService;
+import org.newton.webshop.services.shared.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package org.newton.webshop.services;
+package org.newton.webshop.services.shared;
 
 import org.newton.webshop.models.entities.Cart;
 import org.newton.webshop.repositories.CartRepository;

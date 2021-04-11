@@ -1,4 +1,4 @@
-package org.newton.webshop.services;
+package org.newton.webshop.services.shared;
 
 import org.newton.webshop.models.entities.Employee;
 import org.newton.webshop.repositories.EmployeeRepository;

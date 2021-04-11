@@ -8,6 +8,7 @@ import org.newton.webshop.models.dto.response.OrderDto;
 import org.newton.webshop.models.entities.Cart;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Item;
+import org.newton.webshop.services.shared.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
