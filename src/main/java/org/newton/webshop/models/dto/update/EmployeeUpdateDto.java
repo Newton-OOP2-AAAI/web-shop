@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class EmployeeUpdateDto {
+
     private String roleId;
     private String firstname;
     private String lastname;

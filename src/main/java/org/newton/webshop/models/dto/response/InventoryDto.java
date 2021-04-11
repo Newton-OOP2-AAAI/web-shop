@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InventoryDto {
+
     private String id;
     private String size;
     private String color;

@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class EmployeeCreationDto {
+
     private String roleId;
     private String firstname;
     private String lastname;

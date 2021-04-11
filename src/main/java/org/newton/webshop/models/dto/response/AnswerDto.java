@@ -12,6 +12,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class AnswerDto {
+
     private String id;
     private String description;
     private Map<String, String> questions;
