@@ -63,19 +63,11 @@ public class AssortmentService {
 
         //Find referenced Child Categories, otherwise leave as empty HashSet
         var childCategoryIds = creationDto.getChildCategoryIds();
-        var childCategories = (childCategoryIds == null || childCategoryIds.isEmpty())
-                ? new HashSet<Category>()
-                : childCategoryIds.stream()
-                .map(categoryService::findById)
-                .collect(Collectors.toSet());
+        var childCategories = categoryService.findById(childCategoryIds);
 
-        //Find referenced Products, otherwise leave as empty HashSet
+        //Find referenced Products
         var productIds = creationDto.getProductIds();
-        var products = (productIds == null || productIds.isEmpty())
-                ? new HashSet<Product>()
-                : productIds.stream()
-                .map(productService::findById)
-                .collect(Collectors.toSet());
+        var products =  productService.findById(productIds);
 
         //Convert Dto to Entity, persist in database and return Dto to Controller
         var categoryEntity = toEntity(creationDto, parentCategory, childCategories, products);
@@ -91,28 +83,24 @@ public class AssortmentService {
      * @return Dto
      */
     public CategoryDto updateCategory(String id, CategoryCreationDto dto) {
-        //todo refactor: see if some of the logic can be done in the inner service layer instead. Perhaps compare methods in entity? (e.g findRemovedChildCategoryIds() and findAddedChildCategoryIds())
-        //todo refactor: force user to provide empty sets instead of null values?
         //Find the category
         var oldCategory = categoryService.findById(id); //todo Exception: Category not found
 
-        //Updating parent category
+        //Below we prepare the associated entities with our category (parent category, child categories and products)
+        //The new entities are represented by ids to avoid fetching entities twice
+
+        //Parent category
         var newParentCategoryId = dto.getParentCategoryId();
         var oldParentCategory = oldCategory.getParentCategory();
         var updatedParentCategory = categoryService.getNewCategory(newParentCategoryId, oldParentCategory);
 
-        //todo refactor: the exact same logic is done with both child categories and products. Try to create a general method for this
-        //Updating child categories
-        var newChildCategoryIds = (dto.getChildCategoryIds() == null) //Todo Fråga Thor: Validering i inre lagret? "Variable used in lambda expression should be final or effectively final" när vi assignade om variabeln i inre lagret
-                ? new HashSet<String>()
-                : dto.getChildCategoryIds();
+        //Child categories
+        var newChildCategoryIds = (dto.getChildCategoryIds() == null) ? new HashSet<String>() : dto.getChildCategoryIds();
         var oldChildCategories = oldCategory.getChildCategories();
         var updatedChildCategories = categoryService.getNewCategories(newChildCategoryIds, oldChildCategories);
 
-        //Updating products
-        var newProductIds = (dto.getProductIds() == null)
-                ? new HashSet<String>()
-                : dto.getProductIds();
+        //Products
+        var newProductIds = (dto.getProductIds() == null) ? new HashSet<String>() : dto.getProductIds();
         var oldProducts = oldCategory.getProducts();
         var updatedProducts = productService.getNewProducts(newProductIds, oldProducts);
 

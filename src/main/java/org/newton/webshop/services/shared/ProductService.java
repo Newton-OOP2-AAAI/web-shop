@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,28 +60,43 @@ public class ProductService {
      * @return a set of products, as long as all ids existed in the database
      */
     public Set<Product> findById(Set<String> productIds) {
-        return productIds.stream()
+        return (productIds == null || productIds.isEmpty())
+                ? new HashSet<>()
+                : productIds.stream()
                 .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new))
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Manipulates a set of products by comparing them to a set of product ids.
+     * New categories are fetched from the database, old products which should no longer be in the set are removed and remaining products stay.
+     *
+     * @param newProductIds ids of products that the returned set will contain
+     * @param productsToUpdate set of the old products. Note that this method manipulates that object and returns it
+     * @return set of the products with the ids provided
+     */
     public Set<Product> getNewProducts(Set<String> newProductIds, Set<Product> productsToUpdate) {
         //Remove associations with child categories that shouldn't exist anymore
         productsToUpdate.removeIf(product -> !newProductIds.contains(product.getId()));
 
-        //Add associations with child categories which didn't exist before
+        //If the set of new ids is empty, no further changes are needed
         if (!newProductIds.isEmpty()) {
-            var oldProducts = productsToUpdate
-                    .stream()
-                    .collect(Collectors.toMap(Product::getId, product -> product));
-            var newProducts = newProductIds
-                    .stream()
-                    .filter(productId -> !oldProducts.containsKey(productId))
-                    .map(productRepository::findById)
-                    .map(product -> product.orElseThrow(RuntimeException::new)) //todo Exception: Product not found
-                    .collect(Collectors.toSet());
-            productsToUpdate.addAll(newProducts);
+            return productsToUpdate;
         }
+
+        //Generate a list of the remaining product ids
+        List<String> oldProducts = productsToUpdate
+                .stream()
+                .map(Product::getId)
+                .collect(Collectors.toList());
+        //Fetch new products that we didn't have before
+        Set<Product> newProducts = newProductIds
+                .stream()
+                .filter(productId -> !oldProducts.contains(productId))
+                .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Product not found
+                .collect(Collectors.toSet());
+        //Add the new products
+        productsToUpdate.addAll(newProducts);
 
         //Return the updated set of products
         return productsToUpdate;
