@@ -1,17 +1,17 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.dto.creation.CustomerCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
 import org.newton.webshop.models.dto.response.ItemDto;
-import org.newton.webshop.models.dto.response.OrderDto;
 import org.newton.webshop.models.entities.Cart;
+import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Item;
 import org.newton.webshop.services.shared.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
@@ -43,14 +43,15 @@ public class ShoppingService {
     }
 
     /**
-     * Create a cart with an item
+     * Create a cart with an item.
+     * This method currently treats all customers (logged in or not) as anonymous.
      *
      * @param dto dto
      * @return CartDto
      */
     public CartDto createCart(ItemCreationDto dto) {
         //Create empty cart and fetch inventory (also contains product) from database
-        var cart = cartService.save(new Cart());
+        var cart = cartService.save(toEntity(null));
         var inventory = inventoryService.findById(dto.getInventoryId());
 
         //Convert to item entity and save in database
@@ -198,11 +199,6 @@ public class ShoppingService {
         return toDto(cart);
     }
 
-    public OrderDto createOrder(String cartId, CustomerCreationDto customerCreationDto) {
-        //todo: Create order, toDto method for Order, customerService
-        return new OrderDto();
-    }
-
     /**
      * Converts ItemCreationDto to entity. Associated entites are supplied as parameters
      *
@@ -240,6 +236,19 @@ public class ShoppingService {
     }
 
     /**
+     * Creates Cart entity from a customer entity. No dto is required.
+     *
+     * @param customer the customer creating the cart. Leave as null if the cart is created anonymously (no logged-in user).
+     * @return Cart entity
+     */
+    private static Cart toEntity(Customer customer) {
+        return Cart.builder()
+                .items(new HashSet<>())
+                .customer(customer)
+                .build();
+    }
+
+    /**
      * Convert cart entity to dto
      *
      * @param item the item that should be converted
@@ -265,12 +274,18 @@ public class ShoppingService {
      * @return dto
      */
     private static CartDto toDto(Cart cart) {
+        //Handle NullPointerException if cart doesn't belong to a customer
+        var customer = cart.getCustomer();
+        var customerId = (customer == null) ? null : customer.getId();
+
+        //Build dto
         return CartDto.builder()
                 .id(cart.getId())
                 .items(cart.getItems()
                         .stream()
                         .map(ShoppingService::toDto)
                         .collect(Collectors.toSet()))
+                .customerId(customerId)
                 .build();
     }
 }

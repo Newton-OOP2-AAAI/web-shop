@@ -3,7 +3,6 @@ package org.newton.webshop.models.entities;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.newton.webshop.models.dto.creation.AccountCreationDto;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,15 +15,6 @@ import java.util.Set;
 @Table(name = "customers")
 @Entity
 public class Customer {
-
-    public Customer(AccountCreationDto accountCreationDto) {
-        this.firstname = accountCreationDto.getFirstname();
-        this.lastname = accountCreationDto.getLastname();
-        this.phone = accountCreationDto.getPhone();
-        this.email = accountCreationDto.getEmail();
-        this.address = new Address(accountCreationDto);
-    }
-
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
@@ -32,7 +22,7 @@ public class Customer {
     private String id;
 
     @OneToMany(mappedBy = "customer")
-    private Set<Order> orders;
+    private Set<Cart> carts;
 
     @OneToOne(mappedBy = "customer")
     private Account account;

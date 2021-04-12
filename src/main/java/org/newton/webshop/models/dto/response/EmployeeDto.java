@@ -1,6 +1,9 @@
 package org.newton.webshop.models.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @AllArgsConstructor

@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Table;
-import twitter4j.Trend;
 import twitter4j.Trends;
 
 import javax.persistence.Column;

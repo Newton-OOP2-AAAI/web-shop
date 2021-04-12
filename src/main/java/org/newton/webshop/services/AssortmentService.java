@@ -67,7 +67,7 @@ public class AssortmentService {
 
         //Find referenced Products
         var productIds = creationDto.getProductIds();
-        var products =  productService.findById(productIds);
+        var products = productService.findById(productIds);
 
         //Convert Dto to Entity, persist in database and return Dto to Controller
         var categoryEntity = toEntity(creationDto, parentCategory, childCategories, products);

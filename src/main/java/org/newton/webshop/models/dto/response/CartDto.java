@@ -12,7 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 public class CartDto {
-
     private String id;
     private Set<ItemDto> items;
+    private String customerId;
 }

@@ -97,7 +97,7 @@ public class AccountService {
      */
     private static Customer toEntity(AccountCreationDto dto) {
         return Customer.builder()
-                .orders(new HashSet<>())
+                .carts(new HashSet<>())
                 .firstname(dto.getFirstname())
                 .lastname(dto.getLastname())
                 .phone(dto.getPhone())

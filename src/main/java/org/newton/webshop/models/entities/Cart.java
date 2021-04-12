@@ -35,6 +35,13 @@ public class Cart {
     @OneToOne(mappedBy = "cart")
     private Order order;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    /**
+     * Constructor to create an empty cart. Other entities have conversion. When
+     */
     public Cart() {
         this.items = new HashSet<>();
     }
