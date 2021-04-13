@@ -1,5 +1,6 @@
 package org.newton.webshop.rest;
 
+import org.newton.webshop.models.dto.creation.CartCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
 import org.newton.webshop.services.ShoppingService;
@@ -18,7 +19,7 @@ public class ShoppingController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public CartDto createCart(@RequestBody ItemCreationDto creationDto) {
+    public CartDto createCart(@RequestBody CartCreationDto creationDto) {
         return shoppingService.createCart(creationDto);
     }
 
@@ -44,12 +45,6 @@ public class ShoppingController {
     public CartDto findCartById(@PathVariable(name = "cart_id") String cartId) {
         return shoppingService.findCart(cartId);
     }
-
-    //todo decide where to place Post "/orders"
-//    @PostMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public OrderDto createOrder(@RequestParam(name = "cart_id") String cartId, @RequestBody CustomerCreationDto customerCreationDto) {
-//        return shoppingService.createOrder(cartId, customerCreationDto);
-//    }
 }
 
 

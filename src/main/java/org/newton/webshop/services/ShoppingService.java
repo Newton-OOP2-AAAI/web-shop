@@ -1,5 +1,6 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.models.dto.creation.CartCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
 import org.newton.webshop.models.dto.response.ItemDto;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class ShoppingService {
     private final CartService cartService;
     private final ItemService itemService;
-    private final OrderService orderService;
+    private final OrderLowLevelService orderService;
     private final CustomerService customerService;
     private final ProductService productService;
     private final InventoryService inventoryService;
@@ -30,7 +31,7 @@ public class ShoppingService {
     @Autowired
     public ShoppingService(CartService cartService,
                            ItemService itemService,
-                           OrderService orderService,
+                           OrderLowLevelService orderService,
                            CustomerService customerService,
                            ProductService productService,
                            InventoryService inventoryService) {
@@ -49,9 +50,12 @@ public class ShoppingService {
      * @param dto dto
      * @return CartDto
      */
-    public CartDto createCart(ItemCreationDto dto) {
+    public CartDto createCart(CartCreationDto dto) {
+        var customerId = dto.getCustomerId();
+        var customer = (customerId == null) ? null : customerService.findById(customerId);
+
         //Create empty cart and fetch inventory (also contains product) from database
-        var cart = cartService.save(toEntity(null));
+        var cart = cartService.save(toEntity(customer));
         var inventory = inventoryService.findById(dto.getInventoryId());
 
         //Convert to item entity and save in database
@@ -219,6 +223,24 @@ public class ShoppingService {
 
     /**
      * Converts ItemCreationDto to entity. Associated entites are supplied as parameters
+     *
+     * @param dto       ItemCreationDto
+     * @param inventory an inventory which is already persisted, and therefore also contains a product
+     * @param cart      a cart which is already persisted
+     * @return item (which is not persisted in database)
+     */
+    private static Item toEntity(CartCreationDto dto, Inventory inventory, Cart cart) {
+        return Item.builder()
+                .inventory(inventory)
+                .cart(cart)
+                .quantity(dto.getQuantity())
+                .size(inventory.getSize())
+                .color(inventory.getColor())
+                .build();
+    }
+
+    /**
+     * Converts CartCreation to Item entity. Associated entites are supplied as parameters
      *
      * @param dto       ItemCreationDto
      * @param inventory an inventory which is already persisted, and therefore also contains a product

@@ -1,14 +1,13 @@
 package org.newton.webshop.models.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
+@Builder
+@AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor

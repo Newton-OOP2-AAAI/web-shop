@@ -55,4 +55,17 @@ public class Customer {
         this.account = account;
         account.setCustomer(this);
     }
+
+    /**
+     * Helper method that manages this customer's association with a cart.
+     * Warning: Does not validate if cart already has a customer.
+     *
+     * @param cart the cart to associate this customer with
+     */
+    public void addCart(Cart cart) {
+        this.getCarts().add(cart);
+        cart.setCustomer(this);
+    }
+
+
 }
