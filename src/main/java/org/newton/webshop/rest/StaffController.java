@@ -1,6 +1,5 @@
 package org.newton.webshop.rest;
 
-
 import org.newton.webshop.models.dto.creation.EmployeeCreationDto;
 import org.newton.webshop.models.dto.creation.RoleCreationDto;
 import org.newton.webshop.models.dto.response.EmployeeDto;
@@ -43,29 +42,28 @@ public class StaffController {
         return staffService.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, params = {"employeeId"})
     @DeleteMapping
     public void deleteEmployeeById(@RequestParam String employeeId) {
         staffService.deleteEmployeeById(employeeId);
     }
 
-    @GetMapping("roles")
+    @GetMapping("/roles")
     public List<RoleDto> findAllRoles() {
         return staffService.findAllRoles();
     }
 
-    @PostMapping("/createRole")
+    @PostMapping("/role/create")
     public RoleDto createRole(@RequestBody RoleCreationDto creationDto) {
         return staffService.createRole(creationDto);
     }
 
-    @PutMapping("/updateRole")
-    public RoleDto updateRoleById(@RequestParam String id, @RequestBody RoleCreationDto updateRole) {
-        return staffService.updateRole(id, updateRole);
+    @PutMapping("/role/{roleId}")
+    public RoleDto updateRoleById(@PathVariable String roleId, @RequestBody RoleCreationDto updateRole) {
+        return staffService.updateRole(roleId, updateRole);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, params = {"roleId"})
-    public void deleteRoleById(@RequestParam String roleId) {
+    @DeleteMapping("/roles/{roleId}")
+    public void deleteRoleById(@PathVariable String roleId) {
         staffService.deleteRoleById(roleId);
     }
 }
