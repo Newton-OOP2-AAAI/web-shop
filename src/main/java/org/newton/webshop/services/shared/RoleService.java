@@ -3,11 +3,11 @@ package org.newton.webshop.services.shared;
 import org.newton.webshop.models.entities.Role;
 import org.newton.webshop.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 public class RoleService {
     private final RoleRepository roleRepository;
 
