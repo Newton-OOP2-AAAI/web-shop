@@ -1,18 +1,15 @@
-package org.newton.webshop.models.dto.response;
+package org.newton.webshop.models.dto.creation;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
-@AllArgsConstructor
-@Setter
 @Getter
-public class EmployeeDto {
-
-    private String Id;
-    private String role;
+@Setter
+@AllArgsConstructor
+public class OrderCreationDto {
+    private String cartId;
+    private String customerId;
     private String firstname;
     private String lastname;
     private String phone;
@@ -21,5 +18,4 @@ public class EmployeeDto {
     private String streetNumber;
     private String zipCode;
     private String city;
-    private String username;
 }

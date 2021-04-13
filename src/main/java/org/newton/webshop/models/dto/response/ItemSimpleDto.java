@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-public class CartDto {
-    private String id;
-    private Set<ItemDto> items;
-    private String customerId;
+public class ItemSimpleDto {
+    private String inventoryId;
+    private Integer quantity;
+    private String name;
+    private Integer price;
+    private String size;
+    private String color;
 }

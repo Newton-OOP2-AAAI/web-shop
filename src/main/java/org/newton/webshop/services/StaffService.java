@@ -8,7 +8,6 @@ import org.newton.webshop.models.dto.update.EmployeeUpdateDto;
 import org.newton.webshop.models.entities.Address;
 import org.newton.webshop.models.entities.Employee;
 import org.newton.webshop.models.entities.Role;
-import org.newton.webshop.repositories.EmployeeRepository;
 import org.newton.webshop.services.shared.EmployeeService;
 import org.newton.webshop.services.shared.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

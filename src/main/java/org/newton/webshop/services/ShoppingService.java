@@ -1,17 +1,18 @@
 package org.newton.webshop.services;
 
-import org.newton.webshop.models.dto.creation.CustomerCreationDto;
+import org.newton.webshop.models.dto.creation.CartCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
 import org.newton.webshop.models.dto.response.ItemDto;
-import org.newton.webshop.models.dto.response.OrderDto;
 import org.newton.webshop.models.entities.Cart;
+import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.models.entities.Item;
 import org.newton.webshop.services.shared.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class ShoppingService {
     private final CartService cartService;
     private final ItemService itemService;
-    private final OrderService orderService;
+    private final OrderLowLevelService orderService;
     private final CustomerService customerService;
     private final ProductService productService;
     private final InventoryService inventoryService;
@@ -30,7 +31,7 @@ public class ShoppingService {
     @Autowired
     public ShoppingService(CartService cartService,
                            ItemService itemService,
-                           OrderService orderService,
+                           OrderLowLevelService orderService,
                            CustomerService customerService,
                            ProductService productService,
                            InventoryService inventoryService) {
@@ -43,14 +44,18 @@ public class ShoppingService {
     }
 
     /**
-     * Create a cart with an item
+     * Create a cart with an item.
+     * This method currently treats all customers (logged in or not) as anonymous.
      *
      * @param dto dto
      * @return CartDto
      */
-    public CartDto createCart(ItemCreationDto dto) {
+    public CartDto createCart(CartCreationDto dto) {
+        var customerId = dto.getCustomerId();
+        var customer = (customerId == null) ? null : customerService.findById(customerId);
+
         //Create empty cart and fetch inventory (also contains product) from database
-        var cart = cartService.save(new Cart());
+        var cart = cartService.save(toEntity(customer));
         var inventory = inventoryService.findById(dto.getInventoryId());
 
         //Convert to item entity and save in database
@@ -198,11 +203,6 @@ public class ShoppingService {
         return toDto(cart);
     }
 
-    public OrderDto createOrder(String cartId, CustomerCreationDto customerCreationDto) {
-        //todo: Create order, toDto method for Order, customerService
-        return new OrderDto();
-    }
-
     /**
      * Converts ItemCreationDto to entity. Associated entites are supplied as parameters
      *
@@ -229,6 +229,24 @@ public class ShoppingService {
      * @param cart      a cart which is already persisted
      * @return item (which is not persisted in database)
      */
+    private static Item toEntity(CartCreationDto dto, Inventory inventory, Cart cart) {
+        return Item.builder()
+                .inventory(inventory)
+                .cart(cart)
+                .quantity(dto.getQuantity())
+                .size(inventory.getSize())
+                .color(inventory.getColor())
+                .build();
+    }
+
+    /**
+     * Converts CartCreation to Item entity. Associated entites are supplied as parameters
+     *
+     * @param dto       ItemCreationDto
+     * @param inventory an inventory which is already persisted, and therefore also contains a product
+     * @param cart      a cart which is already persisted
+     * @return item (which is not persisted in database)
+     */
     private static Item toEntity(ItemCreationDto dto, Inventory inventory, Cart cart) {
         return Item.builder()
                 .inventory(inventory)
@@ -236,6 +254,19 @@ public class ShoppingService {
                 .quantity(dto.getQuantity())
                 .size(inventory.getSize())
                 .color(inventory.getColor())
+                .build();
+    }
+
+    /**
+     * Creates Cart entity from a customer entity. No dto is required.
+     *
+     * @param customer the customer creating the cart. Leave as null if the cart is created anonymously (no logged-in user).
+     * @return Cart entity
+     */
+    private static Cart toEntity(Customer customer) {
+        return Cart.builder()
+                .items(new HashSet<>())
+                .customer(customer)
                 .build();
     }
 
@@ -265,12 +296,18 @@ public class ShoppingService {
      * @return dto
      */
     private static CartDto toDto(Cart cart) {
+        //Handle NullPointerException if cart doesn't belong to a customer
+        var customer = cart.getCustomer();
+        var customerId = (customer == null) ? null : customer.getId();
+
+        //Build dto
         return CartDto.builder()
                 .id(cart.getId())
                 .items(cart.getItems()
                         .stream()
                         .map(ShoppingService::toDto)
                         .collect(Collectors.toSet()))
+                .customerId(customerId)
                 .build();
     }
 }

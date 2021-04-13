@@ -71,7 +71,7 @@ public class ProductService {
      * Manipulates a set of products by comparing them to a set of product ids.
      * New categories are fetched from the database, old products which should no longer be in the set are removed and remaining products stay.
      *
-     * @param newProductIds ids of products that the returned set will contain
+     * @param newProductIds    ids of products that the returned set will contain
      * @param productsToUpdate set of the old products. Note that this method manipulates that object and returns it
      * @return set of the products with the ids provided
      */

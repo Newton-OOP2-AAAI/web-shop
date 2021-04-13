@@ -89,7 +89,7 @@ public class CategoryService {
      * Manipulates a set of categories by comparing them to a set of category ids.
      * New categories are fetched from the database, old categories which should no longer be in the set are removed and remaining categories stay.
      *
-     * @param newCategoryIds ids of categories that the returned set will contain
+     * @param newCategoryIds     ids of categories that the returned set will contain
      * @param categoriesToUpdate set of the old categories. Note that this method manipulates that object and returns it
      * @return set of the categories with the ids provided
      */

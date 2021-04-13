@@ -20,8 +20,17 @@ public class InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
-
+    /**
+     * Find inventory entity by inventory id.
+     *
+     * @param id id of inventory
+     * @return Inventory entity
+     * @throws RuntimeException if id is null or no resource was found
+     */
     public Inventory findById(String id) {
+        if (id == null) {
+            throw new RuntimeException(); //todo Exception: Inventory not found
+        }
         return inventoryRepository.findById(id).orElseThrow(RuntimeException::new);//todo Exception: Inventory not found
     }
 

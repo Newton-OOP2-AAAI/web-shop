@@ -1,6 +1,5 @@
 package org.newton.webshop.services;
 
-import jdk.swing.interop.SwingInterOpUtils;
 import org.newton.webshop.repositories.TwitterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

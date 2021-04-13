@@ -5,7 +5,6 @@ import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class CustomerService {
         return customerRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public Customer addCustomer(@RequestBody Customer newCustomer) {
+    public Customer createCustomer(Customer newCustomer) {
         return customerRepository.save(newCustomer);
     }
 }
