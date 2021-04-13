@@ -162,7 +162,7 @@ public class AssortmentService {
      * Filter products by category (categoryId)
      *
      * @param categoryId - categoryId specified in url
-     * @param pageable takes chosen specifications from url,e.g. page=0&size=3
+     * @param pageable   takes chosen specifications from url,e.g. page=0&size=3
      * @return list of productSimpleDto:s
      */
     public Page<ProductSimpleDto> findByCategoryId(String categoryId, Pageable pageable) {
@@ -176,7 +176,7 @@ public class AssortmentService {
     /**
      * Filter products by category (categoryName)
      *
-     * @param name -category named specified in url
+     * @param name     -category named specified in url
      * @param pageable takes chosen specifications from url,e.g. page=0&size=3
      * @return pageImpl that implements dto-list
      */
