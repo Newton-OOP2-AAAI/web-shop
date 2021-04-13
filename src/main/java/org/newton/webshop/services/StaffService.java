@@ -142,7 +142,7 @@ public class StaffService {
      */
     private static EmployeeDto toDto(Employee employee) {
         return EmployeeDto.builder()
-                .Id(employee.getId())
+                .employeeId(employee.getId())
                 .role(employee.getRole().getTitle())
                 .firstname(employee.getFirstname())
                 .lastname(employee.getLastname())

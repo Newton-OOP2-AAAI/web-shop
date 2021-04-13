@@ -2,7 +2,6 @@ package org.newton.webshop.services;
 
 import org.newton.webshop.models.dto.creation.AccountCreationDto;
 import org.newton.webshop.models.dto.response.AccountDto;
-import org.newton.webshop.models.dto.response.AccountSimpleDto;
 import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.models.entities.Address;
@@ -34,9 +33,9 @@ public class AccountService {
      * @param id account id
      * @return dto containing account details
      */
-    public AccountSimpleDto findById(String id) {
+    public AccountDto findById(String id) {
         var account = accountRepository.findById(id).orElseThrow(RuntimeException::new);
-        return toSimpleDto(account);
+        return toDto(account);
     }
 
     /**
@@ -188,12 +187,4 @@ public class AccountService {
                 .birthDate(account.getBirthDate())
                 .build();
     }
-
-    private static AccountSimpleDto toSimpleDto(Account account) {
-        return AccountSimpleDto.builder()
-                .username(account.getUsername())
-                .birthDate(account.getBirthDate())
-                .build();
-    }
-
 }
