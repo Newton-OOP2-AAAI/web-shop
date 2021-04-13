@@ -1,22 +1,23 @@
 package org.newton.webshop.services;
 
+
 import org.newton.webshop.repositories.TwitterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import twitter4j.*;
-import twitter4j.conf.ConfigurationBuilder;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+
+import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
+import java.util.stream.Collectors;
 
 
 @Component
+
 public class TwitterService {
+
     private final TwitterRepository twitterRepository;
+    private static TwitterFactory tf = new TwitterFactory();
 
 
     @Autowired
@@ -24,40 +25,20 @@ public class TwitterService {
         this.twitterRepository = twitterRepository;
     }
 
-    public static List<Trend> twitterTrends(int woeid) throws TwitterException, IOException {
-        // create a reader object on the properties file
-        FileReader reader = null;
-        try {
-            reader = new FileReader("apikey.properties");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Takes a "Where on earth id" (woeid) and returns top ten twitter trends for that location
+     *
+     * @param woeid =  either from URL or in boiler plate code in TwitterController
+     * @return a list of the top ten twitter trends for the country/location specified by woeid
+     * @throws TwitterException
+     */
+    public static List<Trend> twitterTrends(int woeid) throws TwitterException {
 
-        // create properties object
-        Properties p = new Properties();
-
-        // Add a wrapper around reader object
-        p.load(reader);
-
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(p.getProperty("consumerKey"))
-                .setOAuthConsumerSecret(p.getProperty("consumerSecret"))
-                .setOAuthAccessToken(p.getProperty("accessToken"))
-                .setOAuthAccessTokenSecret(p.getProperty("accessTokenSecret"));
-        TwitterFactory tf = new TwitterFactory(cb.build());
         Twitter twitter = tf.getInstance();
         Trends trends = twitter.getPlaceTrends(woeid);
-        List<Trend> trendList = new ArrayList<>();
-        int count = 0;
-        for (
-                Trend trend : trends.getTrends()) {
-            if (count < 10) {
-                count++;
-                trendList.add(trend);
-            }
-        }
-        return trendList;
+
+        return Arrays.stream(trends.getTrends())
+                .limit(10L)
+                .collect(Collectors.toList());
     }
 }
-

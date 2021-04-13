@@ -144,10 +144,11 @@ public class AssortmentService {
     }
 
     /**
-     * todo: Write java docs
+     * Sort products
      *
-     * @param pageable
-     * @return
+     * @param pageable takes chosen specifications from url,e.g. page=0&size=3
+     *                 shows first page and three items per page
+     * @return list of productSimpleDto:s
      */
     public Page<ProductSimpleDto> findAll(Pageable pageable) {
         List<ProductSimpleDto> allItems = productService.findAll(pageable)
@@ -158,26 +159,11 @@ public class AssortmentService {
     }
 
     /**
-     * todo: Write java docs
+     * Filter products by category (categoryId)
      *
-     * @param name
-     * @param pageable
-     * @return
-     */
-    public Page<ProductSimpleDto> findByName(String name, Pageable pageable) {
-        List<ProductSimpleDto> allItems = productService.findByName(name, pageable)
-                .stream()
-                .map(AssortmentService::toSimpleDto)
-                .collect(Collectors.toList());
-        return new PageImpl<>(allItems);
-    }
-
-    /**
-     * todo: Write java docs
-     *
-     * @param categoryId
-     * @param pageable
-     * @return
+     * @param categoryId - categoryId specified in url
+     * @param pageable takes chosen specifications from url,e.g. page=0&size=3
+     * @return list of productSimpleDto:s
      */
     public Page<ProductSimpleDto> findByCategoryId(String categoryId, Pageable pageable) {
         List<ProductSimpleDto> allItems = productService.getAllProductsByCategoryId(categoryId, pageable)
@@ -188,11 +174,11 @@ public class AssortmentService {
     }
 
     /**
-     * todo: Write java docs
+     * Filter products by category (categoryName)
      *
-     * @param name
-     * @param pageable
-     * @return
+     * @param name -category named specified in url
+     * @param pageable takes chosen specifications from url,e.g. page=0&size=3
+     * @return pageImpl that implements dto-list
      */
     public Page<ProductSimpleDto> findByCategoryName(String name, Pageable pageable) {
         List<ProductSimpleDto> allItems = productService.getAllProductsByCategoryName(name, pageable)

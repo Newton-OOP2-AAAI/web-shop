@@ -116,30 +116,47 @@ public class AssortmentController {
     /**
      * Find all products: /products/all
      *
-     * @return list of all products
+     * @return a productDto-list of all products
      */
     @GetMapping("/all")
     List<ProductDto> all() {
         return assortmentService.findAll();
     }
 
+    /**
+     * Sort the list of products
+     *
+     * @param pageable
+     * @return
+     */
     @GetMapping("/sort")
     Page<ProductSimpleDto> all(Pageable pageable) {
         return assortmentService.findAll(pageable);
     }
 
-    @GetMapping("/filter")
-    Page<ProductSimpleDto> findProductsByName(String name, Pageable pageable) {
-        return assortmentService.findByName(name, pageable);
-    }
 
+    /**
+     * Filter products by categoryId
+     *
+     * @param categoryId
+     * @param pageable
+     * @return
+     */
     @GetMapping("/filter/categoryid")
     Page<ProductSimpleDto> findProductByCategoryId(String categoryId, Pageable pageable) {
         return assortmentService.findByCategoryId(categoryId, pageable);
     }
 
+    /**
+     * Filter products by categoryName
+     *
+     * @param name
+     * @param pageable
+     * @return
+     */
     @GetMapping("/filter/categoryname")
     Page<ProductSimpleDto> findProductByCategoryName(String name, Pageable pageable) {
         return assortmentService.findByCategoryName(name, pageable);
     }
+
 }
