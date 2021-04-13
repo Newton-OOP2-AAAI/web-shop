@@ -42,7 +42,6 @@ public class AssortmentController {
         return assortmentService.createCategory(creationDto);
     }
 
-
     /**
      * Update a category
      *
@@ -79,7 +78,11 @@ public class AssortmentController {
         return assortmentService.createProduct(productCreationDto);
     }
 
-    //Employee wants to modify the info about an existing product.
+    @GetMapping
+    public ProductDto findById(@RequestParam String id) {
+        return assortmentService.findProductById(id);
+    }
+
     @PutMapping
     public ProductDto updateProduct(@RequestParam String id, @RequestBody ProductUpdateDto updateDto) {
         return assortmentService.updateProduct(id, updateDto);
@@ -105,44 +108,25 @@ public class AssortmentController {
         assortmentService.deleteInventoryById(id);
     }
 
-    //Employee wants to delete an existing category
     @DeleteMapping
     public void deleteCategoryById(@RequestParam String id) {
         assortmentService.deleteCategoryById(id);
     }
-    //Employee wants to assign a category to a product to make products that belong in multiple categories easier to find.
-
-    //Employee wants to choose if a product is displayed in the webshop to be able to keep information about a product even if it's no longer offered.
-
-    /**
-     * View products: /products
-     * Following user stories need to be implemented:
-     */
-    //Customer wants a list of products to get an overview of what the shop has to offer.
 
     /**
      * Find all products: /products/all
      *
      * @return list of all products
-     * @author Isa
      */
     @GetMapping("/all")
     List<ProductDto> all() {
         return assortmentService.findAll();
     }
 
-    //Customer wants to filter products to find products that meet certain criteria.
-
-    //Customer wants to sort products to find the most relevant product first.
-    //Notes: Sort by category, date added, most sales
-
-
     @GetMapping("/sort")
     Page<ProductSimpleDto> all(Pageable pageable) {
         return assortmentService.findAll(pageable);
     }
-
-    //Customer wants to filter products to find products that meet certain criteria.
 
     @GetMapping("/filter")
     Page<ProductSimpleDto> findProductsByName(String name, Pageable pageable) {
@@ -158,8 +142,4 @@ public class AssortmentController {
     Page<ProductSimpleDto> findProductByCategoryName(String name, Pageable pageable) {
         return assortmentService.findByCategoryName(name, pageable);
     }
-
-
-    //Customer wants to get detailed information about a product to assess if the product meet their needs
-    //Notes: Show name, price, number in stock, description
 }

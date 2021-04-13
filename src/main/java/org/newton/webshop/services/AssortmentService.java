@@ -122,6 +122,16 @@ public class AssortmentService {
     }
 
     /**
+     * Find a product by productId
+     *
+     * @return product
+     */
+    public ProductDto findProductById(String productId) {
+        Product product = productService.findById(productId);
+        return toDto(product);
+    }
+
+    /**
      * Find a list of all products
      *
      * @return list
