@@ -16,7 +16,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Handles requests by OrderController.
+ * Connects shared services needed to handle those requests (one for each repository).
  */
 @Service
 public class OrderHighLevelService {
@@ -144,5 +145,4 @@ public class OrderHighLevelService {
                 .map(OrderHighLevelService::toDto)
                 .collect(Collectors.toSet());
     }
-
 }
