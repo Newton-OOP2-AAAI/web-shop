@@ -36,4 +36,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, error, e));
     }
 
+    @ExceptionHandler(MismatchedIdException.class)
+    protected ResponseEntity<Object> handleMismatchedEntities(MismatchedIdException e) {
+
+        String error = "Could not find matching entity";
+        return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error, e));
+    }
+
 }
