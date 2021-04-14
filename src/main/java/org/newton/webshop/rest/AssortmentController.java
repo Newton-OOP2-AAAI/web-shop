@@ -22,6 +22,7 @@ import java.util.Set;
  * API endpoints to handle the assortment
  * Notes: If a new user story is added, make sure it's also added to the project document!
  */
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/products")
 public class AssortmentController {
