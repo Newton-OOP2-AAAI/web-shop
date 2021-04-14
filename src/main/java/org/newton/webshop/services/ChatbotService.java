@@ -1,5 +1,7 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.exceptions.AnswerNotFoundException;
+import org.newton.webshop.exceptions.QuestionNotFoundException;
 import org.newton.webshop.models.dto.creation.AnswerCreationDto;
 import org.newton.webshop.models.dto.creation.QuestionCreationDto;
 import org.newton.webshop.models.dto.response.AnswerDto;
@@ -25,7 +27,6 @@ public class ChatbotService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
 
-    //todo replace general RuntimeException with custom exceptions and error handling
 
     @Autowired
     public ChatbotService(QuestionRepository questionRepository, AnswerRepository answerRepository) {
@@ -70,7 +71,7 @@ public class ChatbotService {
      * @return dto, containing the info in the created FAQ and the respective ids
      */
     public AnswerDto findFaqById(String id) {
-        var answer = answerRepository.findById(id).orElseThrow(RuntimeException::new);
+        var answer = answerRepository.findById(id).orElseThrow(() -> new AnswerNotFoundException(id));
         return toDto(answer);
     }
 
@@ -96,7 +97,7 @@ public class ChatbotService {
      */
     public AnswerDto createQuestion(String answerId, QuestionCreationDto questionCreationDto) {
         //find answer to create the question for
-        var answer = answerRepository.findById(answerId).orElseThrow(RuntimeException::new);
+        var answer = answerRepository.findById(answerId).orElseThrow(() -> new AnswerNotFoundException(answerId));
 
         //creationdto to question
         var question = toEntity(questionCreationDto);
@@ -117,7 +118,7 @@ public class ChatbotService {
      * @param questionId id of question to delete
      */
     public void deleteQuestion(String questionId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(RuntimeException::new);
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new QuestionNotFoundException(questionId));
         questionRepository.delete(question);
     }
 
@@ -133,7 +134,7 @@ public class ChatbotService {
             answer.setAnswerText(updateDto.getAnswerText());
             answer.setDescription(updateDto.getDescription());
             return answerRepository.save(answer);
-        }).orElseThrow(RuntimeException::new);
+        }).orElseThrow(() -> new AnswerNotFoundException(id));
 
         return toDto(updatedAnswer);
     }
@@ -144,12 +145,13 @@ public class ChatbotService {
      * @param id answer id
      */
     public void deleteFaq(String id) {
-        Answer answer = answerRepository.findById(id).orElseThrow(RuntimeException::new);
+        Answer answer = answerRepository.findById(id).orElseThrow(() -> new AnswerNotFoundException(id));
         answerRepository.delete(answer);
     }
 
     /**
-     * Converts Answer entity to a response dto. The set of Question entities in the Answer entity is mapped to a Hashmap (key = question id, value = question text)
+     * Converts Answer entity to a response dto. The set of Question entities in the Answer entity is mapped
+     * to a Hashmap (key = question id, value = question text)
      *
      * @param answer entity to convert
      * @return response dto

@@ -39,11 +39,11 @@ public class EmployeeService {
             employeeUpdate.setPhone(employee.getPhone());
             employeeUpdate.setAddress(employee.getAddress());
             return employeeRepository.save(employeeUpdate);
-        }).orElseThrow(RuntimeException::new); //todo Exception: Employee not found
+        }).orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 
     public void deleteEmployee(String id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Employee not found
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
         employeeRepository.delete(employee);
     }
 }

@@ -1,5 +1,6 @@
 package org.newton.webshop.services.shared;
 
+import org.newton.webshop.exceptions.InventoryNotFoundException;
 import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.repositories.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ public class InventoryService {
      *
      * @param id id of inventory
      * @return Inventory entity
-     * @throws RuntimeException if id is null or no resource was found
+     * @throws InventoryNotFoundException if id is null or no resource was found
      */
     public Inventory findById(String id) {
         if (id == null) {
-            throw new RuntimeException(); //todo Exception: Inventory not found
+            throw new InventoryNotFoundException(null);
         }
-        return inventoryRepository.findById(id).orElseThrow(RuntimeException::new);//todo Exception: Inventory not found
+        return inventoryRepository.findById(id).orElseThrow(()->new InventoryNotFoundException(id));
     }
 
     /**
@@ -39,6 +40,8 @@ public class InventoryService {
      *
      * @param inventory
      * @return the persisted inventory
+     *
+     * @exception InventoryNotFoundException if inventory id can't be found
      */
     public Inventory save(Inventory inventory) {
         return inventoryRepository.save(inventory);
@@ -50,7 +53,7 @@ public class InventoryService {
             inventoryUpdate.setColor(inventory.getColor());
             inventoryUpdate.setQuantity(inventory.getQuantity());
             return inventoryRepository.save(inventoryUpdate);
-        }).orElseThrow(RuntimeException::new);//todo Exception: Inventory not found
+        }).orElseThrow(()->new InventoryNotFoundException(inventoryId));
     }
 
     /**
@@ -59,7 +62,7 @@ public class InventoryService {
      * @param id id of inventory to delete
      */
     public void deleteInventory(String id) {
-        Inventory inventory = inventoryRepository.findById(id).orElseThrow(RuntimeException::new);
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(()->new InventoryNotFoundException(id));
         inventoryRepository.delete(inventory);
 
     }
@@ -70,11 +73,13 @@ public class InventoryService {
      * @param newInventoryId new inventory id
      * @param oldInventory   old inventory entity
      * @return the new inventory entity
+     *
+     * @exception InventoryNotFoundException if the new inventory id can't be found
      */
     public Inventory getNewInventory(@NonNull String newInventoryId, @NonNull Inventory oldInventory) {
         var oldInventoryId = oldInventory.getId();
         return (newInventoryId.equals(oldInventoryId))
                 ? oldInventory
-                : inventoryRepository.findById(newInventoryId).orElseThrow(RuntimeException::new);
+                : inventoryRepository.findById(newInventoryId).orElseThrow(()->new InventoryNotFoundException(newInventoryId));
     }
 }

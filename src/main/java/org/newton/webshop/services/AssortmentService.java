@@ -1,6 +1,8 @@
 package org.newton.webshop.services;
 
 
+import org.newton.webshop.exceptions.CategoryNotFoundException;
+import org.newton.webshop.exceptions.RoleNotFoundException;
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.creation.InventoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
@@ -49,7 +51,8 @@ public class AssortmentService {
     }
 
     /**
-     * Creates a new category and sets associations (parent category, child categories, products). Referenced entities must already exist in database, otherwise exception is thrown.
+     * Creates a new category and sets associations (parent category, child categories, products).
+     * Referenced entities must already exist in database, otherwise exception is thrown.
      *
      * @param creationDto CategoryCreationDto
      * @return CategoryDto
@@ -81,10 +84,12 @@ public class AssortmentService {
      * @param id  id of category which should be updated
      * @param dto contains the fields and associations to update
      * @return Dto
+     *
+     * @exception
      */
     public CategoryDto updateCategory(String id, CategoryCreationDto dto) {
         //Find the category
-        var oldCategory = categoryService.findById(id); //todo Exception: Category not found
+        var oldCategory = categoryService.findById(id);
 
         //Below we prepare the associated entities with our category (parent category, child categories and products)
         //The new entities are represented by ids to avoid fetching entities twice

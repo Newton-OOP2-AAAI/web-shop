@@ -1,6 +1,6 @@
 package org.newton.webshop.services.shared;
 
-import org.newton.webshop.exceptions.CategoryNotFoundException;
+import org.newton.webshop.exceptions.ProductNotFoundException;
 import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +35,6 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
-    public Page<Product> findByName(String name, Pageable pageable) {
-        return productRepository.findByNameContaining(name, pageable);
-    }
-
     public Page<Product> getAllProductsByCategoryId(String categoryId, Pageable pageable) {
         return productRepository.getAllProductsByCategoryId(categoryId, pageable);
     }
@@ -49,9 +45,9 @@ public class ProductService {
 
     public Product findById(String id) {
         if (id == null) {
-            throw new RuntimeException(); //todo Exception: Product not found
+            throw new ProductNotFoundException(null);
         }
-        return productRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Product not found
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     /**
@@ -59,12 +55,13 @@ public class ProductService {
      *
      * @param productIds a set of product ids
      * @return a set of products, as long as all ids existed in the database
+     * @throws ProductNotFoundException if any of the id's can't be found
      */
     public Set<Product> findById(Set<String> productIds) {
         return (productIds == null || productIds.isEmpty())
                 ? new HashSet<>()
                 : productIds.stream()
-                .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new))
+                .map(id -> productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)))
                 .collect(Collectors.toSet());
     }
 
@@ -75,6 +72,7 @@ public class ProductService {
      * @param newProductIds    ids of products that the returned set will contain
      * @param productsToUpdate set of the old products. Note that this method manipulates that object and returns it
      * @return set of the products with the ids provided
+     * @throws ProductNotFoundException if products can't be found when fetching new products
      */
     public Set<Product> getNewProducts(Set<String> newProductIds, Set<Product> productsToUpdate) {
         //Remove associations with child categories that shouldn't exist anymore
@@ -94,7 +92,7 @@ public class ProductService {
         Set<Product> newProducts = newProductIds
                 .stream()
                 .filter(productId -> !oldProducts.contains(productId))
-                .map(id -> productRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Product not found
+                .map(id -> productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)))
                 .collect(Collectors.toSet());
         //Add the new products
         productsToUpdate.addAll(newProducts);
@@ -111,7 +109,7 @@ public class ProductService {
             productUpdate.setDescription(product.getDescription());
             productUpdate.setVisible(product.isVisible());
             return productRepository.save(productUpdate);
-        }).orElseThrow(RuntimeException::new);//todo Exception: Product not found
+        }).orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
     /**
@@ -130,7 +128,7 @@ public class ProductService {
      * @param productId id of product to delete
      */
     public void deleteProduct(String productId) {
-        Product product = productRepository.findById(productId).orElseThrow(RuntimeException::new); //todo Exception: Product not found
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
         productRepository.delete(product);
     }
 }

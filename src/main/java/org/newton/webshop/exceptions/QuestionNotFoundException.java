@@ -1,7 +1,9 @@
 package org.newton.webshop.exceptions;
 
-public class QuestionNotFoundException extends RuntimeException {
+public class QuestionNotFoundException extends NotFoundException {
+    private final static String RESOURCE = "question";
+
     public QuestionNotFoundException(String id) {
-        super("Could not find the question " + id);
+        super(RESOURCE, id);
     }
 }
