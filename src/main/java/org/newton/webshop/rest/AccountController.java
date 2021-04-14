@@ -19,12 +19,12 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public AccountDto getAccountById(@RequestParam String id) {
         return accountService.findById(id);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public AccountDto createAccount(@RequestBody AccountCreationDto accountCreationDto) {
         return accountService.addAccount(accountCreationDto);
     }
