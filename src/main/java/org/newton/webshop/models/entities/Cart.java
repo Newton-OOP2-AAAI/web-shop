@@ -87,7 +87,7 @@ public class Cart {
             if (customer == null) {
                 return true;
             } else {
-                throw new RuntimeException(); //todo Exception mismatching ids
+                throw new RuntimeException(); //todo Exception mismatching ids (använd existerande kund istället)
             }
         }
 
@@ -95,7 +95,8 @@ public class Cart {
             return false;
         }
 
-        throw new RuntimeException(); //todo Exception: Mismatching ids
+        throw new RuntimeException(); //todo Exception: Mismatching ids (Angivet id matchar inte angiven cart)
+        // MismatchingException -> typ av id, resurs1, resurs2 -> customerid 123 matchar inte cart med id 456:
     }
 
 }

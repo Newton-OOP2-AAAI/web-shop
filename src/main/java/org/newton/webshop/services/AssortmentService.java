@@ -282,15 +282,15 @@ public class AssortmentService {
      */
     public InventoryDto updateInventories(String inventoryId, InventoryCreationDto creationDto) {
         Inventory inventory = toEntity(creationDto);
-        Inventory updateInventories = inventoryService.updateInventories(inventoryId, inventory);
+        Inventory updatedInventory = inventoryService.updateInventories(inventoryId, inventory);
 
-        return toDto(updateInventories);
+        return toDto(updatedInventory);
     }
 
-    public List<Inventory> findAll(String id) {
+    public Set<Inventory> findAll(String id) {
         Product product = productService.findById(id);
 
-        return product.getInventory().stream().collect(Collectors.toList());
+        return product.getInventory();
     }
 
     public void deleteInventoryById(String id) {
