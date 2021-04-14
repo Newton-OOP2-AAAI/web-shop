@@ -83,7 +83,6 @@ public class AssortmentService {
      * @param id  id of category which should be updated
      * @param dto contains the fields and associations to update
      * @return Dto
-     * @throws
      */
     public CategoryDto updateCategory(String id, CategoryCreationDto dto) {
         //Find the category
@@ -323,8 +322,10 @@ public class AssortmentService {
      * @param products        set of products, already persisted in the database
      * @return category entity
      */
-    private static Category toEntity(CategoryCreationDto dto, Category
-            parentCategory, Set<Category> childCategories, Set<Product> products) {
+    private static Category toEntity(CategoryCreationDto dto,
+                                     Category parentCategory,
+                                     Set<Category> childCategories,
+                                     Set<Product> products) {
         return Category.builder()
                 .name(dto.getName())
                 .parentCategory(parentCategory)

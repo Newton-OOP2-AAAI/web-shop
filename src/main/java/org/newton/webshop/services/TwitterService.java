@@ -10,10 +10,8 @@ import java.util.stream.Collectors;
 
 
 @Component
-
 public class TwitterService {
-
-    private static TwitterFactory tf = new TwitterFactory();
+    private final TwitterFactory tf = new TwitterFactory();
 
     /**
      * Takes a "Where on earth id" (woeid) and returns top ten twitter trends for that location
@@ -22,7 +20,7 @@ public class TwitterService {
      * @return a list of the top ten twitter trends for the country/location specified by woeid
      * @throws TwitterException
      */
-    public static List<Trend> twitterTrends(int woeid) throws TwitterException {
+    public List<Trend> twitterTrends(int woeid) throws TwitterException {
 
         Twitter twitter = tf.getInstance();
         Trends trends = twitter.getPlaceTrends(woeid);
