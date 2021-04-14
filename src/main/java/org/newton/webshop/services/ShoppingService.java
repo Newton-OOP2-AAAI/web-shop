@@ -25,7 +25,6 @@ public class ShoppingService {
     private final ItemService itemService;
     private final OrderLowLevelService orderService;
     private final CustomerService customerService;
-    private final ProductService productService;
     private final InventoryService inventoryService;
 
     @Autowired
@@ -39,7 +38,6 @@ public class ShoppingService {
         this.itemService = itemService;
         this.orderService = orderService;
         this.customerService = customerService;
-        this.productService = productService;
         this.inventoryService = inventoryService;
     }
 
@@ -113,32 +111,18 @@ public class ShoppingService {
      * If we update 'Item A' and the cart already has 'Item B' with the desired new properties of 'Item A', then 'Item A' is deleted and the quantity of 'Item B' is updated instead.
      * In that case, the desired quantity of 'Item A' will be added to the original quantity of 'Item B'.
      *
-     * @param cartId id of cart
      * @param itemId id of item
      * @param dto    dto that holds information to update item with
      * @return CartDto
      */
-    public CartDto updateItem(String cartId, String itemId, ItemCreationDto dto) {
-        //todo Bug: if desired quantity is 0, item should be removed instead
-        //todo Bug: if desired quantity is less than 0, throw exception
-        //todo Bug: make sure desired quantity doesn't cause int overflow, maybe by comparing with a smaller number like quantity in stock
-
-        //Fetch given cart from database
-        var cart = cartService.findById(cartId);
-
-        //The desired quantity
+    public CartDto updateItem(String itemId, ItemCreationDto dto) {
+        var item = itemService.findById(itemId);
+        var cart = item.getCart();
         var desiredQuantity = dto.getQuantity();
-
-        //Create a reference to the item that should be updated
-        var itemToUpdate = cart.getItems().stream()
-                .filter(oneItem -> oneItem.getId().equals(itemId))
-                .findFirst()
-                .orElseThrow(RuntimeException::new); //todo Exception: CartId and ItemId doesn't match
 
         //Get the new inventory
         var newInventoryId = dto.getInventoryId();
-        var oldInventory = itemToUpdate.getInventory();
-
+        var oldInventory = item.getInventory();
 
         //Variable to hold the item we actually want to update
         Item actualItemToUpdate;
@@ -151,11 +135,11 @@ public class ShoppingService {
             //Add the desired quantity
             actualItemToUpdate.addQuantity(desiredQuantity);
             //Remove the item we originally wanted to update
-            cart.getItems().remove(itemToUpdate);
-            itemService.delete(itemToUpdate);
+            cart.getItems().remove(item);
+            itemService.delete(item);
         } else {
             //The actual item we want to update is references the item we originally wanted to update
-            actualItemToUpdate = itemToUpdate;
+            actualItemToUpdate = item;
             //Fetch the new inventory if necessary
             var newInventory = inventoryService.getNewInventory(newInventoryId, oldInventory);
 
@@ -173,23 +157,17 @@ public class ShoppingService {
     /**
      * Delete item from cart
      *
-     * @param cartId id of cart to delete from
      * @param itemId id of item to delete
      */
-    public void deleteItem(String cartId, String itemId) {
-        var cart = cartService.findById(cartId);
-
-        var existingItem = cart.findItembyItemId(itemId);
-
-        if (existingItem.isEmpty()) {
-            throw new RuntimeException(); //todo Exception: cartId doesn't match itemId
-        }
+    public void deleteItem(String itemId) {
+        var item = itemService.findById(itemId);
+        var cart = item.getCart();
 
         //Need to remove the item from the cart variable because the item we want to delete is persisted here
-        cart.getItems().remove(existingItem.get());
+        cart.getItems().remove(item);
 
         //Delete item
-        itemService.delete(existingItem.get());
+        itemService.delete(item);
     }
 
     /**
