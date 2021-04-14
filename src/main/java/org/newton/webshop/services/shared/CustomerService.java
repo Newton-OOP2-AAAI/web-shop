@@ -1,6 +1,7 @@
 package org.newton.webshop.services.shared;
 
 
+import org.newton.webshop.exceptions.CustomerNotFoundException;
 import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class CustomerService {
     }
 
     public Customer findById(String id) {
-        return customerRepository.findById(id).orElseThrow(RuntimeException::new);
+        return customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
     }
 
     public Customer createCustomer(Customer newCustomer) {

@@ -72,6 +72,31 @@ public class Cart {
                 .findFirst();
     }
 
+    /**
+     * Tells if this cart needs a customer (to create a valid order)
+     *
+     * @param desiredCustomerId
+     * @return
+     */
+    public boolean needsCustomer(String desiredCustomerId) {
+        //När cart saknar customer och desiredCustomerId = ett existerande desiredCustomerId
+        var customer = this.getCustomer();
+        var actualCustomerId = (customer == null) ? null : customer.getId();
+
+        if (desiredCustomerId == null) {
+            if (customer == null) {
+                return true;
+            } else {
+                throw new RuntimeException(); //todo Exception mismatching ids
+            }
+        }
+
+        if (desiredCustomerId.equals(actualCustomerId)) {
+            return false;
+        }
+
+        throw new RuntimeException(); //todo Exception: Mismatching ids
+    }
 
 }
 

@@ -1,7 +1,6 @@
 package org.newton.webshop.services;
 
 
-import org.newton.webshop.repositories.TwitterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import twitter4j.*;
@@ -16,14 +15,7 @@ import java.util.stream.Collectors;
 
 public class TwitterService {
 
-    private final TwitterRepository twitterRepository;
     private static TwitterFactory tf = new TwitterFactory();
-
-
-    @Autowired
-    public TwitterService(TwitterRepository twitterRepository) {
-        this.twitterRepository = twitterRepository;
-    }
 
     /**
      * Takes a "Where on earth id" (woeid) and returns top ten twitter trends for that location

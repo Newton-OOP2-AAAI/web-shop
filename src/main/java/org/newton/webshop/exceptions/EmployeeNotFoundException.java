@@ -1,7 +1,9 @@
 package org.newton.webshop.exceptions;
 
-public class EmployeeNotFoundException extends RuntimeException {
+public class EmployeeNotFoundException extends NotFoundException {
+    private final static String RESOURCE = "employee";
+
     public EmployeeNotFoundException(String id) {
-        super("Could not find employee " + id);
+        super(RESOURCE, id);
     }
 }
