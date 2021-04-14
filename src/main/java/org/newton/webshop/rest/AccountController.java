@@ -5,6 +5,7 @@ import org.newton.webshop.models.dto.response.AccountDto;
 import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,13 +29,13 @@ public class AccountController {
         return accountService.addAccount(accountCreationDto);
     }
 
-    @PutMapping
-    public AccountDto editCustomerByAccountId(@RequestParam String id, @RequestBody CustomerUpdateDto customerUpdateDto) {
-        return accountService.editCustomerByAccountId(id, customerUpdateDto);
+    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public AccountDto updateCustomerByAccountId(@PathVariable String id, @RequestBody CustomerUpdateDto customerUpdateDto) {
+        return accountService.updateCustomerByAccountId(id, customerUpdateDto);
     }
 
-    @DeleteMapping
-    public void deleteAccountById(@RequestParam String id) {
-        accountService.deleteAccountById(id);
+    @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteById(@PathVariable String id) {
+        accountService.deleteById(id);
     }
 }

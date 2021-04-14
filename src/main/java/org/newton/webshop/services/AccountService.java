@@ -61,7 +61,7 @@ public class AccountService {
      * @param customerUpdateDto dto containing the fields that can be updated
      * @return dto, containing the fields in the Account and Customer entity, including the fields which are currently not allowed to be updated
      */
-    public AccountDto editCustomerByAccountId(String accountId, CustomerUpdateDto customerUpdateDto) {
+    public AccountDto updateCustomerByAccountId(String accountId, CustomerUpdateDto customerUpdateDto) {
         Customer updatedCustomer = customerRepository.findCustomerByAccount_Id(accountId)
                 .map(customer -> {
                     customer.setFirstname(customerUpdateDto.getFirstname());
@@ -81,7 +81,7 @@ public class AccountService {
      *
      * @param id account id
      */
-    public void deleteAccountById(String id) {
+    public void deleteById(String id) {
         Account deleteAccount = accountRepository.findById(id).orElseThrow(RuntimeException::new);
         accountRepository.delete(deleteAccount);
     }

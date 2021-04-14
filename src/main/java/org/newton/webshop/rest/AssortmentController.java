@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * API endpoints to handle the assortment
@@ -33,10 +34,11 @@ public class AssortmentController {
     }
 
     /**
-     * Manage categories: /products/categories
-     * Following user stories need to be implemented:
+     * Create a category
+     *
+     * @param creationDto creation dto
+     * @return response dto
      */
-    //Employee wants to add a category to keep products categorized, making them easier to find.
     @PostMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public CategoryDto createCategory(@RequestBody CategoryCreationDto creationDto) {
         return assortmentService.createCategory(creationDto);
@@ -45,26 +47,26 @@ public class AssortmentController {
     /**
      * Update a category
      *
-     * @param id        id of category
-     * @param updateDto CategoryCreationDto
+     * @param categoryId id of category
+     * @param updateDto  CategoryCreationDto
      * @return CategoryDto
      * Employee wants to modify an existing category, to make it easier to update the webshop.
      * Notes: change name, change parentCategory
      */
-    @PutMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CategoryDto updateCategory(@RequestParam String id, @RequestBody CategoryCreationDto updateDto) {
-        return assortmentService.updateCategory(id, updateDto);
-    }
-
-    @GetMapping("/categories/all")
-    public List<CategoryDto> allCategories() {
-        return assortmentService.findAllCategories();
+    @PutMapping(value = "/categories/{category_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CategoryDto updateCategory(@PathVariable(name = "category_id") String categoryId, @RequestBody CategoryCreationDto updateDto) {
+        return assortmentService.updateCategory(categoryId, updateDto);
     }
 
     /**
-     * Manage products: /products
-     * Following user stories need to be implemented:
+     * Find all categories
+     *
+     * @return
      */
+    @GetMapping(path = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CategoryDto> allCategories() {
+        return assortmentService.findAllCategories();
+    }
 
     /**
      * Create a product
@@ -78,58 +80,93 @@ public class AssortmentController {
         return assortmentService.createProduct(productCreationDto);
     }
 
-    @GetMapping
+    /**
+     * Find product by id
+     *
+     * @param id product id
+     * @return product dto
+     */
+    @GetMapping(params = {"id"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductDto findById(@RequestParam String id) {
         return assortmentService.findProductById(id);
     }
 
-    @PutMapping
-    public ProductDto updateProduct(@RequestParam String id, @RequestBody ProductUpdateDto updateDto) {
-        return assortmentService.updateProduct(id, updateDto);
+    /**
+     * Update a product
+     *
+     * @param productId id of product to update
+     * @param updateDto dto containing fields that will be updated
+     * @return product dto
+     */
+    @PutMapping(path = "/{product_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ProductDto updateProduct(@PathVariable(name = "product_id") String productId,
+                                    @RequestBody ProductUpdateDto updateDto) {
+        return assortmentService.updateProduct(productId, updateDto);
     }
 
-    @GetMapping("/all/inventories")
-    public List<Inventory> allInventories(@RequestParam String id) {
-        return assortmentService.findAll(id);
+    /**
+     * Find all inventories a product has.
+     *
+     * @return
+     */
+    @GetMapping(path = "/inventories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<Inventory> allInventories(@RequestParam(name = "product_id") String productId) {
+        return assortmentService.findAll(productId);
     }
 
-    @PostMapping("/{product_id}/inventories")
-    public ProductDto createInventory(@PathVariable(name = "product_id") String productId, @RequestBody InventoryCreationDto creationDto) {
+    /**
+     * Create a inventory
+     *
+     * @param creationDto dto
+     * @return product dto
+     */
+    @PostMapping(path = "/{product_id}/inventories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ProductDto createInventory(@PathVariable(name = "product_id") String productId,
+                                      @RequestBody InventoryCreationDto creationDto) {
         return assortmentService.createInventory(productId, creationDto);
     }
 
-    @PutMapping("/update/inventories")
-    public InventoryDto updateInventories(@RequestParam String id, @RequestBody InventoryCreationDto creationDto) {
-        return assortmentService.updateInventories(id, creationDto);
-    }
-
-    @DeleteMapping("/delete/inventory")
-    public void deleteInventoryById(@RequestParam String id) {
-        assortmentService.deleteInventoryById(id);
-    }
-
-    @DeleteMapping
-    public void deleteCategoryById(@RequestParam String id) {
-        assortmentService.deleteCategoryById(id);
+    /**
+     * Update a inventory
+     *
+     * @param inventoryId id of inventory to update
+     * @param creationDto dto containing fields that will be updated
+     * @return inventory dto
+     */
+    @PutMapping(path = "/inventories/{inventory_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public InventoryDto updateInventories(@PathVariable(name = "inventory_id") String inventoryId,
+                                          @RequestBody InventoryCreationDto creationDto) {
+        return assortmentService.updateInventories(inventoryId, creationDto);
     }
 
     /**
-     * Find all products: /products/all
+     * Delete a inventory
      *
-     * @return a productDto-list of all products
+     * @param inventoryId id of inventory to delete
      */
-    @GetMapping("/all")
-    List<ProductDto> all() {
-        return assortmentService.findAll();
+    @DeleteMapping(path = "/inventories/{inventory_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteInventoryById(@PathVariable(name = "inventory_id") String inventoryId) {
+        assortmentService.deleteInventoryById(inventoryId);
     }
 
     /**
-     * Sort the list of products
+     * Delete a category
      *
-     * @param pageable
-     * @return
+     * @param categoryId id of category to delete
      */
-    @GetMapping("/sort")
+    @DeleteMapping(path = "/categories/{category_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteCategoryById(@PathVariable(name = "category_id") String categoryId) {
+        assortmentService.deleteCategoryById(categoryId);
+    }
+
+    /**
+     * Find all products.
+     * Optional params:
+     *
+     * @param pageable sort, page, size
+     * @return page of dtos
+     */
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     Page<ProductSimpleDto> all(Pageable pageable) {
         return assortmentService.findAll(pageable);
     }
@@ -142,7 +179,7 @@ public class AssortmentController {
      * @param pageable
      * @return
      */
-    @GetMapping("/filter/categoryid")
+    @GetMapping(path = "/filter", params = {"categoryId"}, produces = MediaType.APPLICATION_JSON_VALUE)
     Page<ProductSimpleDto> findProductByCategoryId(String categoryId, Pageable pageable) {
         return assortmentService.findByCategoryId(categoryId, pageable);
     }
@@ -154,9 +191,8 @@ public class AssortmentController {
      * @param pageable
      * @return
      */
-    @GetMapping("/filter/categoryname")
+    @GetMapping(path = "/filter", params = {"name"}, produces = MediaType.APPLICATION_JSON_VALUE)
     Page<ProductSimpleDto> findProductByCategoryName(String name, Pageable pageable) {
         return assortmentService.findByCategoryName(name, pageable);
     }
-
 }
