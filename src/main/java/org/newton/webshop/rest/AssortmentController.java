@@ -8,7 +8,6 @@ import org.newton.webshop.models.dto.response.InventoryDto;
 import org.newton.webshop.models.dto.response.ProductDto;
 import org.newton.webshop.models.dto.response.ProductSimpleDto;
 import org.newton.webshop.models.dto.update.ProductUpdateDto;
-import org.newton.webshop.models.entities.Inventory;
 import org.newton.webshop.services.AssortmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
