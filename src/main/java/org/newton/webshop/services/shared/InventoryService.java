@@ -53,6 +53,11 @@ public class InventoryService {
         }).orElseThrow(RuntimeException::new);//todo Exception: Inventory not found
     }
 
+    /**
+     * Delete a inventory
+     *
+     * @param id id of inventory to delete
+     */
     public void deleteInventory(String id) {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(RuntimeException::new);
         inventoryRepository.delete(inventory);

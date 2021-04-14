@@ -1,5 +1,6 @@
 package org.newton.webshop.services.shared;
 
+import org.newton.webshop.exceptions.CategoryNotFoundException;
 import org.newton.webshop.models.entities.Product;
 import org.newton.webshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,5 +122,15 @@ public class ProductService {
      */
     public Product save(Product product) {
         return productRepository.save(product);
+    }
+
+    /**
+     * Delete a product
+     *
+     * @param productId id of product to delete
+     */
+    public void deleteProduct(String productId) {
+        Product product = productRepository.findById(productId).orElseThrow(RuntimeException::new); //todo Exception: Product not found
+        productRepository.delete(product);
     }
 }
