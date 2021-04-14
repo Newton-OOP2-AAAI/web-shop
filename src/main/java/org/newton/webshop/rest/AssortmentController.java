@@ -104,13 +104,18 @@ public class AssortmentController {
         return assortmentService.updateProduct(productId, updateDto);
     }
 
+    @DeleteMapping(path = "/{product_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteProductById(@PathVariable(name = "product_id") String productId) {
+        assortmentService.deleteProductById(productId);
+    }
+
     /**
      * Find all inventories a product has.
      *
      * @return
      */
     @GetMapping(path = "/inventories", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<Inventory> allInventories(@RequestParam(name = "product_id") String productId) {
+    public Set<InventoryDto> allInventories(@RequestParam(name = "product_id") String productId) {
         return assortmentService.findAll(productId);
     }
 
@@ -157,6 +162,17 @@ public class AssortmentController {
     @DeleteMapping(path = "/categories/{category_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void deleteCategoryById(@PathVariable(name = "category_id") String categoryId) {
         assortmentService.deleteCategoryById(categoryId);
+    }
+
+    /**
+     * Find category by id
+     *
+     * @param categoryId category id
+     * @return category dto
+     */
+    @GetMapping(path = "/categories", params = {"id"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public CategoryDto findCategoryById(@RequestParam(name = "id") String categoryId) {
+        return assortmentService.findByCategoryById(categoryId);
     }
 
     /**

@@ -110,6 +110,16 @@ public class AssortmentService {
     }
 
     /**
+     * Find a category by id
+     *
+     * @return category
+     */
+    public CategoryDto findByCategoryById(String id) {
+        Category category = categoryService.findById(id);
+        return toDto(category);
+    }
+
+    /**
      * Find a list of all categories
      *
      * @return list
@@ -253,6 +263,10 @@ public class AssortmentService {
         return toDto(updateProduct);
     }
 
+    public void deleteProductById(String productId) {
+        productService.deleteProduct(productId);
+    }
+
     /**
      * Creates a new inventory entity associated with given product id.
      * An inventory is a variation of a product. For example a product with two available colors has two inventory entities describing the variations.
@@ -287,10 +301,10 @@ public class AssortmentService {
         return toDto(updatedInventory);
     }
 
-    public Set<Inventory> findAll(String id) {
+    public Set<InventoryDto> findAll(String id) {
         Product product = productService.findById(id);
 
-        return product.getInventory();
+        return product.getInventory().stream().map(AssortmentService::toDto).collect(Collectors.toSet());
     }
 
     public void deleteInventoryById(String id) {
