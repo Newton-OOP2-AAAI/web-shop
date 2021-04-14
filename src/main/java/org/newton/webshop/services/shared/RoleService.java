@@ -1,5 +1,6 @@
 package org.newton.webshop.services.shared;
 
+import org.newton.webshop.exceptions.RoleNotFoundException;
 import org.newton.webshop.models.entities.Role;
 import org.newton.webshop.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class RoleService {
     }
 
     public Role findById(String id) {
-        return roleRepository.findById(id).orElseThrow(RuntimeException::new); //todo exception: Role not found
+        return roleRepository.findById(id).orElseThrow(() -> new RoleNotFoundException(id));
     }
 
     public Role createRole(Role newRole) {
@@ -36,11 +37,11 @@ public class RoleService {
             roleUpdate.setCategories(oldRole.getCategories());
             roleUpdate.setProducts(oldRole.getProducts());
             return roleRepository.save(roleUpdate);
-        }).orElseThrow(RuntimeException::new); //todo Exception: Role not found
+        }).orElseThrow(() -> new RoleNotFoundException(roleId));
     }
 
     public void deleteRole(String id) {
-        Role role = roleRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Role not found
+        Role role = roleRepository.findById(id).orElseThrow(() -> new RoleNotFoundException(id));
         roleRepository.delete(role);
     }
 }

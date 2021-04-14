@@ -1,7 +1,9 @@
 package org.newton.webshop.exceptions;
 
-public class AnswerNotFoundException extends RuntimeException {
+public class AnswerNotFoundException extends NotFoundException {
+    private final static String RESOURCE = "answer";
+
     public AnswerNotFoundException(String id) {
-        super("Could not find the answer " + id);
+        super(RESOURCE, id);
     }
 }

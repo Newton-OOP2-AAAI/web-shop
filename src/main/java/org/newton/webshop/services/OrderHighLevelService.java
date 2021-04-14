@@ -36,7 +36,8 @@ public class OrderHighLevelService {
 
 
     /**
-     * Create an order. It's optional to refer to an existing customer by customer id or fill out all the other fields to create a new customer.
+     * Create an order. It's optional to refer to an existing customer by customer id or fill out all the other fields
+     * to create a new customer.
      *
      * @param dto dto containing details to create the order.
      * @return OrderDto containing details about the order
