@@ -6,6 +6,7 @@ import org.newton.webshop.models.dto.response.AnswerDto;
 import org.newton.webshop.models.dto.update.AnswerUpdateDto;
 import org.newton.webshop.services.ChatbotService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,28 +26,13 @@ public class ChatbotController {
         this.chatbotService = chatbotService;
     }
 
-    //todo ResponseEntity
-
-    /**
-     * Create an FAQ
-     *
-     * @param answerAndQuestionCreationDto json object that contains details about the FAQ
-     * @return json object that contains details about answer and questions, including ids
-     * @author Alex
-     */
-    @PostMapping("/answers")
-    AnswerDto createFAQ(@RequestBody AnswerCreationDto answerAndQuestionCreationDto) {
-        return chatbotService.createFaq(answerAndQuestionCreationDto);
-    }
-
     /**
      * Find FAQ by answer id
      *
      * @param id answer id
      * @return FAQ including answer id and all question ids
-     * @author Alex
      */
-    @GetMapping("/answers")
+    @GetMapping(path = "/answers", params = {"id"}, produces = MediaType.APPLICATION_JSON_VALUE)
     AnswerDto findFAQbyId(@RequestParam String id) {
         return chatbotService.findFaqById(id);
     }
@@ -55,52 +41,64 @@ public class ChatbotController {
      * Find all FAQs
      *
      * @return list of all FAQs including all related ids
-     * @author Alex
      */
-    @GetMapping("/answers/all")
+    @GetMapping(path = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
     List<AnswerDto> findAllFAQs() {
         return chatbotService.findAllFaq();
     }
 
     /**
-     * Add a question to
+     * Create FAQ
+     *
+     * @param creationDto json object that contains details about the FAQ
+     * @return json object that contains details about answer and questions, including ids
+     */
+    @PostMapping(path = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
+    AnswerDto createFAQ(@RequestBody AnswerCreationDto creationDto) {
+        return chatbotService.createFaq(creationDto);
+    }
+
+    /**
+     * Add a question to FAQ
      *
      * @param answerId            answer id that the question should be associated with
      * @param questionCreationDto requestbody with one field: questionText (String)
      * @return FAQ after the new question was added, including all related ids
-     * @author Alex
      */
-    @PostMapping("/answers/{answerId}/questions")
+    @PostMapping(path = "/answers/{answerId}/questions", produces = MediaType.APPLICATION_JSON_VALUE)
     AnswerDto addQuestionToFAQ(@PathVariable String answerId, @RequestBody QuestionCreationDto questionCreationDto) {
         return chatbotService.createQuestion(answerId, questionCreationDto);
     }
 
     /**
-     * Removes a question from an FAQ
-     *
-     * @param id question id
-     * @author Alex
-     */
-    @DeleteMapping("/answers/questions")
-    void deleteQuestion(@RequestParam String id) {
-        chatbotService.deleteQuestion(id);
-    }
-
-    /**
-     * Update an answer
+     * Update an answer in FAQ
      *
      * @param id        answer id
      * @param updateDto json object with two fields: description (String), answerText (String)
      * @return FAQ after the answer was updated, including all related ids
-     * @author Alex
      */
-    @PutMapping("/answers")
-    AnswerDto replaceAnswer(@RequestParam String id, @RequestBody AnswerUpdateDto updateDto) {
+    @PutMapping(path = "/answers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    AnswerDto updateAnswer(@PathVariable String id, @RequestBody AnswerUpdateDto updateDto) {
         return chatbotService.updateAnswer(id, updateDto);
     }
 
-    @DeleteMapping("/answers")
-    void deleteFAQ(@RequestParam String id) {
-        chatbotService.deleteFaq(id);
+    /**
+     * Delete FAQ (including answer and questions)
+     *
+     * @param answerId answer id
+     */
+    @DeleteMapping(path = "/answers/{answer_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    void deleteFAQ(@PathVariable(name = "answer_id") String answerId) {
+        chatbotService.deleteFaq(answerId);
+    }
+
+    /**
+     * Delete a question in an FAQ
+     *
+     * @param questionId question id
+     */
+    @DeleteMapping(path = "/answers/questions/{question_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    void deleteQuestion(@PathVariable(name = "question_id") String questionId) {
+        chatbotService.deleteQuestion(questionId);
     }
 }
