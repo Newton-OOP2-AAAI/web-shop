@@ -1,5 +1,6 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.exceptions.MismatchedIdException;
 import org.newton.webshop.models.dto.creation.CartCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
 import org.newton.webshop.models.dto.response.CartDto;
@@ -25,6 +26,7 @@ public class ShoppingService {
     private final ItemService itemService;
     private final OrderLowLevelService orderService;
     private final CustomerService customerService;
+    private final ProductService productService;
     private final InventoryService inventoryService;
 
     @Autowired
@@ -38,6 +40,7 @@ public class ShoppingService {
         this.itemService = itemService;
         this.orderService = orderService;
         this.customerService = customerService;
+        this.productService = productService;
         this.inventoryService = inventoryService;
     }
 
@@ -119,6 +122,12 @@ public class ShoppingService {
         var item = itemService.findById(itemId);
         var cart = item.getCart();
         var desiredQuantity = dto.getQuantity();
+
+        //Create a reference to the item that should be updated
+        var itemToUpdate = cart.getItems().stream()
+                .filter(oneItem -> oneItem.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new MismatchedIdException("cart", itemId, "Try another id"));
 
         //Get the new inventory
         var newInventoryId = dto.getInventoryId();

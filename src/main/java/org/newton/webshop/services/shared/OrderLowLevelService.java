@@ -20,7 +20,7 @@ public class OrderLowLevelService {
     }
 
     public Order findById(String id) {
-        return orderRepository.findById(id).orElseThrow(()-> new OrderNotFoundException(id));
+        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
     }
 
     public Order createOrder(Order newOrder) {

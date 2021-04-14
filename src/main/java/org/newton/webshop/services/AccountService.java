@@ -33,11 +33,10 @@ public class AccountService {
      *
      * @param id account id
      * @return dto containing account details
-     *
-     * @exception AccountNotFoundException if account id can't be found
+     * @throws AccountNotFoundException if account id can't be found
      */
     public AccountDto findById(String id) {
-        var account = accountRepository.findById(id).orElseThrow(()-> new AccountNotFoundException(id));
+        var account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
         return toDto(account);
     }
 
@@ -75,7 +74,7 @@ public class AccountService {
                     customer.getAddress().setZipCode(customerUpdateDto.getZipCode());
                     customer.getAddress().setCity(customerUpdateDto.getCity());
                     return customerRepository.save(customer);
-                }).orElseThrow(()-> new AccountNotFoundException(accountId));
+                }).orElseThrow(() -> new AccountNotFoundException(accountId));
         return toDto(updatedCustomer);
     }
 
@@ -85,7 +84,7 @@ public class AccountService {
      * @param id account id
      */
     public void deleteById(String id) {
-        Account deleteAccount = accountRepository.findById(id).orElseThrow(()-> new AccountNotFoundException(id));
+        Account deleteAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
         accountRepository.delete(deleteAccount);
     }
 
@@ -145,8 +144,7 @@ public class AccountService {
      *
      * @param account Account entity to convert
      * @return ResponseDto that bundles
-     *
-     * @exception NullPointerException if customer-field is null, or the address-field in the customer is null.
+     * @throws NullPointerException if customer-field is null, or the address-field in the customer is null.
      */
     private static AccountDto toDto(Account account) {
         var customer = account.getCustomer();
@@ -159,8 +157,7 @@ public class AccountService {
      *
      * @param customer Customer entity to convert
      * @return ResponseDto that bundles
-     *
-     * @exception NullPointerException if account-field or the address-field is null.
+     * @throws NullPointerException if account-field or the address-field is null.
      */
     private static AccountDto toDto(Customer customer) {
 
