@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import twitter4j.TwitterException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -43,4 +44,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error, e));
     }
 
+    @ExceptionHandler(TwitterException.class)
+    protected ResponseEntity<Object> handleTwitterException(TwitterException e) {
+
+        String error = "Resource not found";
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, error, e));
+    }
 }
