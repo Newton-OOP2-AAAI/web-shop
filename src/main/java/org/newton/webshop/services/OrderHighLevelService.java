@@ -45,7 +45,7 @@ public class OrderHighLevelService {
         var cart = cartService.findById(dto.getCartId());
 
         //Cart needs customer to create valid order
-        if (cartService.cartNeedsCustomer(cart, customerId)) {
+        if (cart.needsCustomer(customerId)) {
             var customer = customerService.createCustomer(toEntity(dto));
             customer.addCart(cart);
         }

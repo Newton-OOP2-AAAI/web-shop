@@ -1,5 +1,6 @@
 package org.newton.webshop.services.shared;
 
+import org.newton.webshop.exceptions.CategoryNotFoundException;
 import org.newton.webshop.models.entities.Category;
 import org.newton.webshop.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class CategoryService {
      *
      * @param categoryIds a set of ids. If the set is null, it will be treated as an empty set. If an element in the set is null it will be ignored.
      * @return a set of categories
+     * @throws CategoryNotFoundException if any of the provided id's cant be found
      */
     public Set<Category> findById(@Nullable Set<String> categoryIds) {
         //If null or empty set of ids, just return an empty hashset
@@ -45,7 +47,7 @@ public class CategoryService {
         //If set contains elements, filter out null elements and use the remaining ids to fetch entities from the database
         return categoryIds.stream()
                 .filter(Objects::nonNull)
-                .map(id -> categoryRepository.findById(id).orElseThrow(RuntimeException::new))
+                .map(id -> categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id)))
                 .collect(Collectors.toSet());
     }
 
@@ -54,9 +56,10 @@ public class CategoryService {
      *
      * @param id category id
      * @return category, if the id existed in database
+     * @throws CategoryNotFoundException if the provided id can't be found
      */
     public Category findById(String id) {
-        return categoryRepository.findById(id).orElseThrow(RuntimeException::new); //todo Exception: Category not found
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     /**
@@ -66,6 +69,7 @@ public class CategoryService {
      * @param newCategoryId id of the new category
      * @param oldCategory   old category
      * @return new category
+     * @throws CategoryNotFoundException if the new category id can't be found
      */
     public Category getNewCategory(@Nullable String newCategoryId, @Nullable Category oldCategory) {
         //If new id is null, no comparison needed. If condition is false, invoking methods on object won't cause NullPointerException
@@ -82,7 +86,7 @@ public class CategoryService {
         }
 
         //Fetch the new entity only if the id has changed
-        return categoryRepository.findById(newCategoryId).orElseThrow(RuntimeException::new);
+        return categoryRepository.findById(newCategoryId).orElseThrow(() -> new CategoryNotFoundException(newCategoryId));
     }
 
     /**
@@ -92,6 +96,7 @@ public class CategoryService {
      * @param newCategoryIds     ids of categories that the returned set will contain
      * @param categoriesToUpdate set of the old categories. Note that this method manipulates that object and returns it
      * @return set of the categories with the ids provided
+     * @throws CategoryNotFoundException if any of the provided id's can't be found
      */
     public Set<Category> getNewCategories(Set<String> newCategoryIds, Set<Category> categoriesToUpdate) {
         //Remove categories that should no longer be there
@@ -111,7 +116,7 @@ public class CategoryService {
         Set<Category> newChildCategories = newCategoryIds
                 .stream()
                 .filter(categoryId -> !oldChildCategoryIds.contains(categoryId))
-                .map(id -> categoryRepository.findById(id).orElseThrow(RuntimeException::new)) //todo Exception: Category not found
+                .map(id -> categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id)))
                 .collect(Collectors.toSet());
         //Add the new categories
         categoriesToUpdate.addAll(newChildCategories);
@@ -133,9 +138,10 @@ public class CategoryService {
      * Delete a category
      *
      * @param id id of category to delete
+     * @throws CategoryNotFoundException if provided id doesn't exist
      */
     public void deleteCategory(String id) {
-        Category category = categoryRepository.findById(id).orElseThrow(RuntimeException::new);
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
         categoryRepository.delete(category);
     }
 }

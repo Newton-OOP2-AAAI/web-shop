@@ -1,5 +1,6 @@
 package org.newton.webshop.services.shared;
 
+import org.newton.webshop.exceptions.EmployeeNotFoundException;
 import org.newton.webshop.models.entities.Employee;
 import org.newton.webshop.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class EmployeeService {
         return employeeRepository.save(newEmployee);
     }
 
-    public Employee findById(String id) throws RuntimeException {
-        return employeeRepository.findById(id).orElseThrow(RuntimeException::new);
+    public Employee findById(String id) {
+        return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
     }
 
     public List<Employee> findAll() {
