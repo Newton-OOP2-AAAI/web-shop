@@ -29,4 +29,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, error, e));
     }
 
+    @ExceptionHandler(MalformedRequestBodyException.class)
+    protected ResponseEntity<Object> handleUnprocessableEntity(MalformedRequestBodyException e) {
+
+        String error = "Could not process entity";
+        return buildResponseEntity(new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, error, e));
+    }
+
 }

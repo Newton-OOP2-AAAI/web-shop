@@ -1,8 +1,7 @@
 package org.newton.webshop.services;
 
 
-import org.newton.webshop.exceptions.CategoryNotFoundException;
-import org.newton.webshop.exceptions.RoleNotFoundException;
+import org.newton.webshop.exceptions.MalformedRequestBodyException;
 import org.newton.webshop.models.dto.creation.CategoryCreationDto;
 import org.newton.webshop.models.dto.creation.InventoryCreationDto;
 import org.newton.webshop.models.dto.creation.ProductCreationDto;
@@ -220,7 +219,7 @@ public class AssortmentService {
 
         var inventoryDtos = productCreationDto.getInventories();
         if (inventoryDtos == null || inventoryDtos.isEmpty()) {
-            throw new RuntimeException(); //todo Exception: Inventory must exist, set quantity to 0 if product isn't in stock yet
+            throw new MalformedRequestBodyException("inventories","Provide inventory with quantity 0 if product doesn't exist in inventory yet");
         }
 
         Set<Inventory> inventories = inventoryDtos

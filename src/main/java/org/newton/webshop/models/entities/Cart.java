@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.newton.webshop.exceptions.MismatchedIdException;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -87,7 +88,7 @@ public class Cart {
             if (customer == null) {
                 return true;
             } else {
-                throw new RuntimeException(); //todo Exception mismatching ids (använd existerande kund istället)
+                throw new MismatchedIdException(desiredCustomerId,"customer","Use existing customer instead");
             }
         }
 
@@ -95,8 +96,7 @@ public class Cart {
             return false;
         }
 
-        throw new RuntimeException(); //todo Exception: Mismatching ids (Angivet id matchar inte angiven cart)
-        // MismatchingException -> typ av id, resurs1, resurs2 -> customerid 123 matchar inte cart med id 456:
+        throw new MismatchedIdException(desiredCustomerId,"cart","");
     }
 
 }
