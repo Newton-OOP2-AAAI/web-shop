@@ -83,8 +83,7 @@ public class AssortmentService {
      * @param id  id of category which should be updated
      * @param dto contains the fields and associations to update
      * @return Dto
-     *
-     * @exception
+     * @throws
      */
     public CategoryDto updateCategory(String id, CategoryCreationDto dto) {
         //Find the category
@@ -219,7 +218,7 @@ public class AssortmentService {
 
         var inventoryDtos = productCreationDto.getInventories();
         if (inventoryDtos == null || inventoryDtos.isEmpty()) {
-            throw new MalformedRequestBodyException("inventories","Provide inventory with quantity 0 if product doesn't exist in inventory yet");
+            throw new MalformedRequestBodyException("inventories", "Provide inventory with quantity 0 if product doesn't exist in inventory yet");
         }
 
         Set<Inventory> inventories = inventoryDtos

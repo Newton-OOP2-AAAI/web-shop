@@ -88,7 +88,7 @@ public class Cart {
             if (customer == null) {
                 return true;
             } else {
-                throw new MismatchedIdException(desiredCustomerId,"customer","Use existing customer instead");
+                throw new MismatchedIdException(desiredCustomerId, "customer", "Use existing customer instead");
             }
         }
 
@@ -96,7 +96,7 @@ public class Cart {
             return false;
         }
 
-        throw new MismatchedIdException(desiredCustomerId,"cart","");
+        throw new MismatchedIdException(desiredCustomerId, "cart", "");
     }
 
 }

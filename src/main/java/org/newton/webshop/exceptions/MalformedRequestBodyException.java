@@ -8,7 +8,7 @@ public class MalformedRequestBodyException extends RuntimeException {
     private final static String MESSAGE = "Dto is malformed: %s can not be empty or null. %s.";
 
 
-    public MalformedRequestBodyException(String jsonField,String advice) {
+    public MalformedRequestBodyException(String jsonField, String advice) {
         super(String.format(MESSAGE, jsonField, advice));
     }
 }

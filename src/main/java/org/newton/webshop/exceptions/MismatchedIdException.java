@@ -8,7 +8,7 @@ public class MismatchedIdException extends RuntimeException {
     private final static String MESSAGE = "Could not match %s with %s. %s";
 
 
-    public MismatchedIdException(String firstId, String secondId,String advice) {
-        super(String.format(MESSAGE, firstId, secondId,advice));
+    public MismatchedIdException(String firstId, String secondId, String advice) {
+        super(String.format(MESSAGE, firstId, secondId, advice));
     }
 }

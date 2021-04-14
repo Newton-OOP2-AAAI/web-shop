@@ -127,7 +127,7 @@ public class ShoppingService {
         var itemToUpdate = cart.getItems().stream()
                 .filter(oneItem -> oneItem.getId().equals(itemId))
                 .findFirst()
-                .orElseThrow(()-> new MismatchedIdException("cart",itemId,"Try another id"));
+                .orElseThrow(() -> new MismatchedIdException("cart", itemId, "Try another id"));
 
         //Get the new inventory
         var newInventoryId = dto.getInventoryId();

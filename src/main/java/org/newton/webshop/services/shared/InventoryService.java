@@ -32,7 +32,7 @@ public class InventoryService {
         if (id == null) {
             throw new InventoryNotFoundException(null);
         }
-        return inventoryRepository.findById(id).orElseThrow(()->new InventoryNotFoundException(id));
+        return inventoryRepository.findById(id).orElseThrow(() -> new InventoryNotFoundException(id));
     }
 
     /**
@@ -40,8 +40,7 @@ public class InventoryService {
      *
      * @param inventory
      * @return the persisted inventory
-     *
-     * @exception InventoryNotFoundException if inventory id can't be found
+     * @throws InventoryNotFoundException if inventory id can't be found
      */
     public Inventory save(Inventory inventory) {
         return inventoryRepository.save(inventory);
@@ -53,7 +52,7 @@ public class InventoryService {
             inventoryUpdate.setColor(inventory.getColor());
             inventoryUpdate.setQuantity(inventory.getQuantity());
             return inventoryRepository.save(inventoryUpdate);
-        }).orElseThrow(()->new InventoryNotFoundException(inventoryId));
+        }).orElseThrow(() -> new InventoryNotFoundException(inventoryId));
     }
 
     /**
@@ -62,7 +61,7 @@ public class InventoryService {
      * @param id id of inventory to delete
      */
     public void deleteInventory(String id) {
-        Inventory inventory = inventoryRepository.findById(id).orElseThrow(()->new InventoryNotFoundException(id));
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new InventoryNotFoundException(id));
         inventoryRepository.delete(inventory);
 
     }
@@ -73,13 +72,12 @@ public class InventoryService {
      * @param newInventoryId new inventory id
      * @param oldInventory   old inventory entity
      * @return the new inventory entity
-     *
-     * @exception InventoryNotFoundException if the new inventory id can't be found
+     * @throws InventoryNotFoundException if the new inventory id can't be found
      */
     public Inventory getNewInventory(@NonNull String newInventoryId, @NonNull Inventory oldInventory) {
         var oldInventoryId = oldInventory.getId();
         return (newInventoryId.equals(oldInventoryId))
                 ? oldInventory
-                : inventoryRepository.findById(newInventoryId).orElseThrow(()->new InventoryNotFoundException(newInventoryId));
+                : inventoryRepository.findById(newInventoryId).orElseThrow(() -> new InventoryNotFoundException(newInventoryId));
     }
 }
