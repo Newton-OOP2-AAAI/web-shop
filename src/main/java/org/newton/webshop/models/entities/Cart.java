@@ -100,10 +100,9 @@ public class Cart {
     }
 
     /**
-     *
      * @return
      */
-    public boolean hasOrder(){
+    public boolean hasOrder() {
         return order != null;
     }
 }

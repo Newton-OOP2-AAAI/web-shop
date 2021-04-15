@@ -69,6 +69,7 @@ public class Customer {
 
     /**
      * Helper method that tells if customer has a cart
+     *
      * @return true if customer has cart. False if carts is empty or null.
      */
     public boolean hasCart() {
@@ -80,6 +81,7 @@ public class Customer {
 
     /**
      * Helper method that tells if customer has a order
+     *
      * @return true if customer has order. False if carts is empty or null.
      */
     public boolean hasOrder() {
