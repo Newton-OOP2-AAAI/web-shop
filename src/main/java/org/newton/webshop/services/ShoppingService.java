@@ -1,5 +1,7 @@
 package org.newton.webshop.services;
 
+import org.newton.webshop.exceptions.CartAlreadyExistsException;
+import org.newton.webshop.exceptions.MalformedRequestBodyException;
 import org.newton.webshop.exceptions.MismatchedIdException;
 import org.newton.webshop.models.dto.creation.CartCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;
@@ -81,6 +83,9 @@ public class ShoppingService {
     public CartDto addItem(String cartId, ItemCreationDto dto) {
         //Fetch cart and inventory (also contains a product) from database
         var cart = cartService.findById(cartId);
+        if (cart.hasOrder()) {
+            throw new CartAlreadyExistsException("cartId");
+        }
         var inventoryId = dto.getInventoryId();
 
         //Optional is present if the item were trying to add already existed in the cart
@@ -121,6 +126,9 @@ public class ShoppingService {
     public CartDto updateItem(String itemId, ItemCreationDto dto) {
         var item = itemService.findById(itemId);
         var cart = item.getCart();
+        if (cart.hasOrder()) {
+            throw new CartAlreadyExistsException("cartId");
+        }
         var desiredQuantity = dto.getQuantity();
 
         //Create a reference to the item that should be updated
@@ -171,7 +179,9 @@ public class ShoppingService {
     public void deleteItem(String itemId) {
         var item = itemService.findById(itemId);
         var cart = item.getCart();
-
+        if (cart.hasOrder()) {
+            throw new CartAlreadyExistsException("cartId");
+        }
         //Need to remove the item from the cart variable because the item we want to delete is persisted here
         cart.getItems().remove(item);
 
@@ -188,24 +198,6 @@ public class ShoppingService {
     public CartDto findCart(String cartId) {
         var cart = cartService.findById(cartId);
         return toDto(cart);
-    }
-
-    /**
-     * Converts ItemCreationDto to entity. Associated entites are supplied as parameters
-     *
-     * @param dto       ItemCreationDto
-     * @param inventory an inventory which is already persisted, and therefore also contains a product
-     * @param cart      a cart which is already persisted
-     * @return item (which is not persisted in database)
-     */
-    private static Item toEntity(String itemId, ItemCreationDto dto, Inventory inventory, Cart cart) {
-        return Item.builder()
-                .inventory(inventory)
-                .cart(cart)
-                .quantity(dto.getQuantity())
-                .size(inventory.getSize())
-                .color(inventory.getColor())
-                .build();
     }
 
     /**

@@ -183,7 +183,7 @@ public class AssortmentController {
      * @return page of dtos
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ProductSimpleDto> all(Pageable pageable) {
+    public Page<ProductSimpleDto> all(Pageable pageable) {
         return assortmentService.findAll(pageable);
     }
 
@@ -196,7 +196,7 @@ public class AssortmentController {
      * @return
      */
     @GetMapping(path = "/filter", params = {"categoryId"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ProductSimpleDto> findProductByCategoryId(String categoryId, Pageable pageable) {
+    public Page<ProductSimpleDto> findProductByCategoryId(String categoryId, Pageable pageable) {
         return assortmentService.findByCategoryId(categoryId, pageable);
     }
 
@@ -208,7 +208,7 @@ public class AssortmentController {
      * @return
      */
     @GetMapping(path = "/filter", params = {"name"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ProductSimpleDto> findProductByCategoryName(String name, Pageable pageable) {
+    public Page<ProductSimpleDto> findProductByCategoryName(String name, Pageable pageable) {
         return assortmentService.findByCategoryName(name, pageable);
     }
 }
