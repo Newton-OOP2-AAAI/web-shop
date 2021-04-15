@@ -67,5 +67,25 @@ public class Customer {
         cart.setCustomer(this);
     }
 
+    /**
+     * Helper method that tells if customer has a cart
+     * @return true if customer has cart. False if carts is empty or null.
+     */
+    public boolean hasCart() {
+        if (carts == null) {
+            return false;
+        }
+        return !carts.isEmpty();
+    }
 
+    /**
+     * Helper method that tells if customer has a order
+     * @return true if customer has order. False if carts is empty or null.
+     */
+    public boolean hasOrder() {
+        if (!this.hasCart()) {
+            return false;
+        }
+        return carts.stream().anyMatch(Cart::hasOrder);
+    }
 }

@@ -99,6 +99,13 @@ public class Cart {
         throw new MismatchedIdException(desiredCustomerId, "cart", "");
     }
 
+    /**
+     *
+     * @return
+     */
+    public boolean hasOrder(){
+        return order != null;
+    }
 }
 
 
