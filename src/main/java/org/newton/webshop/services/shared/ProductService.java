@@ -79,7 +79,7 @@ public class ProductService {
         productsToUpdate.removeIf(product -> !newProductIds.contains(product.getId()));
 
         //If the set of new ids is empty, no further changes are needed
-        if (!newProductIds.isEmpty()) {
+        if (newProductIds.isEmpty()) {
             return productsToUpdate;
         }
 
