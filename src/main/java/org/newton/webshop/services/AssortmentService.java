@@ -362,11 +362,9 @@ public class AssortmentService {
      * @return CategoryDto
      */
     private static CategoryDto toDto(Category category) {
-        //todo microoptimeringar: Fråga Thor
-        //todo flytta konvertering till egen factory klass
         var parentCategory = category.getParentCategory();
-        var parentCategoryId = parentCategory != null ? parentCategory.getId() : null;
-        var parentCategoryName = parentCategory != null ? parentCategory.getName() : null;
+        var parentCategoryId = parentCategory == null ? null : parentCategory.getId();
+        var parentCategoryName = parentCategory == null ? null : parentCategory.getName();
 
         return CategoryDto.builder()
                 .id(category.getId())
@@ -438,8 +436,8 @@ public class AssortmentService {
     /**
      * Converts dto to Inventory entity.
      *
-     * @param creationDto
-     * @return
+     * @param creationDto creation dto
+     * @return inventory entity
      */
     private static Inventory toEntity(InventoryCreationDto creationDto) {
         return Inventory.builder()
