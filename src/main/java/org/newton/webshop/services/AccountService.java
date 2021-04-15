@@ -6,9 +6,11 @@ import org.newton.webshop.models.dto.response.AccountDto;
 import org.newton.webshop.models.dto.update.CustomerUpdateDto;
 import org.newton.webshop.models.entities.Account;
 import org.newton.webshop.models.entities.Address;
+import org.newton.webshop.models.entities.Cart;
 import org.newton.webshop.models.entities.Customer;
 import org.newton.webshop.repositories.AccountRepository;
 import org.newton.webshop.repositories.CustomerRepository;
+import org.newton.webshop.services.shared.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -81,11 +83,18 @@ public class AccountService {
     /**
      * Delete account by account id
      *
+     * If the customer has an order then it will only delete account and not customer
+     *
      * @param id account id
      */
     public void deleteById(String id) {
         Account deleteAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
+        var customer = deleteAccount.getCustomer();
         accountRepository.delete(deleteAccount);
+
+        if (!customer.hasOrder()) {
+            customerRepository.delete(customer);
+        }
     }
 
     /**
