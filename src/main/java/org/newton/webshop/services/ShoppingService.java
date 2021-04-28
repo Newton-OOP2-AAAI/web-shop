@@ -1,7 +1,6 @@
 package org.newton.webshop.services;
 
 import org.newton.webshop.exceptions.CartAlreadyExistsException;
-import org.newton.webshop.exceptions.MalformedRequestBodyException;
 import org.newton.webshop.exceptions.MismatchedIdException;
 import org.newton.webshop.models.dto.creation.CartCreationDto;
 import org.newton.webshop.models.dto.creation.ItemCreationDto;

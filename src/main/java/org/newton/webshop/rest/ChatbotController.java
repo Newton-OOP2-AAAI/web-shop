@@ -2,7 +2,8 @@ package org.newton.webshop.rest;
 
 import org.newton.webshop.models.dto.creation.AnswerCreationDto;
 import org.newton.webshop.models.dto.creation.QuestionCreationDto;
-import org.newton.webshop.models.dto.response.AnswerDto;
+import org.newton.webshop.models.dto.response.AnswerSimpleDto;
+import org.newton.webshop.models.dto.response.FaqDto;
 import org.newton.webshop.models.dto.update.AnswerUpdateDto;
 import org.newton.webshop.services.ChatbotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Manages Chatbot
@@ -33,7 +35,7 @@ public class ChatbotController {
      * @return FAQ including answer id and all question ids
      */
     @GetMapping(path = "/answers", params = {"id"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    AnswerDto findFAQbyId(@RequestParam String id) {
+    FaqDto findFAQbyId(@RequestParam String id) {
         return chatbotService.findFaqById(id);
     }
 
@@ -43,8 +45,19 @@ public class ChatbotController {
      * @return list of all FAQs including all related ids
      */
     @GetMapping(path = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<AnswerDto> findAllFAQs() {
+    List<FaqDto> findAllFAQs() {
         return chatbotService.findAllFaq();
+    }
+
+    /**
+     * Find answer text by question text
+     *
+     * @param question phrase/text
+     * @return dto containing answer text
+     */
+    @GetMapping(path = "/answers", params = {"question"})
+    Set<AnswerSimpleDto> findAnswerByQuestionName(@RequestParam String question) {
+        return chatbotService.findAnswerByQuestionText(question);
     }
 
     /**
@@ -54,7 +67,7 @@ public class ChatbotController {
      * @return json object that contains details about answer and questions, including ids
      */
     @PostMapping(path = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
-    AnswerDto createFAQ(@RequestBody AnswerCreationDto creationDto) {
+    FaqDto createFAQ(@RequestBody AnswerCreationDto creationDto) {
         return chatbotService.createFaq(creationDto);
     }
 
@@ -66,7 +79,7 @@ public class ChatbotController {
      * @return FAQ after the new question was added, including all related ids
      */
     @PostMapping(path = "/answers/{answerId}/questions", produces = MediaType.APPLICATION_JSON_VALUE)
-    AnswerDto addQuestionToFAQ(@PathVariable String answerId, @RequestBody QuestionCreationDto questionCreationDto) {
+    FaqDto addQuestionToFAQ(@PathVariable String answerId, @RequestBody QuestionCreationDto questionCreationDto) {
         return chatbotService.createQuestion(answerId, questionCreationDto);
     }
 
@@ -78,7 +91,7 @@ public class ChatbotController {
      * @return FAQ after the answer was updated, including all related ids
      */
     @PutMapping(path = "/answers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    AnswerDto updateAnswer(@PathVariable String id, @RequestBody AnswerUpdateDto updateDto) {
+    FaqDto updateAnswer(@PathVariable String id, @RequestBody AnswerUpdateDto updateDto) {
         return chatbotService.updateAnswer(id, updateDto);
     }
 

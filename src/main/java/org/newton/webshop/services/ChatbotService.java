@@ -4,7 +4,8 @@ import org.newton.webshop.exceptions.AnswerNotFoundException;
 import org.newton.webshop.exceptions.QuestionNotFoundException;
 import org.newton.webshop.models.dto.creation.AnswerCreationDto;
 import org.newton.webshop.models.dto.creation.QuestionCreationDto;
-import org.newton.webshop.models.dto.response.AnswerDto;
+import org.newton.webshop.models.dto.response.AnswerSimpleDto;
+import org.newton.webshop.models.dto.response.FaqDto;
 import org.newton.webshop.models.dto.update.AnswerUpdateDto;
 import org.newton.webshop.models.entities.Answer;
 import org.newton.webshop.models.entities.Question;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +42,7 @@ public class ChatbotService {
      * @param creationDto contains info about the entities to create
      * @return dto that contains the created entities and their ids
      */
-    public AnswerDto createFaq(AnswerCreationDto creationDto) {
+    public FaqDto createFaq(AnswerCreationDto creationDto) {
         //AnswerCreationDto to Answer using constructor, then persist
         Answer answer = answerRepository.save(toEntity(creationDto));
 
@@ -70,7 +72,7 @@ public class ChatbotService {
      * @param id answer id
      * @return dto, containing the info in the created FAQ and the respective ids
      */
-    public AnswerDto findFaqById(String id) {
+    public FaqDto findFaqById(String id) {
         var answer = answerRepository.findById(id).orElseThrow(() -> new AnswerNotFoundException(id));
         return toDto(answer);
     }
@@ -81,11 +83,22 @@ public class ChatbotService {
      *
      * @return list of all FAQs, each one contained in a dto
      */
-    public List<AnswerDto> findAllFaq() {
+    public List<FaqDto> findAllFaq() {
         return answerRepository.findAll()
                 .stream()
                 .map(ChatbotService::toDto)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Find answer by question text
+     *
+     * @param question question phrase/text
+     * @return dto containing answer text
+     */
+    public Set<AnswerSimpleDto> findAnswerByQuestionText(String question) {
+        var answers = answerRepository.findAnswerByQuestionName(question);
+        return toSimpleDto(answers);
     }
 
     /**
@@ -95,7 +108,7 @@ public class ChatbotService {
      * @param questionCreationDto dto containing info required to create question
      * @return dto, containing the info in the created question and the respective ids
      */
-    public AnswerDto createQuestion(String answerId, QuestionCreationDto questionCreationDto) {
+    public FaqDto createQuestion(String answerId, QuestionCreationDto questionCreationDto) {
         //find answer to create the question for
         var answer = answerRepository.findById(answerId).orElseThrow(() -> new AnswerNotFoundException(answerId));
 
@@ -129,7 +142,7 @@ public class ChatbotService {
      * @param updateDto dto containing info needed to update answer
      * @return dto representing FAQ after the answer was updated
      */
-    public AnswerDto updateAnswer(String id, AnswerUpdateDto updateDto) {
+    public FaqDto updateAnswer(String id, AnswerUpdateDto updateDto) {
         Answer updatedAnswer = answerRepository.findById(id).map(answer -> {
             answer.setAnswerText(updateDto.getAnswerText());
             answer.setDescription(updateDto.getDescription());
@@ -149,6 +162,7 @@ public class ChatbotService {
         answerRepository.delete(answer);
     }
 
+
     /**
      * Converts Answer entity to a response dto. The set of Question entities in the Answer entity is mapped
      * to a Hashmap (key = question id, value = question text)
@@ -156,8 +170,8 @@ public class ChatbotService {
      * @param answer entity to convert
      * @return response dto
      */
-    private static AnswerDto toDto(Answer answer) {
-        return AnswerDto.builder()
+    private static FaqDto toDto(Answer answer) {
+        return FaqDto.builder()
                 .id(answer.getId())
                 .description(answer.getDescription())
                 .questions(answer.getQuestions()
@@ -165,6 +179,26 @@ public class ChatbotService {
                         .collect(Collectors.toMap(Question::getId, Question::getQuestionText)))
                 .answerText(answer.getAnswerText())
                 .build();
+    }
+
+    /**
+     * @param answer
+     * @return
+     */
+    private static AnswerSimpleDto toSimpleDto(Answer answer) {
+        return AnswerSimpleDto.builder()
+                .answerText(answer.getAnswerText())
+                .build();
+    }
+
+    /**
+     * @param answers
+     * @return
+     */
+    private static Set<AnswerSimpleDto> toSimpleDto(Set<Answer> answers) {
+        return answers.stream()
+                .map(ChatbotService::toSimpleDto)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -208,4 +242,6 @@ public class ChatbotService {
                 .description(creationDto.getDescription())
                 .build();
     }
+
+
 }
